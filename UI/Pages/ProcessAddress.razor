@@ -124,7 +124,7 @@ else
 @code {
 	private EditContext? editContext;
 	private ValidationMessageStore? validationMessageStore;
-	[CascadingParameter] 
+	[CascadingParameter]
 	private Task<AuthenticationState>? authenticationState { get; set; }
 	private AuthenticationState? userState;
 	[Parameter]
@@ -150,36 +150,55 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		userState = await authenticationState;
-		editContext = new(addressToBeInputModel);
-		editContext.OnFieldChanged += EditContextPaymentFrequencyOnFieldChanged;
-		validationMessageStore = new(editContext);
-		editContext.OnValidationRequested += (s, e) => validationMessageStore.Clear();
+		if(authenticationState is not null)
+		{
+			userState = await authenticationState;	
+		}
+
+		if(addressToBeInputModel is not null)
+		{
+			editContext = new(addressToBeInputModel);
+		}
+
+		if(editContext is not null)
+		{
+			editContext.OnFieldChanged += EditContextPaymentFrequencyOnFieldChanged;
+			validationMessageStore = new(editContext);
+			editContext.OnValidationRequested += (s, e) => validationMessageStore.Clear();
+			editContext.NotifyValidationStateChanged();
+			validationMessageStore.Clear();
+		}
 
 		CalculateListAmounts();
 		await LoadAddressList();
-		addressesLoaded = true;
-		validationMessageStore.Clear();
-		editContext.NotifyValidationStateChanged();
-		this.StateHasChanged();
+		addressesLoaded = true;	
+		StateHasChanged();
 	}
+
 	protected override Task OnParametersSetAsync()
 	{
 		if (addressToBeInputModel is null)
 		{
 			addressToBeInputModel = new();
 		}
-		editContext = new(this.addressToBeInputModel);
-		editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
-		editContext.OnValidationRequested += (s, e) => validationMessageStore.Clear();
-		validationMessageStore = new ValidationMessageStore(editContext);
+
+		if(editContext is not null)
+		{
+			editContext = new(addressToBeInputModel);
+			editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
+			editContext.OnValidationRequested += (s, e) => validationMessageStore?.Clear();
+			validationMessageStore = new ValidationMessageStore(editContext);
+		}		
+
 		return Task.CompletedTask;
 	}
+
 	private void CalculateListAmounts()
 	{
 		double percentage = UnprocessedAddressListAmount * 0.1;
 		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.AwayFromZero);
 	}
+
 	private async Task LoadAddressList()
 	{
 		addressesLoaded = false;
@@ -190,12 +209,15 @@ else
 		AddressList.AddRange(UnverifiedAddressList);
 		UnprocessedAddressList = new();
 		UnverifiedAddressList = new();
+
 		foreach (var address in AddressList)
 		{
 			addressToBeInputModel = address;
 		}
+
 		addressesLoaded = true;
 	}
+
 	private async Task<List<AddressModel>> LoadUnprocessedAddresses()
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -203,6 +225,7 @@ else
 			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
 			UnprocessedAddressList = await testDataService.ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse(UnprocessedAddressListAmount, "BaltimoreCity");
 		}
+
 		return UnprocessedAddressList;
 	}
 	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
@@ -212,6 +235,7 @@ else
 			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
 			UnverifiedAddressList = await testDataService.ReadByVerificationPercentageWhereIsLegibleTrueAndIsProcessedTrue(UnverifiedAddressListAmount);
 		}
+
 		return UnverifiedAddressList;
 	}
 	private async Task HandleOnSubmit()
