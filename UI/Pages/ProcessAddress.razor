@@ -18,32 +18,38 @@
 					<ValidationSummary />
 					<div class="row">
 						<div class="col gy-3">
-							<label>@userState.User.Identity?.Name is currently processing @addressToBeInputModel.AccountId</label>
+							<label>@userState.User.Identity?.Name is currently processing @addressToBeInputModel?.AccountId</label>
 						</div>
 					</div>
 
 					<div class="col gy-3">
 						<label>Payment Amount</label>
-						<InputNumber @bind-Value="addressToBeInputModel.PaymentAmount" class="form-control" required></InputNumber>
+						@if (addressToBeInputModel is not null)
+						{
+							<InputNumber @bind-Value="addressToBeInputModel.PaymentAmount" class="form-control" required></InputNumber>
+						}						
 					</div>
 					<div class="col gy-3">
 						<label>Payment Frequency</label>
-						<InputSelect @bind-Value="addressToBeInputModel.GroundRentPaymentFrequency" class="form-control" required>
-							<option></option>
-							<option value="@AddressModel.PaymentFrequency.Annual" onselect="@(() => TogglePaymentFrequencyAnnual)">Annual</option>
-							<option value="@AddressModel.PaymentFrequency.SemiAnnual" onselect="@(() => TogglePaymentFrequencySemiAnnual)">Semi-Annual</option>
-							<option value="@AddressModel.PaymentFrequency.Quarterly" onselect="@(() => TogglePaymentFrequencyQuarterly)">Quarterly</option>
-							<option value="@AddressModel.PaymentFrequency.Other" onselect="@(() => TogglePaymentFrequencyOther)">Other</option>
-						</InputSelect>
+						@if (addressToBeInputModel is not null)
+						{
+							<InputSelect @bind-Value="addressToBeInputModel.GroundRentPaymentFrequency" class="form-control" required>
+								<option></option>
+								<option value="@AddressModel.PaymentFrequency.Annual" onselect="@(() => TogglePaymentFrequencyAnnual)">Annual</option>
+								<option value="@AddressModel.PaymentFrequency.SemiAnnual" onselect="@(() => TogglePaymentFrequencySemiAnnual)">Semi-Annual</option>
+								<option value="@AddressModel.PaymentFrequency.Quarterly" onselect="@(() => TogglePaymentFrequencyQuarterly)">Quarterly</option>
+								<option value="@AddressModel.PaymentFrequency.Other" onselect="@(() => TogglePaymentFrequencyOther)">Other</option>
+							</InputSelect>
+						}
 					</div>
-					@if (paymentFrequencyAnnual)
+					@if (addressToBeInputModel is not null && paymentFrequencyAnnual)
 					{
 						<div class="col gy-3">
 							<label>Annual Date</label>
 							<InputDate @bind-Value="addressToBeInputModel.PaymentDateAnnual" class="form-control" bind:event="onselect"></InputDate>
 						</div>
 					}
-					@if (paymentFrequencySemiAnnual)
+					@if (addressToBeInputModel is not null && paymentFrequencySemiAnnual)
 					{
 						<div class="col gy-3">
 							<label>Semi-Annual 1 Date</label>
@@ -54,7 +60,7 @@
 							<InputDate @bind-Value="addressToBeInputModel.PaymentDateSemiAnnual2" class="form-control"></InputDate>
 						</div>
 					}
-					@if (paymentFrequencyQuarterly)
+					@if (addressToBeInputModel is not null && paymentFrequencyQuarterly)
 					{
 						<div class="col gy-3">
 							<label>Quarterly 1 Date</label>
@@ -73,7 +79,7 @@
 							<InputDate @bind-Value="addressToBeInputModel.PaymentDateQuarterly4" class="form-control"></InputDate>
 						</div>
 					}
-					@if (paymentFrequencyOther)
+					@if (addressToBeInputModel is not null && paymentFrequencyOther)
 					{
 						<div class="col gy-3">
 							<label>Other Date</label>
@@ -89,7 +95,7 @@
 							</InputRadioGroup>
 						</div>
 					</div>
-					@if (isLegibleRadio == IsLegibleRadio.No)
+					@if (addressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
 					{
 						<div class="row">
 							<div class="col gy-3">
@@ -134,7 +140,8 @@ else
 	private List<AddressModel> AddressList = new();
 
 
-	[Parameter] public EventCallback AddressProcessed { get; set; }
+	[Parameter] 
+	public EventCallback AddressProcessed { get; set; }
 	private int UnprocessedAddressListAmount { get; set; } = 100;
 	private int UnverifiedAddressListAmount;
 	private bool addressesLoaded { get; set; } = false;
@@ -228,6 +235,7 @@ else
 
 		return UnprocessedAddressList;
 	}
+
 	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -238,20 +246,22 @@ else
 
 		return UnverifiedAddressList;
 	}
+
 	private async Task HandleOnSubmit()
 	{
 		if (isSubmitting)
 		{
 			return;
 		}
-		if (editContext.Validate())
+
+		if (editContext is not null && editContext.Validate())
 		{
 			isSubmitting = true;
 			AddressModel addressToDbModel = new();
-			if (addressToBeInputModel.IsProcessed is true)
+			if (addressToBeInputModel?.IsProcessed is true)
 			{
 				addressToDbModel.IsVerified = true;
-				addressToDbModel.UserWhoVerified = userState.User.Identity.Name;
+				addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
 				addressToDbModel.PaymentAmount = addressToBeInputModel.PaymentAmount;
 				addressToDbModel.GroundRentPaymentFrequency = addressToBeInputModel.GroundRentPaymentFrequency;
 				addressToDbModel.PaymentDateAnnual = addressToBeInputModel.PaymentDateAnnual;
@@ -272,13 +282,13 @@ else
 				}
 				if (dataServiceResult is false)
 				{
-					validationMessageStore.Add(editContext.Field(""), "Could not process.");
+					validationMessageStore?.Add(editContext.Field(""), "Could not process.");
 				}
 			}
-			if (addressToBeInputModel.IsProcessed is false)
+			if (addressToBeInputModel?.IsProcessed is false)
 			{
 				addressToDbModel.IsProcessed = true;
-				addressToDbModel.UserWhoVerified = userState.User.Identity.Name;
+				addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
 				addressToDbModel.PaymentAmount = addressToBeInputModel.PaymentAmount;
 				addressToDbModel.GroundRentPaymentFrequency = addressToBeInputModel.GroundRentPaymentFrequency;
 				addressToDbModel.PaymentDateAnnual = addressToBeInputModel.PaymentDateAnnual;
@@ -299,7 +309,7 @@ else
 				}
 				if (dataServiceResult is false)
 				{
-					validationMessageStore.Add(editContext.Field(""), "Could not process.");
+					validationMessageStore?.Add(editContext.Field(""), "Could not process.");
 				}
 			}
 			editContext.NotifyValidationStateChanged();
@@ -310,33 +320,45 @@ else
 	}
 	private void IsLegibleRadioSelect()
 	{
-		if (isLegibleRadio == IsLegibleRadio.Yes)
+		if (addressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.Yes)
 		{
 			addressToBeInputModel.IsLegible = true;
 		}
-		if (isLegibleRadio == IsLegibleRadio.No)
+
+		if (addressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
 		{
 			addressToBeInputModel.IsLegible = false;
 		}
-		editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
+
+		if(editContext is not null) 
+		{
+			editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
+		}		
 	}
+
 	private void NotLegibleTypeSelect()
 	{
-		if (isLegibleRadio == IsLegibleRadio.No)
+		if (addressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
 		{
 			addressToBeInputModel.NotLegibleType = AddressModel.NotLegible.Other;
 		}
-		editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
+
+		if(editContext is not null)
+		{
+			editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
+		}		
 	}
+
 	private void EditContextAddressOnFieldChanged(object sender, FieldChangedEventArgs e)
 	{
 		AddressProcessed.InvokeAsync();
 	}
+
 	private void EditContextPaymentFrequencyOnFieldChanged(object sender, FieldChangedEventArgs e)
 	{
 		if (e.FieldIdentifier.FieldName == "GroundRentPaymentFrequency")
 		{
-			if (addressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
+			if (addressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
 			{
 				TogglePaymentFrequencyAnnual();
 				addressToBeInputModel.PaymentDateSemiAnnual1 = null;
@@ -347,7 +369,7 @@ else
 				addressToBeInputModel.PaymentDateQuarterly4 = null;
 				addressToBeInputModel.PaymentDateOther = null;
 			}
-			else if (addressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
+			else if (addressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
 			{
 				TogglePaymentFrequencySemiAnnual();
 				addressToBeInputModel.PaymentDateAnnual = null;
@@ -357,7 +379,7 @@ else
 				addressToBeInputModel.PaymentDateQuarterly4 = null;
 				addressToBeInputModel.PaymentDateOther = null;
 			}
-			else if (addressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
+			else if (addressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
 			{
 				TogglePaymentFrequencyQuarterly();
 				addressToBeInputModel.PaymentDateAnnual = null;
@@ -365,7 +387,7 @@ else
 				addressToBeInputModel.PaymentDateSemiAnnual2 = null;
 				addressToBeInputModel.PaymentDateOther = null;
 			}
-			else if (addressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
+			else if (addressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
 			{
 				TogglePaymentFrequencyOther();
 				addressToBeInputModel.PaymentDateAnnual = null;
