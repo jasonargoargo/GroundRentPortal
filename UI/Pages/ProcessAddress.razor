@@ -1,10 +1,12 @@
 ﻿@using DataLibrary.DbAccess
 @using DataLibrary.DbServices
 @using DataLibrary.Models
+@using GroundRentPortal.UI.Pages.ProcessAddressComponents
 @inject IDataContext dataContext
 @inject IGroundRentPortalDataServiceFactory testDataServiceFactory
 @attribute [Authorize]
 @page "/processAddress"
+@namespace GroundRentPortal.UI.Pages
 
 @if (userState is not null)
 {
@@ -22,26 +24,9 @@
 						</div>
 					</div>
 
-					<div class="col gy-3">
-						<label>Payment Amount</label>
-						@if (AddressToBeInputModel is not null)
-						{
-							<InputNumber @bind-Value="AddressToBeInputModel.PaymentAmount" class="form-control" required></InputNumber>
-						}						
-					</div>
-					<div class="col gy-3">
-						<label>Payment Frequency</label>
-						@if (AddressToBeInputModel is not null)
-						{
-							<InputSelect @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency" class="form-control" required>
-								<option></option>
-								<option value="@AddressModel.PaymentFrequency.Annual" onselect="@(() => TogglePaymentFrequencyAnnual)">Annual</option>
-								<option value="@AddressModel.PaymentFrequency.SemiAnnual" onselect="@(() => TogglePaymentFrequencySemiAnnual)">Semi-Annual</option>
-								<option value="@AddressModel.PaymentFrequency.Quarterly" onselect="@(() => TogglePaymentFrequencyQuarterly)">Quarterly</option>
-								<option value="@AddressModel.PaymentFrequency.Other" onselect="@(() => TogglePaymentFrequencyOther)">Other</option>
-							</InputSelect>
-						}
-					</div>
+					<PaymentAmountField />
+					<PaymentFrequencyField />
+
 					@if (AddressToBeInputModel is not null && paymentFrequencyAnnual)
 					{
 						<div class="col gy-3">

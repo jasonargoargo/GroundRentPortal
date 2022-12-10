@@ -1,0 +1,53 @@
+﻿@using DataLibrary.Models
+@namespace GroundRentPortal.UI.Pages.ProcessAddressComponents
+
+<div class="col gy-3">
+	<label>Payment Frequency</label>
+	@if (AddressToBeInputModel is not null)
+	{
+		<InputSelect @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency" class="form-control" required>
+			<option></option>
+			<option value="@AddressModel.PaymentFrequency.Annual" @onselect="@TogglePaymentFrequencyAnnual">Annual</option>
+			<option value="@AddressModel.PaymentFrequency.SemiAnnual" @onselect="@TogglePaymentFrequencySemiAnnual">Semi-Annual</option>
+			<option value="@AddressModel.PaymentFrequency.Quarterly" @onselect="@TogglePaymentFrequencyQuarterly">Quarterly</option>
+			<option value="@AddressModel.PaymentFrequency.Other" @onselect="TogglePaymentFrequencyOther">Other</option>
+		</InputSelect>
+	}
+</div>
+
+@code {
+	[Parameter]
+	public AddressModel? AddressToBeInputModel { get; set; }
+
+	private void TogglePaymentFrequencyAnnual()
+	{
+		paymentFrequencyAnnual = true;
+		paymentFrequencySemiAnnual = false;
+		paymentFrequencyQuarterly = false;
+		paymentFrequencyOther = false;
+	}
+
+	private void TogglePaymentFrequencySemiAnnual()
+	{
+		paymentFrequencyAnnual = false;
+		paymentFrequencySemiAnnual = true;
+		paymentFrequencyQuarterly = false;
+		paymentFrequencyOther = false;
+	}
+
+	private void TogglePaymentFrequencyQuarterly()
+	{
+		paymentFrequencyAnnual = false;
+		paymentFrequencySemiAnnual = false;
+		paymentFrequencyQuarterly = true;
+		paymentFrequencyOther = false;
+	}
+
+	private void TogglePaymentFrequencyOther()
+	{
+		paymentFrequencyAnnual = false;
+		paymentFrequencySemiAnnual = false;
+		paymentFrequencyQuarterly = false;
+		paymentFrequencyOther = true;
+	}
+}
