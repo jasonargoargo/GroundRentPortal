@@ -1,12 +1,13 @@
 ﻿@using DataLibrary.DbAccess
 @using DataLibrary.DbServices
 @using DataLibrary.Models
-@using GroundRentPortal.UI.Pages.ProcessAddressComponents
+@using UI.Pages.ProcessAddressComponents
 @inject IDataContext dataContext
 @inject IGroundRentPortalDataServiceFactory testDataServiceFactory
+@inject ILogger<ProcessAddress> logger
 @attribute [Authorize]
 @page "/processAddress"
-@namespace GroundRentPortal.UI.Pages
+@namespace UI.Pages
 
 @if (userState is not null)
 {
@@ -24,8 +25,8 @@
 						</div>
 					</div>
 
-					<PaymentAmountField />
-					<PaymentFrequencyField />
+					<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
+					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
 
 					@if (AddressToBeInputModel is not null && paymentFrequencyAnnual)
 					{
@@ -74,7 +75,7 @@
 					<div class="row">
 						<div class="col gy-3">
 							<p>Is data legible?</p>
-							<InputRadioGroup @bind-Value="isLegibleRadio" class="form-control" onselect="@(() => IsLegibleRadioSelect)" required>
+							<InputRadioGroup @bind-Value="isLegibleRadio" class="form-control" @onselect="@IsLegibleRadioSelect" required>
 								<InputRadio Value="IsLegibleRadio.Yes">Yes</InputRadio>
 								<InputRadio Value="IsLegibleRadio.No">No</InputRadio>
 							</InputRadioGroup>
@@ -125,7 +126,7 @@ else
 	private List<AddressModel> AddressList = new();
 
 
-	[Parameter] 
+	[Parameter]
 	public EventCallback AddressProcessed { get; set; }
 	private int UnprocessedAddressListAmount { get; set; } = 100;
 	private int UnverifiedAddressListAmount;
@@ -142,45 +143,61 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		if(authenticationState is not null)
+		try
 		{
-			userState = await authenticationState;	
-		}
+			if (authenticationState is not null)
+			{
+				userState = await authenticationState;
+			}
 
-		if(AddressToBeInputModel is not null)
+			if (AddressToBeInputModel is not null)
+			{
+				editContext = new(AddressToBeInputModel);
+			}
+
+			if (editContext is not null)
+			{
+				editContext.OnFieldChanged += EditContextPaymentFrequencyOnFieldChanged;
+				validationMessageStore = new(editContext);
+				editContext.OnValidationRequested += (s, e) => validationMessageStore.Clear();
+				editContext.NotifyValidationStateChanged();
+				validationMessageStore.Clear();
+			}
+
+			CalculateListAmounts();
+			await LoadAddressList();
+			addressesLoaded = true;
+			StateHasChanged();
+		}
+		catch (Exception ex)
 		{
-			editContext = new(AddressToBeInputModel);
+			logger.LogError($"Exception thrown during initilaztion {ex.Message}");
 		}
-
-		if(editContext is not null)
-		{
-			editContext.OnFieldChanged += EditContextPaymentFrequencyOnFieldChanged;
-			validationMessageStore = new(editContext);
-			editContext.OnValidationRequested += (s, e) => validationMessageStore.Clear();
-			editContext.NotifyValidationStateChanged();
-			validationMessageStore.Clear();
-		}
-
-		CalculateListAmounts();
-		await LoadAddressList();
-		addressesLoaded = true;	
-		StateHasChanged();
 	}
 
 	protected override Task OnParametersSetAsync()
 	{
-		if (AddressToBeInputModel is null)
+		try
 		{
-			AddressToBeInputModel = new();
-		}
+			if (AddressToBeInputModel is null)
+			{
+				AddressToBeInputModel = new();
+			}
 
-		if(editContext is not null)
+			if (editContext is not null)
+			{
+				editContext = new(AddressToBeInputModel);
+				editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
+				editContext.OnValidationRequested += (s, e) => validationMessageStore?.Clear();
+				validationMessageStore = new ValidationMessageStore(editContext);
+			}
+
+
+		}
+		catch (Exception ex)
 		{
-			editContext = new(AddressToBeInputModel);
-			editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
-			editContext.OnValidationRequested += (s, e) => validationMessageStore?.Clear();
-			validationMessageStore = new ValidationMessageStore(editContext);
-		}		
+			logger.LogError($"Exception throwin during OnParametersSetAsync life cycle {ex.Message}");
+		}
 
 		return Task.CompletedTask;
 	}
@@ -315,10 +332,10 @@ else
 			AddressToBeInputModel.IsLegible = false;
 		}
 
-		if(editContext is not null) 
+		if (editContext is not null)
 		{
 			editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
-		}		
+		}
 	}
 
 	private void NotLegibleTypeSelect()
@@ -328,10 +345,10 @@ else
 			AddressToBeInputModel.NotLegibleType = AddressModel.NotLegible.Other;
 		}
 
-		if(editContext is not null)
+		if (editContext is not null)
 		{
 			editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
-		}		
+		}
 	}
 
 	private void EditContextAddressOnFieldChanged(object sender, FieldChangedEventArgs e)
