@@ -3,7 +3,7 @@ using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using DataLibrary.DbAccess;
 using DataLibrary.DbServices;
-using DataLibrary.Services.SDATScrapers;
+using MudBlazor.Services;
 
 namespace UI;
 
@@ -33,6 +33,7 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor()
             .AddMicrosoftIdentityConsentHandler();
+        builder.Services.AddMudServices();
 
         var app = builder.Build();
 

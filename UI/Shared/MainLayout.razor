@@ -3,18 +3,22 @@
 <PageTitle>Ground Rent Portal</PageTitle>
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+	<div class="sidebar">
+		<NavMenu />
+	</div>
 
-    <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">Instructions</a>
-        </div>
+	<main>
+		<div class="top-row px-4 auth">
+			<LoginDisplay />
+			<a href="https://docs.microsoft.com/aspnet/" target="_blank">Instructions</a>
+		</div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+		<article class="content px-4">
+			@Body
+		</article>
+	</main>
+
+	<MudThemeProvider />
+	<MudDialogProvider />
+	<MudSnackbarProvider />
 </div>
