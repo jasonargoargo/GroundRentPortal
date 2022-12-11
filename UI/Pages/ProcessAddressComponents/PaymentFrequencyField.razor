@@ -6,7 +6,7 @@
 	@if (AddressToBeInputModel is not null)
 	{
 		<InputSelect @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency" class="form-control" style="max-width: fit-content;" required>
-			<option></option>
+			<option value="@AddressModel.PaymentFrequency.Blank"></option>
 			<option value="@AddressModel.PaymentFrequency.Annual" @onselect="@TogglePaymentFrequencyAnnual">Annual</option>
 			<option value="@AddressModel.PaymentFrequency.SemiAnnual" @onselect="@TogglePaymentFrequencySemiAnnual">Semi-Annual</option>
 			<option value="@AddressModel.PaymentFrequency.Quarterly" @onselect="@TogglePaymentFrequencyQuarterly">Quarterly</option>
@@ -22,6 +22,16 @@
 	private bool paymentFrequencySemiAnnual { get; set; }
 	private bool paymentFrequencyQuarterly { get; set; }
 	private bool paymentFrequencyOther { get; set; }
+
+	protected override void OnInitialized()
+	{
+		if(AddressToBeInputModel is not null)
+		{
+			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
+		}
+		
+		base.OnInitialized();
+	}
 
 	private void TogglePaymentFrequencyAnnual()
 	{

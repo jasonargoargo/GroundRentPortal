@@ -21,7 +21,7 @@ namespace DataLibrary.Models
         public enum NotLegible { PaymentAmount, PaymentDate, PaymentFrequency, Other }
         public NotLegible NotLegibleType { get; set; } = new();
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
-        public enum PaymentFrequency { Annual, SemiAnnual, Quarterly, Other }
+        public enum PaymentFrequency { Annual, SemiAnnual, Quarterly, Other, Blank }
         [Required] public PaymentFrequency GroundRentPaymentFrequency { get; set; }
         [DataType(DataType.Date)] public DateTime? PaymentDateAnnual { get; set; }
         [DataType(DataType.Date)] public DateTime? PaymentDateSemiAnnual1 { get; set; }
