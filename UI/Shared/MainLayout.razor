@@ -1,13 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
 <PageTitle>Ground Rent Portal</PageTitle>
-<MudThemeProvider @bind-IsDarkMode="_isDarkMode" Theme="_theme" />
+<MudThemeProvider @bind-IsDarkMode="_isDarkMode" Theme="MainTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-	<MudAppBar>
-		Ground Rent Portal
+	<MudAppBar Color="Color.Primary">
+		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>		
 	</MudAppBar>
 	<MudDrawer Open="true">
 		<MudLink Class="nav-link" Href="">
@@ -24,9 +24,17 @@
 </MudLayout>
 
 @code {
-	private MudTheme _theme = new();
 	private bool _isDarkMode;
 	private MudThemeProvider? _mudThemeProvider;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && _mudThemeProvider is not null)
+		{
+			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
+			StateHasChanged();
+		}
+	}
 
 	MudTheme MainTheme = new MudTheme()
 		{
@@ -42,16 +50,8 @@
 			},
 			LayoutProperties = new LayoutProperties()
 			{
-
+				DrawerWidthLeft = "260px",
+				DrawerWidthRight = "300px"
 			}
-		};
-
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender && _mudThemeProvider is not null)
-		{
-			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
-			StateHasChanged();
-		}
-	}
+		};	
 }
