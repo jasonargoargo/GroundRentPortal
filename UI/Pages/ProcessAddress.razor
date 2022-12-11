@@ -76,7 +76,9 @@
 						<div class="col gy-3">
 							<p>Is data legible?</p>
 							<InputRadioGroup @bind-Value="isLegibleRadio" class="form-control" @onselect="@IsLegibleRadioSelect" required>
+								<p>Yes</p>
 								<InputRadio Value="IsLegibleRadio.Yes">Yes</InputRadio>
+								<p>No</p>
 								<InputRadio Value="IsLegibleRadio.No">No</InputRadio>
 							</InputRadioGroup>
 						</div>
@@ -145,6 +147,8 @@ else
 	{
 		try
 		{
+			AddressToBeInputModel = new();
+
 			if (authenticationState is not null)
 			{
 				userState = await authenticationState;
