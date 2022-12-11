@@ -16,9 +16,8 @@
 		<p>Addresses are loaded.</p>
 		<div class="container">
 			<div hidden="@addressSubmitted">
-				<EditForm EditContext="editContext" OnValidSubmit="HandleOnSubmit">
+				<EditForm EditContext="editContext" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
 					<DataAnnotationsValidator />
-					<ValidationSummary />
 					<div class="row">
 						<div class="col gy-3">
 							<label>@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</label>
@@ -26,13 +25,23 @@
 					</div>
 
 					<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
-					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />					
-					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" EditContext="editContext" />					
+					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
+					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" EditContext="editContext" />
 					<div class="row">
 						<div class="col gy-3">
-							<button class="btn btn-primary" type="submit" disabled="@isSubmitting">Submit</button>
+							<MudButton Variant="Variant.Filled" Class="btn btn-primary" ButtonType="ButtonType.Submit" Disabled="@isSubmitting">Submit</MudButton>
 						</div>
 					</div>
+					@if (isValidationSuccessful)
+					{
+						<MudText Color="Color.Success" Typo="Typo.body2">Successful!</MudText>
+					}
+					else
+					{
+						<MudText Color="Color.Error" Typo="Typo.body2">
+							<ValidationSummary />
+						</MudText>
+					}
 				</EditForm>
 			</div>
 		</div>
@@ -50,6 +59,7 @@ else
 @code {
 	private EditContext? editContext;
 	private ValidationMessageStore? validationMessageStore;
+	private bool isValidationSuccessful { get; set; }
 	[CascadingParameter]
 	private Task<AuthenticationState>? authenticationState { get; set; }
 	private AuthenticationState? userState;
@@ -185,10 +195,15 @@ else
 		return UnverifiedAddressList;
 	}
 
+	private void HandleInvalidSubmit() =>
+		isValidationSuccessful = false;
+
 	private async Task HandleOnSubmit()
 	{
+		isValidationSuccessful = true;
+
 		if (isSubmitting)
-		{
+		{			
 			return;
 		}
 

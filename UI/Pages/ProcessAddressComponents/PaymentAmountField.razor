@@ -6,7 +6,7 @@
 	@if (AddressToBeInputModel is not null)
 	{
 		<MudNumericField T="decimal?" Format="C" Label="Currency Amount" HelperText="Shift + Mouse wheel increment" 
-			Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentAmount" Class="form-control" 
+			Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentAmount" Min="0" Class="form-control" 
 			Style="max-width: fit-content;" InvertMouseWheel="false" Required />
 	}
 </div>

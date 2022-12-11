@@ -52,29 +52,4 @@
 @code {
 	[Parameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
-	private bool paymentFrequencyAnnual { get; set; }
-	private bool paymentFrequencySemiAnnual { get; set; }
-	private bool paymentFrequencyQuarterly { get; set; }
-	private bool paymentFrequencyOther { get; set; }
-
-	protected override Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (AddressToBeInputModel is not null)
-		{
-			paymentFrequencyAnnual = AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual;
-			paymentFrequencySemiAnnual = AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual;
-		}
-		return base.OnAfterRenderAsync(firstRender);
-	}
-
-	protected override void OnParametersSet()
-	{
-		if (AddressToBeInputModel is not null)
-		{
-			paymentFrequencyAnnual = AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual;	
-			paymentFrequencySemiAnnual = AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual;
-		}
-		
-		base.OnParametersSet();
-	}
 }
