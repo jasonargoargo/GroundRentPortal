@@ -26,52 +26,7 @@
 					</div>
 
 					<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
-					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
-
-					@if (AddressToBeInputModel is not null && paymentFrequencyAnnual)
-					{
-						<div class="col gy-3">
-							<label>Annual Date</label>
-							<InputDate @bind-Value="AddressToBeInputModel.PaymentDateAnnual" class="form-control" bind:event="onselect"></InputDate>
-						</div>
-					}
-					@if (AddressToBeInputModel is not null && paymentFrequencySemiAnnual)
-					{
-						<div class="col gy-3">
-							<label>Semi-Annual 1 Date</label>
-							<InputDate @bind-Value="AddressToBeInputModel.PaymentDateSemiAnnual1" class="form-control"></InputDate>
-						</div>
-						<div class="col gy-3">
-							<label>Semi-Annual 2 Date</label>
-							<InputDate @bind-Value="AddressToBeInputModel.PaymentDateSemiAnnual2" class="form-control"></InputDate>
-						</div>
-					}
-					@if (AddressToBeInputModel is not null && paymentFrequencyQuarterly)
-					{
-						<div class="col gy-3">
-							<label>Quarterly 1 Date</label>
-							<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly1" class="form-control"></InputDate>
-						</div>
-						<div class="col gy-3">
-							<label>Quarterly 2 Date</label>
-							<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly2" class="form-control"></InputDate>
-						</div>
-						<div class="col gy-3">
-							<label>Quarterly 3 Date</label>
-							<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly3" class="form-control"></InputDate>
-						</div>
-						<div class="col gy-3">
-							<label>Quarterly 4 Date</label>
-							<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly4" class="form-control"></InputDate>
-						</div>
-					}
-					@if (AddressToBeInputModel is not null && paymentFrequencyOther)
-					{
-						<div class="col gy-3">
-							<label>Other Date</label>
-							<InputText @bind-Value="AddressToBeInputModel.PaymentDateOther" class="form-control"></InputText>
-						</div>
-					}
+					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />					
 					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" EditContext="editContext" />					
 					<div class="row">
 						<div class="col gy-3">

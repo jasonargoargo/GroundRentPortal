@@ -1,0 +1,80 @@
+﻿@using DataLibrary.Models
+@namespace UI.Pages.ProcessAddressComponents
+
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
+{
+	<div class="col gy-3">
+		<label>Annual Date</label>
+		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateAnnual" class="form-control" bind:event="onselect"></InputDate>
+	</div>
+}
+
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
+{
+	<div class="col gy-3">
+		<label>Semi-Annual 1 Date</label>
+		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateSemiAnnual1" class="form-control"></InputDate>
+	</div>
+	<div class="col gy-3">
+		<label>Semi-Annual 2 Date</label>
+		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateSemiAnnual2" class="form-control"></InputDate>
+	</div>
+}
+
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
+{
+	<div class="col gy-3">
+		<label>Quarterly 1 Date</label>
+		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly1" class="form-control"></InputDate>
+	</div>
+	<div class="col gy-3">
+		<label>Quarterly 2 Date</label>
+		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly2" class="form-control"></InputDate>
+	</div>
+	<div class="col gy-3">
+		<label>Quarterly 3 Date</label>
+		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly3" class="form-control"></InputDate>
+	</div>
+	<div class="col gy-3">
+		<label>Quarterly 4 Date</label>
+		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly4" class="form-control"></InputDate>
+	</div>
+}
+
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
+{
+	<div class="col gy-3">
+		<label>Other Date</label>
+		<InputText @bind-Value="AddressToBeInputModel.PaymentDateOther" class="form-control"></InputText>
+	</div>
+}
+
+@code {
+	[Parameter]
+	public AddressModel? AddressToBeInputModel { get; set; }
+	private bool paymentFrequencyAnnual { get; set; }
+	private bool paymentFrequencySemiAnnual { get; set; }
+	private bool paymentFrequencyQuarterly { get; set; }
+	private bool paymentFrequencyOther { get; set; }
+
+	protected override Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (AddressToBeInputModel is not null)
+		{
+			paymentFrequencyAnnual = AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual;
+			paymentFrequencySemiAnnual = AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual;
+		}
+		return base.OnAfterRenderAsync(firstRender);
+	}
+
+	protected override void OnParametersSet()
+	{
+		if (AddressToBeInputModel is not null)
+		{
+			paymentFrequencyAnnual = AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual;	
+			paymentFrequencySemiAnnual = AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual;
+		}
+		
+		base.OnParametersSet();
+	}
+}
