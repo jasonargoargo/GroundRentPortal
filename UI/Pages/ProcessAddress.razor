@@ -72,30 +72,7 @@
 							<InputText @bind-Value="AddressToBeInputModel.PaymentDateOther" class="form-control"></InputText>
 						</div>
 					}
-					<div class="row">
-						<div class="col gy-3">
-							<p>Is data legible?</p>
-							<InputRadioGroup @bind-Value="isLegibleRadio" class="form-control" @onselect="@IsLegibleRadioSelect" required>
-								<p>Yes</p>
-								<InputRadio Value="IsLegibleRadio.Yes">Yes</InputRadio>
-								<p>No</p>
-								<InputRadio Value="IsLegibleRadio.No">No</InputRadio>
-							</InputRadioGroup>
-						</div>
-					</div>
-					@if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
-					{
-						<div class="row">
-							<div class="col gy-3">
-								<InputSelect @bind-Value="AddressToBeInputModel.NotLegibleType" class="form-select" onselect="">
-									@foreach (var option in Enum.GetValues(typeof(AddressModel.NotLegible)))
-									{
-										<option value="@option">@option</option>
-									}
-								</InputSelect>
-							</div>
-						</div>
-					}
+					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" EditContext="editContext" />					
 					<div class="row">
 						<div class="col gy-3">
 							<button class="btn btn-primary" type="submit" disabled="@isSubmitting">Submit</button>

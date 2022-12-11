@@ -5,7 +5,7 @@
 	<label>Payment Frequency</label>
 	@if (AddressToBeInputModel is not null)
 	{
-		<InputSelect @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency" class="form-control" required>
+		<InputSelect @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency" class="form-control" style="max-width: fit-content;" required>
 			<option></option>
 			<option value="@AddressModel.PaymentFrequency.Annual" @onselect="@TogglePaymentFrequencyAnnual">Annual</option>
 			<option value="@AddressModel.PaymentFrequency.SemiAnnual" @onselect="@TogglePaymentFrequencySemiAnnual">Semi-Annual</option>
