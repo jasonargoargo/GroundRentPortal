@@ -1,24 +1,24 @@
 ﻿@inherits LayoutComponentBase
 
 <PageTitle>Ground Rent Portal</PageTitle>
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-<div class="page">
-	<div class="sidebar">
-		<NavMenu />
-	</div>
-
-	<main>
-		<div class="top-row px-4 auth">
-			<LoginDisplay />
-			<a href="https://docs.microsoft.com/aspnet/" target="_blank">Instructions</a>
-		</div>
-
-		<article class="content px-4">
-			@Body
-		</article>
-	</main>
-
-	<MudThemeProvider />
-	<MudDialogProvider />
-	<MudSnackbarProvider />
-</div>
+<MudLayout>
+	<MudAppBar>
+		Ground Rent Portal
+	</MudAppBar>
+	<MudDrawer Open="true">
+		<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+			<span class="oi oi-home" aria-hidden="true"></span> Home
+		</NavLink>
+		<NavLink class="nav-link" href="processAddress">
+			<span class="oi oi-home" aria-hidden="true"></span> Process Address
+		</NavLink>
+	</MudDrawer>
+	<MudMainContent>
+		<LoginDisplay />
+		@Body
+	</MudMainContent>
+</MudLayout>
