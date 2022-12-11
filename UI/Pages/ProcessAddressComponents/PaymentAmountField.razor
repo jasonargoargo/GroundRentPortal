@@ -1,0 +1,15 @@
+﻿@using DataLibrary.Models;
+@namespace UI.Pages.ProcessAddressComponents
+
+<div class="col gy-3">
+	<label>Payment Amount</label>
+	@if (AddressToBeInputModel is not null)
+	{
+		<InputNumber @bind-Value="AddressToBeInputModel.PaymentAmount" class="form-control" style="max-width: fit-content;" required />
+	}
+</div>
+
+@code {
+	[Parameter]
+	public AddressModel? AddressToBeInputModel { get; set; }
+}

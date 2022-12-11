@@ -1,0 +1,62 @@
+﻿@using DataLibrary.Models
+@namespace UI.Pages.ProcessAddressComponents
+
+<div class="row">
+	<div class="col gy-3">
+		<p>Is data legible?</p>
+		<InputRadioGroup @bind-Value="isLegibleRadio" class="form-control" @onselect="IsLegibleRadioSelect" required>
+			<p>Yes</p>
+			<InputRadio Value="IsLegibleRadio.Yes">Yes</InputRadio>
+			<p>No</p>
+			<InputRadio Value="IsLegibleRadio.No">No</InputRadio>
+		</InputRadioGroup>
+	</div>
+</div>
+
+@if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
+{
+	<div class="row">
+		<div class="col gy-3">
+			<InputSelect @bind-Value="AddressToBeInputModel.NotLegibleType" class="form-select" onselect="">
+				@foreach (var option in Enum.GetValues(typeof(AddressModel.NotLegible)))
+				{
+					<option value="@option">@option</option>
+				}
+			</InputSelect>
+		</div>
+	</div>
+}
+
+@code {
+	[Parameter]
+	public AddressModel? AddressToBeInputModel { get; set; }
+	[Parameter]
+	public EditContext? EditContext { get; set; }
+	[Parameter]
+	public EventCallback AddressProcessed { get; set; }
+	private enum IsLegibleRadio { Yes, No }
+	private IsLegibleRadio isLegibleRadio;
+
+	private void IsLegibleRadioSelect()
+	{
+		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.Yes)
+		{
+			AddressToBeInputModel.IsLegible = true;
+		}
+
+		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
+		{
+			AddressToBeInputModel.IsLegible = false;
+		}
+
+		if (EditContext is not null)
+		{
+			EditContext.OnFieldChanged += EditContextAddressOnFieldChanged;
+		}
+	}
+
+	private void EditContextAddressOnFieldChanged(object sender, FieldChangedEventArgs e)
+	{
+		AddressProcessed.InvokeAsync();
+	}
+}
