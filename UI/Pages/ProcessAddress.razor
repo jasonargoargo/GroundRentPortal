@@ -18,6 +18,9 @@
 			<div hidden="@addressSubmitted">
 				<EditForm EditContext="editContext" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
 					<DataAnnotationsValidator />
+					<MudText Color="Color.Error" Typo="Typo.body2">
+						<ValidationSummary />
+					</MudText>
 					<div class="row">
 						<div class="col gy-3">
 							<label>@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</label>
@@ -35,13 +38,7 @@
 					@if (isValidationSuccessful)
 					{
 						<MudText Color="Color.Success" Typo="Typo.body2">Successful!</MudText>
-					}
-					else
-					{
-						<MudText Color="Color.Error" Typo="Typo.body2">
-							<ValidationSummary />
-						</MudText>
-					}
+					}					
 				</EditForm>
 			</div>
 		</div>
@@ -119,33 +116,6 @@ else
 		{
 			logger.LogError($"Exception thrown during initilaztion {ex.Message}");
 		}
-	}
-
-	protected override Task OnParametersSetAsync()
-	{
-		try
-		{
-			if (AddressToBeInputModel is null)
-			{
-				AddressToBeInputModel = new();
-			}
-
-			if (editContext is not null)
-			{
-				editContext = new(AddressToBeInputModel);
-				editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
-				editContext.OnValidationRequested += (s, e) => validationMessageStore?.Clear();
-				validationMessageStore = new ValidationMessageStore(editContext);
-			}
-
-
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"Exception throwin during OnParametersSetAsync life cycle {ex.Message}");
-		}
-
-		return Task.CompletedTask;
 	}
 
 	private void CalculateListAmounts()
