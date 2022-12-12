@@ -18,6 +18,14 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
+.theme-container {
+    position: relative;
+    left: 78%;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+}
+
 .content {
     padding-top: 1.1rem;
 }

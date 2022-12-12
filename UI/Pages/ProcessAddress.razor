@@ -30,11 +30,7 @@
 					<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
 					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
 					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" EditContext="editContext" />
-					<div class="row">
-						<div class="col gy-3">
-							<MudButton Variant="Variant.Filled" Class="btn btn-primary" ButtonType="ButtonType.Submit" Disabled="@isSubmitting">Submit</MudButton>
-						</div>
-					</div>
+					<FormSubmitButton />
 					@if (isValidationSuccessful)
 					{
 						<MudText Color="Color.Success" Typo="Typo.body2">Successful!</MudText>

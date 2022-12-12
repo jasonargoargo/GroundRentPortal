@@ -7,7 +7,11 @@
 
 <MudLayout>
 	<MudAppBar Color="Color.Primary">
-		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>		
+		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>
+		<div class="theme-container">
+			<MudText Typo="Typo.body2">Dark Mode:</MudText>
+			<MudSwitch @bind-Checked="_isDarkMode" Color="Color.Primary" />
+		</div>
 	</MudAppBar>
 	<MudDrawer Open="true">
 		<MudLink Class="nav-link" Href="">
@@ -40,18 +44,18 @@
 		{
 			Palette = new Palette()
 			{
-				Primary = Colors.Grey.Default,
-				Secondary = Colors.Shades.White,
+				Primary = "#be894a",
+				Secondary = "#4d4d4d",
 			},
 			PaletteDark = new PaletteDark()
 			{
-				Primary = Colors.Grey.Darken2,
-				Secondary = Colors.Shades.White,
-			},
+				Primary = "#4d4d4d",
+				Secondary = "#000000",
+			}, 
 			LayoutProperties = new LayoutProperties()
 			{
 				DrawerWidthLeft = "260px",
 				DrawerWidthRight = "300px"
 			}
-		};	
+		};
 }

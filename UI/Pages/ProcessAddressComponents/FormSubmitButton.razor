@@ -1,0 +1,11 @@
+﻿@namespace UI.Pages.ProcessAddressComponents
+
+<div class="row">
+	<div class="col gy-3">
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn btn-primary" ButtonType="ButtonType.Submit" Disabled="@isSubmitting">Submit</MudButton>
+	</div>
+</div>
+
+@code {
+	private bool isSubmitting { get; set; } = false;
+}
