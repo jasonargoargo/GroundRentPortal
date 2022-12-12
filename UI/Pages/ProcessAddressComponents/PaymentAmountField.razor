@@ -3,11 +3,12 @@
 @namespace UI.Pages.ProcessAddressComponents
 
 <div class="col gy-3">
-	<label>Payment Amount USD</label>
+	<label>Payment Amount $</label>
 	@if (AddressToBeInputModel is not null)
 	{
-		<MudNumericField T="decimal?" Format="C" Culture="CultureInfo.CurrentCulture" Label="Currency Amount" HelperText="Shift + Mouse wheel increment"
-					 Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentAmount" Min="0" Class="form-control" 
+		<MudNumericField T="decimal?" Culture="CultureInfo.CurrentCulture" Label=@($"Currency Amount ${AddressToBeInputModel.PaymentAmount}") HelperText="Shift + Mouse wheel increment"
+					 Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentAmount"
+					 For="@(() => AddressToBeInputModel.PaymentAmount)" Min="0" Class="form-control" Step="(decimal?)0.1"
 			Style="max-width: fit-content;" InvertMouseWheel="false" Required />
 	}
 </div>

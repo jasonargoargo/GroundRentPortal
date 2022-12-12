@@ -16,7 +16,7 @@
 		<p>Addresses are loaded.</p>
 		<div class="container">
 			<div hidden="@addressSubmitted">
-				<EditForm EditContext="editContext" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+				<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
 					<DataAnnotationsValidator />
 					<MudText Color="Color.Error" Typo="Typo.body2">
 						<ValidationSummary />
