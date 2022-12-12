@@ -3,49 +3,49 @@
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
 {
-	<div class="col gy-3">
+	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Annual Date</label>
-		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateAnnual" class="form-control" bind:event="onselect"></InputDate>
+		<MudDatePicker @bind-Value="AddressToBeInputModel.PaymentDateAnnual" Class="form-control" bind:event="onselect"></MudDatePicker>
 	</div>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
 {
-	<div class="col gy-3">
+	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Semi-Annual 1 Date</label>
-		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateSemiAnnual1" class="form-control"></InputDate>
+		<MudDatePicker @bind-Value="AddressToBeInputModel.PaymentDateSemiAnnual1" Class="form-control"></MudDatePicker>
 	</div>
-	<div class="col gy-3">
+	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Semi-Annual 2 Date</label>
-		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateSemiAnnual2" class="form-control"></InputDate>
+		<MudDatePicker @bind-Value="AddressToBeInputModel.PaymentDateSemiAnnual2" Class="form-control"></MudDatePicker>
 	</div>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
 {
-	<div class="col gy-3">
+	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Quarterly 1 Date</label>
-		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly1" class="form-control"></InputDate>
+		<MudDatePicker @bind-Value="AddressToBeInputModel.PaymentDateQuarterly1" Class="form-control"></MudDatePicker>
 	</div>
-	<div class="col gy-3">
+	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Quarterly 2 Date</label>
-		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly2" class="form-control"></InputDate>
+		<MudDatePicker @bind-Value="AddressToBeInputModel.PaymentDateQuarterly2" Class="form-control"></MudDatePicker>
 	</div>
-	<div class="col gy-3">
+	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Quarterly 3 Date</label>
-		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly3" class="form-control"></InputDate>
+		<MudDatePicker @bind-Value="AddressToBeInputModel.PaymentDateQuarterly3" Class="form-control"></MudDatePicker>
 	</div>
-	<div class="col gy-3">
+	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Quarterly 4 Date</label>
-		<InputDate @bind-Value="AddressToBeInputModel.PaymentDateQuarterly4" class="form-control"></InputDate>
+		<MudDatePicker @bind-Value="AddressToBeInputModel.PaymentDateQuarterly4" Class="form-control"></MudDatePicker>
 	</div>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
 {
-	<div class="col gy-3">
+	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Other Date</label>
-		<InputText @bind-Value="AddressToBeInputModel.PaymentDateOther" class="form-control"></InputText>
+		<MudInputString Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentDateOther" Class="form-control" />
 	</div>
 }
 

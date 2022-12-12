@@ -17,12 +17,12 @@
 {
 	<div class="row">
 		<div class="col gy-3">
-			<InputSelect @bind-Value="AddressToBeInputModel.NotLegibleType" class="form-select" onselect="">
-				@foreach (var option in Enum.GetValues(typeof(AddressModel.NotLegible)))
+			<MudSelect T="AddressModel.NotLegible" Variant="Variant.Filled" Label="What information is not illegible?" @bind-Value="AddressToBeInputModel.NotLegibleType" Class="form-select" onselect="">
+				@foreach (AddressModel.NotLegible option in Enum.GetValues(typeof(AddressModel.NotLegible)))
 				{
-					<option value="@option">@option</option>
+					<MudSelectItem T="AddressModel.NotLegible" Value="@option">@option</MudSelectItem>
 				}
-			</InputSelect>
+			</MudSelect>
 		</div>
 	</div>
 }

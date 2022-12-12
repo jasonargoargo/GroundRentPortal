@@ -5,13 +5,13 @@
 	<label>Payment Frequency</label>
 	@if (AddressToBeInputModel is not null)
 	{
-		<InputSelect @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency" class="form-control" style="max-width: fit-content;" required>
-			<option value="@AddressModel.PaymentFrequency.Blank"></option>
-			<option value="@AddressModel.PaymentFrequency.Annual" @onselect="TogglePaymentFrequencyAnnual">Annual</option>
-			<option value="@AddressModel.PaymentFrequency.SemiAnnual" @onselect="TogglePaymentFrequencySemiAnnual">Semi-Annual</option>
-			<option value="@AddressModel.PaymentFrequency.Quarterly" @onselect="TogglePaymentFrequencyQuarterly">Quarterly</option>
-			<option value="@AddressModel.PaymentFrequency.Other" @onselect="TogglePaymentFrequencyOther">Other</option>
-		</InputSelect>
+		<MudSelect Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency" class="form-control" style="max-width: fit-content;" required>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.Blank"></MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.Annual" @onselect="TogglePaymentFrequencyAnnual">Annual</MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.SemiAnnual" @onselect="TogglePaymentFrequencySemiAnnual">Semi-Annual</MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.Quarterly" @onselect="TogglePaymentFrequencyQuarterly">Quarterly</MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.Other" @onselect="TogglePaymentFrequencyOther">Other</MudSelectItem>
+		</MudSelect>
 	}
 </div>
 <DisplayDatesFrequency AddressToBeInputModel="AddressToBeInputModel" />
