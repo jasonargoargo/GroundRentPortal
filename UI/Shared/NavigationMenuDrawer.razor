@@ -1,14 +1,13 @@
 ﻿@namespace UI.Shared
 
 <MudDrawer Open="IsDrawerOpen">
-	<MudText Class="ml-4" Typo="Typo.body2">Dark Mode:</MudText>
-	<MudSwitch Class="ml-4" CheckedChanged="OnIsDarkTheme" Color="Color.Secondary" />
-	<MudLink Color="Color.Primary" Class="nav-link" Href="">
-		Home
-	</MudLink>
-	<MudLink Color="Color.Primary" Class="nav-link" Href="processAddress">
-		Process Address
-	</MudLink>	
+	<div class="navigation-container">
+		<LoginDisplay />
+		<MudText Class="ml-2" Typo="Typo.body2">Dark Mode:</MudText>
+		<MudSwitch Class="ml-2" CheckedChanged="OnIsDarkTheme" Color="Color.Secondary" />
+		<MudButton Class="ml-2" StartIcon="@Icons.Filled.Home" Color="Color.Primary" Href="/">Home</MudButton>
+		<MudButton Class="ml-2" StartIcon="@Icons.Filled.LocationOn" Color="Color.Primary" Href="processaddress">Process Address</MudButton>		
+	</div>
 </MudDrawer>
 
 @code {

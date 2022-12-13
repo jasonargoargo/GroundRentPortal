@@ -18,12 +18,11 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
-.theme-container {
-    position: relative;
-    left: 78%;
+.navigation-container {
     display: flex;
     flex-direction: column;
-    align-items: baseline;
+    align-items: flex-start;
+    gap: 0.5em;
 }
 
 .content {
