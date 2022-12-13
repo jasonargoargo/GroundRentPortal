@@ -150,6 +150,8 @@ else
 
 		isSubmitting = true;
 		AddressModel addressToDbModel = new();
+		string differencesNotesToDb = "";
+		// If address has already been processed, it will now be verified
 		if (AddressToBeInputModel?.IsProcessed is true)
 		{
 			addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
@@ -168,58 +170,40 @@ else
 			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel.PaymentDateQuarterly4;
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
-			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;			
+			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
 
-			AddressModel originalProcessedAddress = new();
-
-			using (var uow = dataContext.CreateUnitOfWork())
+			if (OriginalAddressModel.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency)
 			{
-				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-				originalProcessedAddress = await testDataService.ReadByAccountId(addressToDbModel.AccountId);
+				addressToDbModel.IsVerified = false;
+				addressToDbModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
 			}
-
-			if (originalProcessedAddress.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency)
+			if (OriginalAddressModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
 			{
-				if (originalProcessedAddress.PaymentDateAnnual != addressToDbModel.PaymentDateAnnual)
-				{
-					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-				}
-				if (originalProcessedAddress.PaymentDateSemiAnnual1 != addressToDbModel.PaymentDateSemiAnnual1)
-				{
-					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-				}
-				if (originalProcessedAddress.PaymentDateSemiAnnual2 != addressToDbModel.PaymentDateSemiAnnual2)
-				{
-					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-				}
-				if (originalProcessedAddress.PaymentDateQuarterly1 != addressToDbModel.PaymentDateQuarterly1)
-				{
-					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-				}
-				if (originalProcessedAddress.PaymentDateQuarterly2 != addressToDbModel.PaymentDateQuarterly2)
-				{
-					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-				}
-				if (originalProcessedAddress.PaymentDateQuarterly3 != addressToDbModel.PaymentDateQuarterly3)
-				{
-					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-				}
-				if (originalProcessedAddress.PaymentDateQuarterly4 != addressToDbModel.PaymentDateQuarterly4)
-				{
-					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-				}
-				if (originalProcessedAddress.PaymentDateOther != addressToDbModel.PaymentDateOther)
-				{
-					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-				}
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Annual Date as {OriginalAddressModel.PaymentDateAnnual}. {addressToDbModel.UserWhoVerified} input Payment Frequency Annual Date as {addressToDbModel.PaymentDateAnnual}." + Environment.NewLine;
+			}
+			if (OriginalAddressModel.PaymentDateSemiAnnual1 != addressToDbModel.PaymentDateSemiAnnual1)
+			{
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Semi-Annual1 Date as {OriginalAddressModel.PaymentDateSemiAnnual1}. {addressToDbModel.UserWhoVerified} input Payment Frequency Semi-Annual1 Date as {addressToDbModel.PaymentDateSemiAnnual1}." + Environment.NewLine;
+			}
+			if (OriginalAddressModel.PaymentDateSemiAnnual2 != addressToDbModel.PaymentDateSemiAnnual2)
+			{
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Semi-Annual2 Date as {OriginalAddressModel.PaymentDateSemiAnnual2}. {addressToDbModel.UserWhoVerified} input Payment Frequency Semi-Annual2 Date as {addressToDbModel.PaymentDateSemiAnnual2}." + Environment.NewLine;
+			}
+			if (OriginalAddressModel.PaymentDateQuarterly1 != addressToDbModel.PaymentDateQuarterly1)
+			{
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Quarterly1 Date as {OriginalAddressModel.PaymentDateQuarterly1}. {addressToDbModel.UserWhoVerified} input Payment Frequency Quarterly1 Date as {addressToDbModel.PaymentDateQuarterly1}." + Environment.NewLine;
+			}
+			if (OriginalAddressModel.PaymentDateQuarterly2 != addressToDbModel.PaymentDateQuarterly2)
+			{
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Quarterly2 Date as {OriginalAddressModel.PaymentDateQuarterly2}. {addressToDbModel.UserWhoVerified} input Payment Frequency Quarterly2 Date as {addressToDbModel.PaymentDateQuarterly2}." + Environment.NewLine;
+			}
+			if (OriginalAddressModel.PaymentDateQuarterly3 != addressToDbModel.PaymentDateQuarterly3)
+			{
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Quarterly3 Date as {OriginalAddressModel.PaymentDateQuarterly3}. {addressToDbModel.UserWhoVerified} input Payment Frequency Quarterly3 Date as {addressToDbModel.PaymentDateQuarterly3}." + Environment.NewLine;
+			}
+			if (OriginalAddressModel.PaymentDateQuarterly4 != addressToDbModel.PaymentDateQuarterly4)
+			{
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Quarterly4 Date as {OriginalAddressModel.PaymentDateQuarterly4}. {addressToDbModel.UserWhoVerified} input Payment Frequency Quarterly4 Date as {addressToDbModel.PaymentDateQuarterly4}." + Environment.NewLine;
 			}
 			if (OriginalAddressModel.IsLegible != addressToDbModel.IsLegible)
 			{
