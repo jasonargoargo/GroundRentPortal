@@ -4,6 +4,7 @@ using Microsoft.Identity.Web.UI;
 using DataLibrary.DbAccess;
 using DataLibrary.DbServices;
 using MudBlazor.Services;
+using DataLibrary.Services;
 
 namespace UI;
 
@@ -27,8 +28,7 @@ public class Program
         });
         builder.Services.AddScoped<IDataContext>(s => new DataContext(configuration.GetConnectionString("Default")));
         builder.Services.AddScoped<IGroundRentPortalDataServiceFactory, TestDataServiceFactory>();
-        //builder.Services.AddScoped<IRealPropertySearchScraper, BaltimoreCityScraper>();
-        //builder.Services.AddScoped<IRealPropertySearchScraper, BaltimoreCountyScraper>();
+        builder.Services.AddScoped<Scraper>();
 
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor()

@@ -1,9 +1,11 @@
 ﻿@using DataLibrary.DbAccess
 @using DataLibrary.DbServices
 @using DataLibrary.Models
+@using DataLibrary.Services;
 @using UI.Pages.ProcessAddressComponents
 @inject IDataContext dataContext
 @inject IGroundRentPortalDataServiceFactory testDataServiceFactory
+@inject Scraper scraper
 @inject ILogger<ProcessAddress> logger
 @inject ISnackbar snackbarNotification
 @attribute [Authorize]
@@ -75,12 +77,6 @@ else
 			}
 			await LoadAddressList();
 			addressesLoaded = true;
-			foreach (var address in AddressList)
-			{
-				AddressToBeInputModel = address;
-				OriginalAddressModel = await LoadOriginalProcessedAddress(address.AccountId);
-			}
-			StateHasChanged();
 			await InvokeAsync(StateHasChanged);
 		}
 		catch (Exception ex)
@@ -88,13 +84,11 @@ else
 			logger.LogError($"Exception thrown during initilaztion {ex.Message}");
 		}
 	}
-
 	private void CalculateListAmounts()
 	{
 		double percentage = UnprocessedAddressListAmount * 0.1;
 		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.AwayFromZero);
 	}
-
 	private async Task LoadAddressList()
 	{
 		addressesLoaded = false;
@@ -106,7 +100,6 @@ else
 		UnprocessedAddressList = new();
 		UnverifiedAddressList = new();
 	}
-
 	private async Task<List<AddressModel>> LoadUnprocessedAddresses()
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -116,7 +109,6 @@ else
 		}
 		return UnprocessedAddressList;
 	}
-
 	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
 	{
 		CalculateListAmounts();
@@ -136,9 +128,17 @@ else
 		}
 		return OriginalAddressModel;
 	}
-
 	private void HandleInvalidSubmit() => isValidationSuccessful = false;
-
+	protected override async Task OnParametersSetAsync()
+	{
+		foreach (var address in AddressList)
+		{
+			AddressToBeInputModel = address;
+			OriginalAddressModel = await LoadOriginalProcessedAddress(address.AccountId);
+			await scraper.Scrape(AddressToBeInputModel);
+			await InvokeAsync(StateHasChanged);
+		}
+	}
 	private async Task HandleOnSubmit()
 	{	
 		if (isSubmitting)

@@ -66,53 +66,48 @@ public class Scraper
 		RemoteWebDriver = new RemoteWebDriver(new Uri("http://localhost:4444/"), firefoxOptions);
 		RemoteWebDriver.Navigate().GoToUrl(BaseUrl);
 	}
-	public async Task Scrape(List<AddressModel> addressList)
+	public async Task Scrape(AddressModel address)
 	{
 		WebDriverWait webDriverWait = new(RemoteWebDriver, TimeSpan.FromSeconds(10));
 		// Business logic to direct user to specific page per address in the AddressList
-		AddressList = new(addressList);
 		try
 		{
-			foreach (var address in AddressList)
+			if (address.County == "BaltimoreCity")
 			{
-				if (address.County == "BaltimoreCity")
-				{
-					RemoteWebDriver.Navigate().GoToUrl(BaseUrl);
-					// Select "BALTIMORE CITY"
-					webDriverWait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(CssSelectorBaltimoreCityNameSelect)));
-					FirefoxInput.Click();
-					// Select "PROPERTY ACCOUNT IDENTIFIER"
-					webDriverWait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(CssSelectorBaltimoreCityPropertyAccountIdentifierSelect)));
-					FirefoxInput.Click();
-					// Click Continue Button
-					webDriverWait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(CssSelectorBaltimoreCityContinueButtonClick)));
-					FirefoxInput.Click();
-					// Input Ward
-					webDriverWait.Until(ExpectedConditions.ElementExists(By.CssSelector(CssSelectorBaltimoreCityWardInput)));
-					FirefoxInput.Clear();
-					FirefoxInput.SendKeys(address.Ward);
-					// Input Section
-					webDriverWait.Until(ExpectedConditions.ElementExists(By.CssSelector(CssSelectorBaltimoreCitySectionInput)));
-					FirefoxInput.Clear();
-					FirefoxInput.SendKeys(address.Section);
-					// Input Block
-					webDriverWait.Until(ExpectedConditions.ElementExists(By.CssSelector(CssSelectorBaltimoreCityBlockInput)));
-					FirefoxInput.Clear();
-					FirefoxInput.SendKeys(address.Block);
-					// Input Lot
-					webDriverWait.Until(ExpectedConditions.ElementExists(By.CssSelector(CssSelectorBaltimoreCityLotInput)));
-					FirefoxInput.Clear();
-					FirefoxInput.SendKeys(address.Lot);
-					// Click Next Button
-					webDriverWait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(CssSelectorBaltimoreCityNextButtonClick)));
-					FirefoxInput.Click();
-				}
+				RemoteWebDriver.Navigate().GoToUrl(BaseUrl);
+				// Select "BALTIMORE CITY"
+				webDriverWait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(CssSelectorBaltimoreCityNameSelect)));
+				FirefoxInput.Click();
+				// Select "PROPERTY ACCOUNT IDENTIFIER"
+				webDriverWait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(CssSelectorBaltimoreCityPropertyAccountIdentifierSelect)));
+				FirefoxInput.Click();
+				// Click Continue Button
+				webDriverWait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(CssSelectorBaltimoreCityContinueButtonClick)));
+				FirefoxInput.Click();
+				// Input Ward
+				webDriverWait.Until(ExpectedConditions.ElementExists(By.CssSelector(CssSelectorBaltimoreCityWardInput)));
+				FirefoxInput.Clear();
+				FirefoxInput.SendKeys(address.Ward);
+				// Input Section
+				webDriverWait.Until(ExpectedConditions.ElementExists(By.CssSelector(CssSelectorBaltimoreCitySectionInput)));
+				FirefoxInput.Clear();
+				FirefoxInput.SendKeys(address.Section);
+				// Input Block
+				webDriverWait.Until(ExpectedConditions.ElementExists(By.CssSelector(CssSelectorBaltimoreCityBlockInput)));
+				FirefoxInput.Clear();
+				FirefoxInput.SendKeys(address.Block);
+				// Input Lot
+				webDriverWait.Until(ExpectedConditions.ElementExists(By.CssSelector(CssSelectorBaltimoreCityLotInput)));
+				FirefoxInput.Clear();
+				FirefoxInput.SendKeys(address.Lot);
+				// Click Next Button
+				webDriverWait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(CssSelectorBaltimoreCityNextButtonClick)));
+				FirefoxInput.Click();
 			}
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-
-			throw;
+			Console.WriteLine(ex.Message);
 		}
 		finally
 		{
