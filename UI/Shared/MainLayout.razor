@@ -6,7 +6,7 @@
 <MudSnackbarProvider />
 
 <MudLayout>	
-	<MudAppBar Color="Color.Primary">		
+	<MudAppBar>		
 		<MudIconButton Style="color: white;" Icon="@Icons.Filled.Menu"
 					   OnClick="() => _isNavigationMenuOpened = !_isNavigationMenuOpened" />
 		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>		
@@ -39,16 +39,19 @@
 	MudTheme MainTheme = new MudTheme()
 		{
 			Palette = new Palette()
-			{
+			{				
 				Primary = "#be894a",
 				Secondary = "#4d4d4d",
+				AppbarBackground = "#be894a",
 			},
 			PaletteDark = new PaletteDark()
 			{
-				Primary = "#4d4d4d",
+				Primary = "#959595",
 				Secondary = "#000000",
-				TextPrimary = "#fff",
-				TextSecondary = "#fff"
+				TextPrimary = "#fff",				
+				TextSecondary = "#fff",
+				AppbarText = "#fff",
+				AppbarBackground = "#333333"
 			},
 			LayoutProperties = new LayoutProperties()
 			{

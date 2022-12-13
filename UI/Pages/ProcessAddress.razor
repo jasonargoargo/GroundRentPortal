@@ -12,8 +12,7 @@
 @if (userState is not null)
 {
 	@if (addressesLoaded)
-	{
-		<p>Addresses are loaded.</p>
+	{		
 		<div class="container">
 			<div hidden="@addressSubmitted">
 				<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
@@ -21,12 +20,8 @@
 					<MudText Color="Color.Error" Typo="Typo.body2">
 						<ValidationSummary />
 					</MudText>
-					<div class="row">
-						<div class="col gy-3">
-							<label>@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</label>
-						</div>
-					</div>
-
+					<MudText>@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</MudText>
+					<MudText Color="Color.Primary">Addresses are loaded.</MudText>
 					<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
 					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
 					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" EditContext="editContext" />
@@ -41,12 +36,12 @@
 	}
 	else
 	{
-		<p>Loading addresses...</p>
+		<MudText>Loading addresses...</MudText>
 	}
 }
 else
 {
-	<p>You are not authorized. Please log in or contact your manager.</p>
+	<MudText Color="Color.Error">You are not authorized. Please log in or contact your manager.</MudText>
 }
 
 @code {
