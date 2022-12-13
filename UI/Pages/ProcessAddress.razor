@@ -19,7 +19,7 @@
 				<MudText Color="Color.Primary">Addresses are loaded.</MudText>
 				<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
 				<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
-				<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" />
+				<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" />
 				<FormSubmitButton />
 				@if (isValidationSuccessful)
 				{
@@ -276,32 +276,6 @@ else
 		StateHasChanged();
 		return;
 	}
-
-	private void IsLegibleRadioSelect()
-	{
-		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.Yes)
-		{
-			AddressToBeInputModel.IsLegible = true;
-		}
-
-		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
-		{
-			AddressToBeInputModel.IsLegible = false;
-		}
-	}
-
-	//private void NotLegibleTypeSelect()
-	//{
-	//	if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
-	//	{
-	//		AddressToBeInputModel.NotLegibleType = AddressModel.InputType.;
-	//	}
-
-	//	if (editContext is not null)
-	//	{
-	//		editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
-	//	}
-	//}
 
 	private void EditContextAddressOnFieldChanged(object sender, FieldChangedEventArgs e)
 	{

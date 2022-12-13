@@ -4,10 +4,13 @@
 <div class="row">
 	<div class="col gy-3">
 		<p>Is data legible?</p>
-		<MudRadioGroup @bind-SelectedOption="isLegibleRadio" @onselect="IsLegibleRadioSelect" Required>
-			<MudRadio Option="IsLegibleRadio.Yes" Color="Color.Primary">Yes</MudRadio>
-			<MudRadio Option="IsLegibleRadio.No" Color="Color.Primary">No</MudRadio>
-		</MudRadioGroup>
+		@if (AddressToBeInputModel is not null)
+		{
+			<MudRadioGroup T="bool?" @bind-SelectedOption="AddressToBeInputModel.IsLegible" Required>
+				<MudRadio Option="(bool?)true" Color="Color.Primary">Yes</MudRadio>
+				<MudRadio Option="(bool?)false" Color="Color.Primary">No</MudRadio>
+			</MudRadioGroup>
+		}		
 	</div>
 </div>
 
@@ -29,26 +32,6 @@
 @code {
 	[Parameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
-	[Parameter]
-	public EventCallback AddressProcessed { get; set; }
 	private enum IsLegibleRadio { Yes, No }
 	private IsLegibleRadio isLegibleRadio;
-
-	private void IsLegibleRadioSelect()
-	{
-		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.Yes)
-		{
-			AddressToBeInputModel.IsLegible = true;
-		}
-
-		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
-		{
-			AddressToBeInputModel.IsLegible = false;
-		}
-	}
-
-	private void EditContextAddressOnFieldChanged(object sender, FieldChangedEventArgs e)
-	{
-		AddressProcessed.InvokeAsync();
-	}
 }
