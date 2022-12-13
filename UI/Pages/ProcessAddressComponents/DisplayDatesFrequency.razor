@@ -43,7 +43,7 @@
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
 {
-	<div class="col gy-3" style="max-width: fit-content;">
+	<div class="col gy-3" style="max-width: 15em;">
 		<label>Other Date</label>
 		<MudInputString Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentDateOther" />
 	</div>
