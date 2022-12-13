@@ -3,7 +3,7 @@
 
 <div class="row">
 	<div class="col gy-3">
-		<p>Is data legible?</p>
+		<label>Is data legible?</label>
 		@if (AddressToBeInputModel is not null)
 		{
 			<MudRadioGroup T="bool?" @bind-SelectedOption="AddressToBeInputModel.IsLegible" Required>
@@ -14,7 +14,7 @@
 	</div>
 </div>
 
-@if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.IsLegible == false)
 {
 	<div class="row">
 		<div class="col gy-3">
