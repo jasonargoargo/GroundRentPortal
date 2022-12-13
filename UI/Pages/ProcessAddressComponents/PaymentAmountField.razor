@@ -6,7 +6,7 @@
 	<label>Payment Amount</label>
 	@if (AddressToBeInputModel is not null)
 	{
-		<MudNumericField T="decimal?" Culture="CultureInfo.CurrentCulture" Label=@($"Currency Amount ${AddressToBeInputModel.PaymentAmount}")
+		<MudNumericField T="decimal?" Format="F2" Culture="CultureInfo.CurrentCulture" Label=@($"Currency Amount ${AddressToBeInputModel.PaymentAmount}")
 					 HelperText="Shift + Mouse wheel increment"
 					 Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentAmount"
 					 For="@(() => AddressToBeInputModel.PaymentAmount)" Min="0" Step="(decimal?)0.1"
