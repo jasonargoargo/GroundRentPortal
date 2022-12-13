@@ -24,6 +24,7 @@ public class TestSqlDataService : IGroundRentPortalDataService
                 addressModel.IsVerified,
                 addressModel.IsLegible,
                 addressModel.NotLegibleType,
+                addressModel.NotVerifiedType,
                 addressModel.PaymentAmount,
 				PaymentFrequency = addressModel.GroundRentPaymentFrequency,
 				addressModel.PaymentDateAnnual,
@@ -47,6 +48,12 @@ public class TestSqlDataService : IGroundRentPortalDataService
             return false;
         }
     }
+    public async Task<AddressModel> ReadByAccountId(string accountId)
+    {
+		return (await _unitOfWork.Connection.QueryAsync<AddressModel>("spTest_ReadByAccountId",
+			new { AccountId = accountId },
+			commandType: CommandType.StoredProcedure, transaction: _unitOfWork.Transaction)).FirstOrDefault();
+	}
     public async Task<List<AddressModel>> ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse(int unprocessedAddressListAmount, string county)
     {
         return (await _unitOfWork.Connection.QueryAsync<AddressModel>("spTest_ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse",

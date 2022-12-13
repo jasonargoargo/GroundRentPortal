@@ -9,6 +9,7 @@ select top (@UnverifiedAddressListAmount)
 [IsProcessed],
 [IsVerified],
 [NotLegibleType],
+[NotVerifiedType],
 [PaymentAmount],
 [PaymentFrequency],
 [PaymentDateAnnual],
@@ -23,5 +24,5 @@ select top (@UnverifiedAddressListAmount)
 [UserWhoVerified]
 	
 from dbo.[Test] 
-where [IsLegible] = 1 and [IsProcessed] = 1
+where [IsLegible] = 1 and [IsProcessed] = 1 and [IsVerified] is null
 end

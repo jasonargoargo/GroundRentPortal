@@ -15,6 +15,7 @@
     [IsVerified] BIT NULL,
     [IsLegible] BIT NULL,
     [NotLegibleType] NCHAR(32) NULL,
+    [NotVerifiedType] NCHAR(32) NULL,
     [PaymentAmount] SMALLMONEY NULL,
     [PaymentFrequency] NCHAR(16) NULL,
     [PaymentDateAnnual] SMALLDATETIME NULL,

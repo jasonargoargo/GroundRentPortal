@@ -10,6 +10,7 @@ select top (@UnprocessedAddressListAmount)
 [IsProcessed],
 [IsVerified],
 [NotLegibleType],
+[NotVerifiedType],
 [PaymentAmount],
 [PaymentFrequency],
 [PaymentDateAnnual],

@@ -17,10 +17,10 @@
 		<div class="col gy-3">
 			<MudSelect Variant="Variant.Filled" Label="What is illegible?" 
 				@bind-Value="AddressToBeInputModel.NotLegibleType" Style="max-width: fit-content;">
-				@foreach (AddressModel.NotLegible option in Enum.GetValues(typeof(AddressModel.NotLegible)))
-				{
-					<MudSelectItem Value="@option">@option</MudSelectItem>
-				}
+				<MudSelectItem Value="AddressModel.InputType.Blank"></MudSelectItem>
+				<MudSelectItem Value="AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
+				<MudSelectItem Value="AddressModel.InputType.PaymentFrequency">Payment Frequency</MudSelectItem>
+				<MudSelectItem Value="AddressModel.InputType.PaymentDate">Payment Date</MudSelectItem>
 			</MudSelect>
 		</div>
 	</div>

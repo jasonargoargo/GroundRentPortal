@@ -47,7 +47,13 @@ public class AddressSqlDataService : IGroundRentPortalDataService
             return false;
         }
     }
-    public async Task<List<AddressModel>> ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse(int unprocessedAddressListAmount, string county)
+	public async Task<AddressModel> ReadByAccountId(string accountId)
+    {
+		return (await _unitOfWork.Connection.QueryAsync<AddressModel>("spAddress_ReadByAccountId",
+			new { AccountId = accountId },
+			commandType: CommandType.StoredProcedure, transaction: _unitOfWork.Transaction)).FirstOrDefault();
+	}
+	public async Task<List<AddressModel>> ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse(int unprocessedAddressListAmount, string county)
     {
         return (await _unitOfWork.Connection.QueryAsync<AddressModel>("spAddress_ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse",
             new { UnprocessedAddressListAmount = unprocessedAddressListAmount, County = county },

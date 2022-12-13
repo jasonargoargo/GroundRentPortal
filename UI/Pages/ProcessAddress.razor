@@ -175,7 +175,7 @@ else
 			if (AddressToBeInputModel?.IsProcessed is true)
 			{
 				addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
-				addressToDbModel.IsVerified = true;
+				addressToDbModel.IsProcessed = true;
 				addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
 				addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
 				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
@@ -190,6 +190,76 @@ else
 				addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
 				addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
 
+				AddressModel originalProcessedAddress = new();
+
+				using (var uow = dataContext.CreateUnitOfWork())
+				{
+					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+					originalProcessedAddress = await testDataService.ReadByAccountId(addressToDbModel.AccountId);
+				}
+
+				if(originalProcessedAddress.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency)
+				{
+					if (originalProcessedAddress.PaymentDateAnnual != addressToDbModel.PaymentDateAnnual)
+					{
+						addressToDbModel.IsVerified = false;
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+					}
+					if (originalProcessedAddress.PaymentDateSemiAnnual1 != addressToDbModel.PaymentDateSemiAnnual1)
+					{
+						addressToDbModel.IsVerified = false;
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+					}
+					if (originalProcessedAddress.PaymentDateSemiAnnual2 != addressToDbModel.PaymentDateSemiAnnual2)
+					{
+						addressToDbModel.IsVerified = false;
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+					}
+					if (originalProcessedAddress.PaymentDateQuarterly1 != addressToDbModel.PaymentDateQuarterly1)
+					{
+						addressToDbModel.IsVerified = false;
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+					}
+					if (originalProcessedAddress.PaymentDateQuarterly2 != addressToDbModel.PaymentDateQuarterly2)
+					{
+						addressToDbModel.IsVerified = false;
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+					}
+					if (originalProcessedAddress.PaymentDateQuarterly3 != addressToDbModel.PaymentDateQuarterly3)
+					{
+						addressToDbModel.IsVerified = false;
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+					}
+					if (originalProcessedAddress.PaymentDateQuarterly4 != addressToDbModel.PaymentDateQuarterly4)
+					{
+						addressToDbModel.IsVerified = false;
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+					}
+					if (originalProcessedAddress.PaymentDateOther != addressToDbModel.PaymentDateOther)
+					{
+						addressToDbModel.IsVerified = false;
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+					}
+				}
+				if (originalProcessedAddress.IsLegible != addressToDbModel.IsLegible)
+				{
+					addressToDbModel.IsVerified = false;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.IsLegible;
+					if (originalProcessedAddress.NotLegibleType != addressToDbModel.NotLegibleType)
+					{
+						addressToDbModel.NotVerifiedType = AddressModel.InputType.NotLegibleType;
+					}
+				}
+				if (originalProcessedAddress.PaymentAmount != addressToDbModel.PaymentAmount)
+				{
+					addressToDbModel.IsVerified = false;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentAmount;
+				}
+				else
+				{
+					addressToDbModel.IsVerified = true;
+				}
+
 				using (var uow = dataContext.CreateUnitOfWork())
 				{
 					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
@@ -200,10 +270,11 @@ else
 					validationMessageStore?.Add(editContext.Field(""), "Could not process.");
 				}
 			}
-			if (AddressToBeInputModel?.IsProcessed is false)
+			if (AddressToBeInputModel?.IsProcessed is null || AddressToBeInputModel?.IsProcessed is false)
 			{
 				addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
 				addressToDbModel.IsProcessed = true;
+				addressToDbModel.IsVerified = null;
 				addressToDbModel.UserWhoProcessed = userState?.User.Identity?.Name;
 				addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
 				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
@@ -252,18 +323,18 @@ else
 		}
 	}
 
-	private void NotLegibleTypeSelect()
-	{
-		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
-		{
-			AddressToBeInputModel.NotLegibleType = AddressModel.NotLegible.Other;
-		}
+	//private void NotLegibleTypeSelect()
+	//{
+	//	if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
+	//	{
+	//		AddressToBeInputModel.NotLegibleType = AddressModel.InputType.;
+	//	}
 
-		if (editContext is not null)
-		{
-			editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
-		}
-	}
+	//	if (editContext is not null)
+	//	{
+	//		editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
+	//	}
+	//}
 
 	private void EditContextAddressOnFieldChanged(object sender, FieldChangedEventArgs e)
 	{

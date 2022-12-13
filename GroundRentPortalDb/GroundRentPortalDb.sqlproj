@@ -72,6 +72,7 @@
     <Build Include="dbo\Stored Procedures\Test\spTest_ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse.sql" />
     <Build Include="dbo\Stored Procedures\Test\spTest_ReadByVerificationPercentageWhereIsLegibleTrueAndIsProcessedTrue.sql" />
     <Build Include="dbo\Stored Procedures\Test\spTest_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Test\spTest_ReadByAccountId.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GroundRentPortalDb.publish.xml" />
