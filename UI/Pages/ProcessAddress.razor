@@ -42,33 +42,24 @@ else
 }
 
 @code {
-	private AddressModel addressToDbModel = new();
-	private ValidationMessageStore? validationMessageStore;
-	private bool isValidationSuccessful { get; set; }
 	[CascadingParameter]
 	private Task<AuthenticationState>? authenticationState { get; set; }
+	private AddressModel addressToDbModel = new();
+	private AddressModel originalProcessedAddress = new();
+	private ValidationMessageStore? validationMessageStore;
+	private bool isValidationSuccessful { get; set; }	
 	private AuthenticationState? userState;
-	[Parameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
 	private List<AddressModel> UnprocessedAddressList = new();
 	private List<AddressModel> UnverifiedAddressList = new();
 	private List<AddressModel> AddressList = new();
-
-
-	[Parameter]
 	public EventCallback AddressProcessed { get; set; }
 	private int UnprocessedAddressListAmount { get; set; } = 100;
-	private int UnverifiedAddressListAmount;
+	private int UnverifiedAddressListAmount = default;
 	private bool addressesLoaded { get; set; } = false;
 	private bool addressSubmitted { get; set; } = false;
 	private bool isSubmitting { get; set; } = false;
-	private enum IsLegibleRadio { Yes, No }
-	private IsLegibleRadio isLegibleRadio;
 	private bool dataServiceResult { get; set; }
-	private bool paymentFrequencyAnnual { get; set; }
-	private bool paymentFrequencySemiAnnual { get; set; }
-	private bool paymentFrequencyQuarterly { get; set; }
-	private bool paymentFrequencyOther { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -166,15 +157,17 @@ else
 			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel.PaymentDateQuarterly4;
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
-			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;			
 
-			AddressModel originalProcessedAddress = new();
-
-			using (var uow = dataContext.CreateUnitOfWork())
+			if (addressToDbModel.AccountId is not null)
 			{
-				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-				originalProcessedAddress = await testDataService.ReadByAccountId(addressToDbModel.AccountId);
+				using (var uow = dataContext.CreateUnitOfWork())
+				{
+					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+					originalProcessedAddress = await testDataService.ReadByAccountId(addressToDbModel.AccountId);
+				}
 			}
+			
 
 			if (originalProcessedAddress.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency)
 			{
@@ -274,6 +267,7 @@ else
 				dataServiceResult = await testDataService.Update(addressToDbModel);
 			}
 		}
+
 		isSubmitting = false;
 		await InvokeAsync(StateHasChanged);
 		return;

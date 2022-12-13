@@ -7,11 +7,11 @@
 	{
 		<MudSelect Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency"
 			   Style="max-width: fit-content;" Required>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.Blank" @onselect="TogglePaymentFrequencyBlank"></MudSelectItem>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.Annual" @onselect="TogglePaymentFrequencyAnnual">Annual</MudSelectItem>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.SemiAnnual" @onselect="TogglePaymentFrequencySemiAnnual">Semi-Annual</MudSelectItem>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.Quarterly" @onselect="TogglePaymentFrequencyQuarterly">Quarterly</MudSelectItem>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.Other" @onselect="TogglePaymentFrequencyOther">Other</MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.Blank"></MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.Annual">Annual</MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.SemiAnnual">Semi-Annual</MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.Quarterly">Quarterly</MudSelectItem>
+			<MudSelectItem Value="@AddressModel.PaymentFrequency.Other">Other</MudSelectItem>
 		</MudSelect>
 	}
 </div>
@@ -34,67 +34,6 @@
 		{
 			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
 		}
-
 		base.OnInitialized();
-	}
-
-	private void TogglePaymentFrequencyBlank()
-	{
-		if (AddressToBeInputModel is not null)
-		{
-			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
-			paymentFrequencyAnnual = false;
-			paymentFrequencySemiAnnual = false;
-			paymentFrequencyQuarterly = false;
-			paymentFrequencyOther = false;
-		}
-	}
-
-	private void TogglePaymentFrequencyAnnual()
-	{
-		if (AddressToBeInputModel is not null)
-		{
-			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Annual;
-			paymentFrequencyAnnual = true;
-			paymentFrequencySemiAnnual = false;
-			paymentFrequencyQuarterly = false;
-			paymentFrequencyOther = false;
-		}
-	}
-
-	private void TogglePaymentFrequencySemiAnnual()
-	{
-		if (AddressToBeInputModel is not null)
-		{
-			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.SemiAnnual;
-			paymentFrequencyAnnual = false;
-			paymentFrequencySemiAnnual = true;
-			paymentFrequencyQuarterly = false;
-			paymentFrequencyOther = false;
-		}
-	}
-
-	private void TogglePaymentFrequencyQuarterly()
-	{
-		if (AddressToBeInputModel is not null)
-		{
-			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Quarterly;
-			paymentFrequencyAnnual = false;
-			paymentFrequencySemiAnnual = false;
-			paymentFrequencyQuarterly = true;
-			paymentFrequencyOther = false;
-		}
-	}
-
-	private void TogglePaymentFrequencyOther()
-	{
-		if (AddressToBeInputModel is not null)
-		{
-			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Other;
-			paymentFrequencyAnnual = false;
-			paymentFrequencySemiAnnual = false;
-			paymentFrequencyQuarterly = false;
-			paymentFrequencyOther = true;
-		}
-	}
+	}	
 }
