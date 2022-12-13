@@ -1,0 +1,24 @@
+﻿@namespace UI.Shared
+
+<MudDrawer Open="IsDrawerOpen">
+	<MudText Class="ml-4" Typo="Typo.body2">Dark Mode:</MudText>
+	<MudSwitch Class="ml-4" CheckedChanged="OnIsDarkTheme" Color="Color.Secondary" />
+	<MudLink Color="Color.Primary" Class="nav-link" Href="">
+		Home
+	</MudLink>
+	<MudLink Color="Color.Primary" Class="nav-link" Href="processAddress">
+		Process Address
+	</MudLink>	
+</MudDrawer>
+
+@code {
+	[Parameter]
+	public bool IsDrawerOpen { get; set; }
+	[Parameter]
+	public EventCallback<bool> OnIsDarkTheme { get; set; }
+
+	public void OnIsDarkThemeToggledSelectedChanged()
+	{
+		OnIsDarkTheme.InvokeAsync(true);
+	}
+}

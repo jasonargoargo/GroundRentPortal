@@ -1,26 +1,17 @@
 ﻿@inherits LayoutComponentBase
-
+@namespace UI.Shared
 <PageTitle>Ground Rent Portal</PageTitle>
 <MudThemeProvider @bind-IsDarkMode="_isDarkMode" Theme="MainTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
-	<MudAppBar Color="Color.Primary">
-		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>
-		<div class="theme-container">
-			<MudText Typo="Typo.body2">Dark Mode:</MudText>
-			<MudSwitch @bind-Checked="_isDarkMode" Color="Color.Secondary" />
-		</div>
+<MudLayout>	
+	<MudAppBar Color="Color.Primary">		
+		<MudIconButton Style="color: white;" Icon="@Icons.Filled.Menu"
+					   OnClick="() => _isNavigationMenuOpened = !_isNavigationMenuOpened" />
+		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>		
 	</MudAppBar>
-	<MudDrawer Open="true">
-		<MudLink Color="Color.Primary" Class="nav-link" Href="">
-			Home
-		</MudLink>
-		<MudLink Color="Color.Primary" Class="nav-link" Href="processAddress">
-			Process Address
-		</MudLink>
-	</MudDrawer>
+	<NavigationMenuDrawer IsDrawerOpen="_isNavigationMenuOpened" OnIsDarkTheme="UpdateIsDarkTheme" />
 	<MudMainContent>
 		<LoginDisplay />
 		@Body
@@ -30,6 +21,7 @@
 @code {
 	private bool _isDarkMode;
 	private MudThemeProvider? _mudThemeProvider;
+	private bool _isNavigationMenuOpened { get; set; } = true;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -38,6 +30,11 @@
 			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
 			StateHasChanged();
 		}
+	}
+
+	private void UpdateIsDarkTheme(bool value)
+	{
+		_isDarkMode = value;
 	}
 
 	MudTheme MainTheme = new MudTheme()
@@ -53,7 +50,7 @@
 				Secondary = "#000000",
 				TextPrimary = "#fff",
 				TextSecondary = "#fff"
-			}, 
+			},
 			LayoutProperties = new LayoutProperties()
 			{
 				DrawerWidthLeft = "260px",
