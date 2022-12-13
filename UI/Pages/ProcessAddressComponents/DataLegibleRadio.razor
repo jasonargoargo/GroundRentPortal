@@ -30,8 +30,6 @@
 	[Parameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
 	[Parameter]
-	public EditContext? EditContext { get; set; }
-	[Parameter]
 	public EventCallback AddressProcessed { get; set; }
 	private enum IsLegibleRadio { Yes, No }
 	private IsLegibleRadio isLegibleRadio;
@@ -46,11 +44,6 @@
 		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
 		{
 			AddressToBeInputModel.IsLegible = false;
-		}
-
-		if (EditContext is not null)
-		{
-			EditContext.OnFieldChanged += EditContextAddressOnFieldChanged;
 		}
 	}
 

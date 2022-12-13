@@ -16,20 +16,20 @@
 		<div class="container">
 			<div hidden="@addressSubmitted">
 				<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
-					<DataAnnotationsValidator />
-					<MudText Color="Color.Error" Typo="Typo.body2">
-						<ValidationSummary />
-					</MudText>
+					<DataAnnotationsValidator />					
 					<MudText>@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</MudText>
 					<MudText Color="Color.Primary">Addresses are loaded.</MudText>
 					<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
 					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
-					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" EditContext="editContext" />
+					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" />
 					<FormSubmitButton />
 					@if (isValidationSuccessful)
 					{
-						<MudText Color="Color.Success" Typo="Typo.body2">Successful!</MudText>
-					}					
+						<MudText Color="Color.Success" Typo="Typo.caption">Form submission successful!</MudText>
+					}
+					<MudText Color="Color.Error" Typo="Typo.body2">
+						<ValidationSummary />
+					</MudText>
 				</EditForm>
 			</div>
 		</div>
