@@ -4,7 +4,7 @@
 <div class="row">
 	<div class="col gy-3">
 		<p>Is data legible?</p>
-		<MudRadioGroup @bind-SelectedOption="isLegibleRadio" Class="form-control" @onselect="IsLegibleRadioSelect" Required>
+		<MudRadioGroup @bind-SelectedOption="isLegibleRadio" @onselect="IsLegibleRadioSelect" Required>
 			<MudRadio Option="IsLegibleRadio.Yes" Color="Color.Primary">Yes</MudRadio>
 			<MudRadio Option="IsLegibleRadio.No" Color="Color.Primary">No</MudRadio>
 		</MudRadioGroup>
@@ -16,7 +16,7 @@
 	<div class="row">
 		<div class="col gy-3">
 			<MudSelect Variant="Variant.Filled" Label="What is illegible?" 
-				@bind-Value="AddressToBeInputModel.NotLegibleType" Class="form-select" Style="max-width: fit-content;">
+				@bind-Value="AddressToBeInputModel.NotLegibleType" Style="max-width: fit-content;">
 				@foreach (AddressModel.NotLegible option in Enum.GetValues(typeof(AddressModel.NotLegible)))
 				{
 					<MudSelectItem Value="@option">@option</MudSelectItem>

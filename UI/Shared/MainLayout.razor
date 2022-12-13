@@ -10,14 +10,14 @@
 		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>
 		<div class="theme-container">
 			<MudText Typo="Typo.body2">Dark Mode:</MudText>
-			<MudSwitch @bind-Checked="_isDarkMode" Color="Color.Primary" />
+			<MudSwitch @bind-Checked="_isDarkMode" Color="Color.Secondary" />
 		</div>
 	</MudAppBar>
 	<MudDrawer Open="true">
-		<MudLink Class="nav-link" Href="">
+		<MudLink Color="Color.Primary" Class="nav-link" Href="">
 			Home
 		</MudLink>
-		<MudLink Class="nav-link" Href="processAddress">
+		<MudLink Color="Color.Primary" Class="nav-link" Href="processAddress">
 			Process Address
 		</MudLink>
 	</MudDrawer>
@@ -51,6 +51,8 @@
 			{
 				Primary = "#4d4d4d",
 				Secondary = "#000000",
+				TextPrimary = "#fff",
+				TextSecondary = "#fff"
 			}, 
 			LayoutProperties = new LayoutProperties()
 			{

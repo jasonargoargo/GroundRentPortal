@@ -5,7 +5,8 @@
 	<label>Payment Frequency</label>
 	@if (AddressToBeInputModel is not null)
 	{
-		<MudSelect Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency" class="form-control" style="max-width: fit-content;" required>
+		<MudSelect Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency"
+			   Style="max-width: fit-content;" Required>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.Blank"></MudSelectItem>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.Annual" @onselect="TogglePaymentFrequencyAnnual">Annual</MudSelectItem>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.SemiAnnual" @onselect="TogglePaymentFrequencySemiAnnual">Semi-Annual</MudSelectItem>
