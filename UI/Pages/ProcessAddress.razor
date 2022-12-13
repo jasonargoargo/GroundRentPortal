@@ -14,6 +14,7 @@
 {
 	<div class="container">
 		<div hidden="@addressSubmitted">
+			<MudText Class="mt-2" Typo="Typo.h4">Process Address</MudText>
 			<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
 				<DataAnnotationsValidator />
 				<MudText Class="mt-2">@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</MudText>
