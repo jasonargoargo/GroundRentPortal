@@ -18,7 +18,7 @@
 <DisplayDatesFrequency AddressToBeInputModel="AddressToBeInputModel" />
 
 @code {
-	[Parameter]
+	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
 	private bool paymentFrequencyAnnual { get; set; }
 	private bool paymentFrequencySemiAnnual { get; set; }

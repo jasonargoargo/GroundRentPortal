@@ -30,7 +30,7 @@
 }
 
 @code {
-	[Parameter]
+	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
 	private enum IsLegibleRadio { Yes, No }
 	private IsLegibleRadio isLegibleRadio;

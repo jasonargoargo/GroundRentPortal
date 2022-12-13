@@ -17,9 +17,11 @@
 				<DataAnnotationsValidator />
 				<MudText>@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</MudText>
 				<MudText Color="Color.Primary">Addresses are loaded.</MudText>
-				<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
-				<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
-				<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" />
+				<CascadingValue Value="AddressToBeInputModel">
+					<PaymentAmountField />
+					<PaymentFrequencyField />
+					<DataLegibleRadio />
+				</CascadingValue>				
 				<FormSubmitButton />
 				@if (isValidationSuccessful)
 				{
@@ -38,6 +40,7 @@ else
 }
 
 @code {
+	private AddressModel addressToDbModel = new();
 	private ValidationMessageStore? validationMessageStore;
 	private bool isValidationSuccessful { get; set; }
 	[CascadingParameter]
@@ -79,7 +82,7 @@ else
 			CalculateListAmounts();
 			await LoadAddressList();
 			addressesLoaded = true;
-			StateHasChanged();
+			await InvokeAsync(StateHasChanged);
 		}
 		catch (Exception ex)
 		{
@@ -146,8 +149,7 @@ else
 			return;
 		}
 
-		isSubmitting = true;
-		AddressModel addressToDbModel = new();
+		isSubmitting = true;		
 		if (AddressToBeInputModel?.IsProcessed is true)
 		{
 			addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
