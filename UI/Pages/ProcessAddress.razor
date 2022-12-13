@@ -139,19 +139,17 @@ else
 		return UnverifiedAddressList;
 	}
 
-	private void HandleInvalidSubmit() =>
-		isValidationSuccessful = false;
+	private void HandleInvalidSubmit() => isValidationSuccessful = false;
 
 	private async Task HandleOnSubmit()
-	{
-		isValidationSuccessful = true;
-
+	{	
 		if (isSubmitting)
 		{			
 			return;
 		}
-
+		isValidationSuccessful = true;
 		isSubmitting = true;		
+
 		if (AddressToBeInputModel?.IsProcessed is true)
 		{
 			addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
@@ -277,13 +275,7 @@ else
 			}
 		}
 		isSubmitting = false;
-		StateHasChanged();
+		await InvokeAsync(StateHasChanged);
 		return;
 	}
-
-	private void EditContextAddressOnFieldChanged(object sender, FieldChangedEventArgs e)
-	{
-		AddressProcessed.InvokeAsync();
-	}
-	
 }

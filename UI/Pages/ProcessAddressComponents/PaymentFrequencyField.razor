@@ -15,7 +15,10 @@
 		</MudSelect>
 	}
 </div>
-<DisplayDatesFrequency AddressToBeInputModel="AddressToBeInputModel" />
+
+<CascadingValue Value="AddressToBeInputModel">
+	<DisplayDatesFrequency />
+</CascadingValue>
 
 @code {
 	[CascadingParameter]
