@@ -9,35 +9,28 @@
 @page "/processaddress"
 @namespace UI.Pages
 
-@if (userState is not null)
+@if (userState is not null && addressesLoaded)
 {
-	@if (addressesLoaded)
-	{		
-		<div class="container">
-			<div hidden="@addressSubmitted">
-				<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
-					<DataAnnotationsValidator />					
-					<MudText>@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</MudText>
-					<MudText Color="Color.Primary">Addresses are loaded.</MudText>
-					<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
-					<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
-					<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" />
-					<FormSubmitButton />
-					@if (isValidationSuccessful)
-					{
-						<MudText Color="Color.Success" Typo="Typo.caption">Form submission successful!</MudText>
-					}
-					<MudText Color="Color.Error" Typo="Typo.body2">
-						<ValidationSummary />
-					</MudText>
-				</EditForm>
-			</div>
+	<div class="container">
+		<div hidden="@addressSubmitted">
+			<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+				<DataAnnotationsValidator />
+				<MudText>@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</MudText>
+				<MudText Color="Color.Primary">Addresses are loaded.</MudText>
+				<PaymentAmountField AddressToBeInputModel="AddressToBeInputModel" />
+				<PaymentFrequencyField AddressToBeInputModel="AddressToBeInputModel" />
+				<DataLegibleRadio AddressToBeInputModel="AddressToBeInputModel" AddressProcessed="AddressProcessed" />
+				<FormSubmitButton />
+				@if (isValidationSuccessful)
+				{
+					<MudText Color="Color.Success" Typo="Typo.caption">Form submission successful!</MudText>
+				}
+				<MudText Color="Color.Error" Typo="Typo.body2">
+					<ValidationSummary />
+				</MudText>
+			</EditForm>
 		</div>
-	}
-	else
-	{
-		<MudText>Loading addresses...</MudText>
-	}
+	</div>	
 }
 else
 {
@@ -45,7 +38,6 @@ else
 }
 
 @code {
-	private EditContext? editContext;
 	private ValidationMessageStore? validationMessageStore;
 	private bool isValidationSuccessful { get; set; }
 	[CascadingParameter]
@@ -82,20 +74,6 @@ else
 			if (authenticationState is not null)
 			{
 				userState = await authenticationState;
-			}
-
-			if (AddressToBeInputModel is not null)
-			{
-				editContext = new(AddressToBeInputModel);
-			}
-
-			if (editContext is not null)
-			{
-				editContext.OnFieldChanged += EditContextPaymentFrequencyOnFieldChanged;
-				validationMessageStore = new(editContext);
-				editContext.OnValidationRequested += (s, e) => validationMessageStore.Clear();
-				editContext.NotifyValidationStateChanged();
-				validationMessageStore.Clear();
 			}
 
 			CalculateListAmounts();
@@ -168,143 +146,137 @@ else
 			return;
 		}
 
-		if (editContext is not null && editContext.Validate())
+		isSubmitting = true;
+		AddressModel addressToDbModel = new();
+		if (AddressToBeInputModel?.IsProcessed is true)
 		{
-			isSubmitting = true;
-			AddressModel addressToDbModel = new();
-			if (AddressToBeInputModel?.IsProcessed is true)
+			addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
+			addressToDbModel.IsProcessed = true;
+			addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
+			addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
+			addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
+			addressToDbModel.PaymentDateAnnual = AddressToBeInputModel.PaymentDateAnnual;
+			addressToDbModel.PaymentDateSemiAnnual1 = AddressToBeInputModel.PaymentDateSemiAnnual1;
+			addressToDbModel.PaymentDateSemiAnnual2 = AddressToBeInputModel.PaymentDateSemiAnnual2;
+			addressToDbModel.PaymentDateQuarterly1 = AddressToBeInputModel.PaymentDateQuarterly1;
+			addressToDbModel.PaymentDateQuarterly2 = AddressToBeInputModel.PaymentDateQuarterly2;
+			addressToDbModel.PaymentDateQuarterly3 = AddressToBeInputModel.PaymentDateQuarterly3;
+			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel.PaymentDateQuarterly4;
+			addressToDbModel.PaymentDateOther = AddressToBeInputModel.PaymentDateOther;
+			addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
+			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+
+			AddressModel originalProcessedAddress = new();
+
+			using (var uow = dataContext.CreateUnitOfWork())
 			{
-				addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
-				addressToDbModel.IsProcessed = true;
-				addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
-				addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
-				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
-				addressToDbModel.PaymentDateAnnual = AddressToBeInputModel.PaymentDateAnnual;
-				addressToDbModel.PaymentDateSemiAnnual1 = AddressToBeInputModel.PaymentDateSemiAnnual1;
-				addressToDbModel.PaymentDateSemiAnnual2 = AddressToBeInputModel.PaymentDateSemiAnnual2;
-				addressToDbModel.PaymentDateQuarterly1 = AddressToBeInputModel.PaymentDateQuarterly1;
-				addressToDbModel.PaymentDateQuarterly2 = AddressToBeInputModel.PaymentDateQuarterly2;
-				addressToDbModel.PaymentDateQuarterly3 = AddressToBeInputModel.PaymentDateQuarterly3;
-				addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel.PaymentDateQuarterly4;
-				addressToDbModel.PaymentDateOther = AddressToBeInputModel.PaymentDateOther;
-				addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
-				addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+				originalProcessedAddress = await testDataService.ReadByAccountId(addressToDbModel.AccountId);
+			}
 
-				AddressModel originalProcessedAddress = new();
-
-				using (var uow = dataContext.CreateUnitOfWork())
-				{
-					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-					originalProcessedAddress = await testDataService.ReadByAccountId(addressToDbModel.AccountId);
-				}
-
-				if(originalProcessedAddress.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency)
-				{
-					if (originalProcessedAddress.PaymentDateAnnual != addressToDbModel.PaymentDateAnnual)
-					{
-						addressToDbModel.IsVerified = false;
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-					}
-					if (originalProcessedAddress.PaymentDateSemiAnnual1 != addressToDbModel.PaymentDateSemiAnnual1)
-					{
-						addressToDbModel.IsVerified = false;
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-					}
-					if (originalProcessedAddress.PaymentDateSemiAnnual2 != addressToDbModel.PaymentDateSemiAnnual2)
-					{
-						addressToDbModel.IsVerified = false;
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-					}
-					if (originalProcessedAddress.PaymentDateQuarterly1 != addressToDbModel.PaymentDateQuarterly1)
-					{
-						addressToDbModel.IsVerified = false;
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-					}
-					if (originalProcessedAddress.PaymentDateQuarterly2 != addressToDbModel.PaymentDateQuarterly2)
-					{
-						addressToDbModel.IsVerified = false;
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-					}
-					if (originalProcessedAddress.PaymentDateQuarterly3 != addressToDbModel.PaymentDateQuarterly3)
-					{
-						addressToDbModel.IsVerified = false;
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-					}
-					if (originalProcessedAddress.PaymentDateQuarterly4 != addressToDbModel.PaymentDateQuarterly4)
-					{
-						addressToDbModel.IsVerified = false;
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-					}
-					if (originalProcessedAddress.PaymentDateOther != addressToDbModel.PaymentDateOther)
-					{
-						addressToDbModel.IsVerified = false;
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
-					}
-				}
-				if (originalProcessedAddress.IsLegible != addressToDbModel.IsLegible)
+			if (originalProcessedAddress.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency)
+			{
+				if (originalProcessedAddress.PaymentDateAnnual != addressToDbModel.PaymentDateAnnual)
 				{
 					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.IsLegible;
-					if (originalProcessedAddress.NotLegibleType != addressToDbModel.NotLegibleType)
-					{
-						addressToDbModel.NotVerifiedType = AddressModel.InputType.NotLegibleType;
-					}
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
 				}
-				if (originalProcessedAddress.PaymentAmount != addressToDbModel.PaymentAmount)
+				if (originalProcessedAddress.PaymentDateSemiAnnual1 != addressToDbModel.PaymentDateSemiAnnual1)
 				{
 					addressToDbModel.IsVerified = false;
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentAmount;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
 				}
-				else
+				if (originalProcessedAddress.PaymentDateSemiAnnual2 != addressToDbModel.PaymentDateSemiAnnual2)
 				{
-					addressToDbModel.IsVerified = true;
+					addressToDbModel.IsVerified = false;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
 				}
-
-				using (var uow = dataContext.CreateUnitOfWork())
+				if (originalProcessedAddress.PaymentDateQuarterly1 != addressToDbModel.PaymentDateQuarterly1)
 				{
-					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-					dataServiceResult = await testDataService.Update(addressToDbModel);
+					addressToDbModel.IsVerified = false;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
 				}
-				if (dataServiceResult is false)
+				if (originalProcessedAddress.PaymentDateQuarterly2 != addressToDbModel.PaymentDateQuarterly2)
 				{
-					validationMessageStore?.Add(editContext.Field(""), "Could not process.");
+					addressToDbModel.IsVerified = false;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+				}
+				if (originalProcessedAddress.PaymentDateQuarterly3 != addressToDbModel.PaymentDateQuarterly3)
+				{
+					addressToDbModel.IsVerified = false;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+				}
+				if (originalProcessedAddress.PaymentDateQuarterly4 != addressToDbModel.PaymentDateQuarterly4)
+				{
+					addressToDbModel.IsVerified = false;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
+				}
+				if (originalProcessedAddress.PaymentDateOther != addressToDbModel.PaymentDateOther)
+				{
+					addressToDbModel.IsVerified = false;
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
 				}
 			}
-			if (AddressToBeInputModel?.IsProcessed is null || AddressToBeInputModel?.IsProcessed is false)
+			if (originalProcessedAddress.IsLegible != addressToDbModel.IsLegible)
 			{
-				addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
-				addressToDbModel.IsProcessed = true;
-				addressToDbModel.IsVerified = null;
-				addressToDbModel.UserWhoProcessed = userState?.User.Identity?.Name;
-				addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
-				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
-				addressToDbModel.PaymentDateAnnual = AddressToBeInputModel.PaymentDateAnnual;
-				addressToDbModel.PaymentDateSemiAnnual1 = AddressToBeInputModel.PaymentDateSemiAnnual1;
-				addressToDbModel.PaymentDateSemiAnnual2 = AddressToBeInputModel.PaymentDateSemiAnnual2;
-				addressToDbModel.PaymentDateQuarterly1 = AddressToBeInputModel.PaymentDateQuarterly1;
-				addressToDbModel.PaymentDateQuarterly2 = AddressToBeInputModel.PaymentDateQuarterly2;
-				addressToDbModel.PaymentDateQuarterly3 = AddressToBeInputModel.PaymentDateQuarterly3;
-				addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel.PaymentDateQuarterly4;
-				addressToDbModel.PaymentDateOther = AddressToBeInputModel.PaymentDateOther;
-				addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
-				addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
-
-				using (var uow = dataContext.CreateUnitOfWork())
+				addressToDbModel.IsVerified = false;
+				addressToDbModel.NotVerifiedType = AddressModel.InputType.IsLegible;
+				if (originalProcessedAddress.NotLegibleType != addressToDbModel.NotLegibleType)
 				{
-					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-					dataServiceResult = await testDataService.Update(addressToDbModel);
-				}
-				if (dataServiceResult is false)
-				{
-					validationMessageStore?.Add(editContext.Field(""), "Could not process.");
+					addressToDbModel.NotVerifiedType = AddressModel.InputType.NotLegibleType;
 				}
 			}
-			editContext.NotifyValidationStateChanged();
-			isSubmitting = false;
-			this.StateHasChanged();
-			return;
+			if (originalProcessedAddress.PaymentAmount != addressToDbModel.PaymentAmount)
+			{
+				addressToDbModel.IsVerified = false;
+				addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentAmount;
+			}
+			else
+			{
+				addressToDbModel.IsVerified = true;
+			}
+
+			using (var uow = dataContext.CreateUnitOfWork())
+			{
+				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+				dataServiceResult = await testDataService.Update(addressToDbModel);
+			}
 		}
+
+		if (AddressToBeInputModel?.IsProcessed is null || AddressToBeInputModel?.IsProcessed is false)
+		{
+			addressToDbModel.AccountId = AddressToBeInputModel?.AccountId;
+			addressToDbModel.IsProcessed = true;
+			addressToDbModel.IsVerified = null;
+			addressToDbModel.UserWhoProcessed = userState?.User.Identity?.Name;
+			addressToDbModel.PaymentAmount = AddressToBeInputModel?.PaymentAmount;						
+			addressToDbModel.PaymentDateAnnual = AddressToBeInputModel?.PaymentDateAnnual;
+			addressToDbModel.PaymentDateSemiAnnual1 = AddressToBeInputModel?.PaymentDateSemiAnnual1;
+			addressToDbModel.PaymentDateSemiAnnual2 = AddressToBeInputModel?.PaymentDateSemiAnnual2;
+			addressToDbModel.PaymentDateQuarterly1 = AddressToBeInputModel?.PaymentDateQuarterly1;
+			addressToDbModel.PaymentDateQuarterly2 = AddressToBeInputModel?.PaymentDateQuarterly2;
+			addressToDbModel.PaymentDateQuarterly3 = AddressToBeInputModel?.PaymentDateQuarterly3;
+			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel?.PaymentDateQuarterly4;
+			addressToDbModel.PaymentDateOther = AddressToBeInputModel?.PaymentDateOther;
+			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;			
+
+			if (AddressToBeInputModel is not null)
+			{
+				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
+				addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+			}
+
+			using (var uow = dataContext.CreateUnitOfWork())
+			{
+				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+				dataServiceResult = await testDataService.Update(addressToDbModel);
+			}
+		}
+		isSubmitting = false;
+		StateHasChanged();
+		return;
 	}
+
 	private void IsLegibleRadioSelect()
 	{
 		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.Yes)
@@ -315,11 +287,6 @@ else
 		if (AddressToBeInputModel is not null && isLegibleRadio == IsLegibleRadio.No)
 		{
 			AddressToBeInputModel.IsLegible = false;
-		}
-
-		if (editContext is not null)
-		{
-			editContext.OnFieldChanged += EditContextAddressOnFieldChanged;
 		}
 	}
 
@@ -340,79 +307,5 @@ else
 	{
 		AddressProcessed.InvokeAsync();
 	}
-
-	private void EditContextPaymentFrequencyOnFieldChanged(object sender, FieldChangedEventArgs e)
-	{
-		if (e.FieldIdentifier.FieldName == "GroundRentPaymentFrequency")
-		{
-			if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
-			{
-				TogglePaymentFrequencyAnnual();
-				AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
-				AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
-				AddressToBeInputModel.PaymentDateQuarterly1 = null;
-				AddressToBeInputModel.PaymentDateQuarterly2 = null;
-				AddressToBeInputModel.PaymentDateQuarterly3 = null;
-				AddressToBeInputModel.PaymentDateQuarterly4 = null;
-				AddressToBeInputModel.PaymentDateOther = null;
-			}
-			else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
-			{
-				TogglePaymentFrequencySemiAnnual();
-				AddressToBeInputModel.PaymentDateAnnual = null;
-				AddressToBeInputModel.PaymentDateQuarterly1 = null;
-				AddressToBeInputModel.PaymentDateQuarterly2 = null;
-				AddressToBeInputModel.PaymentDateQuarterly3 = null;
-				AddressToBeInputModel.PaymentDateQuarterly4 = null;
-				AddressToBeInputModel.PaymentDateOther = null;
-			}
-			else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
-			{
-				TogglePaymentFrequencyQuarterly();
-				AddressToBeInputModel.PaymentDateAnnual = null;
-				AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
-				AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
-				AddressToBeInputModel.PaymentDateOther = null;
-			}
-			else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
-			{
-				TogglePaymentFrequencyOther();
-				AddressToBeInputModel.PaymentDateAnnual = null;
-				AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
-				AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
-				AddressToBeInputModel.PaymentDateQuarterly1 = null;
-				AddressToBeInputModel.PaymentDateQuarterly2 = null;
-				AddressToBeInputModel.PaymentDateQuarterly3 = null;
-				AddressToBeInputModel.PaymentDateQuarterly4 = null;
-			}
-		}
-	}
-	private void TogglePaymentFrequencyAnnual()
-	{
-		paymentFrequencyAnnual = true;
-		paymentFrequencySemiAnnual = false;
-		paymentFrequencyQuarterly = false;
-		paymentFrequencyOther = false;
-	}
-	private void TogglePaymentFrequencySemiAnnual()
-	{
-		paymentFrequencyAnnual = false;
-		paymentFrequencySemiAnnual = true;
-		paymentFrequencyQuarterly = false;
-		paymentFrequencyOther = false;
-	}
-	private void TogglePaymentFrequencyQuarterly()
-	{
-		paymentFrequencyAnnual = false;
-		paymentFrequencySemiAnnual = false;
-		paymentFrequencyQuarterly = true;
-		paymentFrequencyOther = false;
-	}
-	private void TogglePaymentFrequencyOther()
-	{
-		paymentFrequencyAnnual = false;
-		paymentFrequencySemiAnnual = false;
-		paymentFrequencyQuarterly = false;
-		paymentFrequencyOther = true;
-	}
+	
 }
