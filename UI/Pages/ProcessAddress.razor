@@ -135,7 +135,7 @@ else
 		{
 			AddressToBeInputModel = address;
 			OriginalAddressModel = await LoadOriginalProcessedAddress(address.AccountId);
-			await scraper.Scrape(AddressToBeInputModel);
+			//await scraper.Scrape(AddressToBeInputModel);
 			await InvokeAsync(StateHasChanged);
 		}
 	}
