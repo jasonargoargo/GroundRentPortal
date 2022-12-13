@@ -51,6 +51,7 @@ else
 	private bool isValidationSuccessful { get; set; }	
 	private AuthenticationState? userState;
 	public AddressModel? AddressToBeInputModel { get; set; }
+	public AddressModel? OriginalAddressModel { get; set; }
 	private List<AddressModel> UnprocessedAddressList = new();
 	private List<AddressModel> UnverifiedAddressList = new();
 	private List<AddressModel> AddressList = new();
@@ -72,10 +73,14 @@ else
 			{
 				userState = await authenticationState;
 			}
-
-			CalculateListAmounts();
 			await LoadAddressList();
 			addressesLoaded = true;
+			foreach (var address in AddressList)
+			{
+				AddressToBeInputModel = address;
+				OriginalAddressModel = await LoadOriginalProcessedAddress(address.AccountId);
+			}
+			StateHasChanged();
 			await InvokeAsync(StateHasChanged);
 		}
 		catch (Exception ex)
@@ -100,13 +105,6 @@ else
 		AddressList.AddRange(UnverifiedAddressList);
 		UnprocessedAddressList = new();
 		UnverifiedAddressList = new();
-
-		foreach (var address in AddressList)
-		{
-			AddressToBeInputModel = address;
-		}
-
-		addressesLoaded = true;
 	}
 
 	private async Task<List<AddressModel>> LoadUnprocessedAddresses()
@@ -116,19 +114,27 @@ else
 			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
 			UnprocessedAddressList = await testDataService.ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse(UnprocessedAddressListAmount, "BaltimoreCity");
 		}
-
 		return UnprocessedAddressList;
 	}
 
 	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
 	{
+		CalculateListAmounts();
 		using (var uow = dataContext.CreateUnitOfWork())
 		{
 			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
 			UnverifiedAddressList = await testDataService.ReadByVerificationPercentageWhereIsLegibleTrueAndIsProcessedTrue(UnverifiedAddressListAmount);
 		}
-
 		return UnverifiedAddressList;
+	}
+	private async Task<AddressModel> LoadOriginalProcessedAddress(string accountId)
+	{
+		using (var uow = dataContext.CreateUnitOfWork())
+		{
+			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+			OriginalAddressModel = await testDataService.ReadByAccountId(accountId);
+		}
+		return OriginalAddressModel;
 	}
 
 	private void HandleInvalidSubmit() => isValidationSuccessful = false;
@@ -142,10 +148,14 @@ else
 		isValidationSuccessful = true;
 		isSubmitting = true;		
 
+		isSubmitting = true;
+		AddressModel addressToDbModel = new();
 		if (AddressToBeInputModel?.IsProcessed is true)
 		{
 			addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
-			addressToDbModel.IsProcessed = true;
+			addressToDbModel.IsProcessed = AddressToBeInputModel.IsProcessed;
+			addressToDbModel.IsVerified = true;
+			addressToDbModel.UserWhoProcessed = AddressToBeInputModel.UserWhoProcessed;
 			addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
 			addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
 			addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
@@ -160,15 +170,13 @@ else
 			addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
 			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;			
 
-			if (addressToDbModel.AccountId is not null)
+			AddressModel originalProcessedAddress = new();
+
+			using (var uow = dataContext.CreateUnitOfWork())
 			{
-				using (var uow = dataContext.CreateUnitOfWork())
-				{
-					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-					originalProcessedAddress = await testDataService.ReadByAccountId(addressToDbModel.AccountId);
-				}
+				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+				originalProcessedAddress = await testDataService.ReadByAccountId(addressToDbModel.AccountId);
 			}
-			
 
 			if (originalProcessedAddress.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency)
 			{
@@ -213,39 +221,32 @@ else
 					addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentDate;
 				}
 			}
-			if (originalProcessedAddress.IsLegible != addressToDbModel.IsLegible)
+			if (OriginalAddressModel.IsLegible != addressToDbModel.IsLegible)
 			{
 				addressToDbModel.IsVerified = false;
-				addressToDbModel.NotVerifiedType = AddressModel.InputType.IsLegible;
-				if (originalProcessedAddress.NotLegibleType != addressToDbModel.NotLegibleType)
-				{
-					addressToDbModel.NotVerifiedType = AddressModel.InputType.NotLegibleType;
-				}
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} selected IsLegible as {OriginalAddressModel.IsLegible}. {addressToDbModel.UserWhoVerified} selected IsLegible as {addressToDbModel.IsLegible}." + Environment.NewLine;
 			}
-			if (originalProcessedAddress.PaymentAmount != addressToDbModel.PaymentAmount)
+			if (OriginalAddressModel.PaymentAmount != addressToDbModel.PaymentAmount)
 			{
 				addressToDbModel.IsVerified = false;
-				addressToDbModel.NotVerifiedType = AddressModel.InputType.PaymentAmount;
-			}
-			else
-			{
-				addressToDbModel.IsVerified = true;
+				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Amount as {OriginalAddressModel.PaymentAmount}. {addressToDbModel.UserWhoVerified} input Payment Amount as {addressToDbModel.PaymentAmount}." + Environment.NewLine;
 			}
 
+			addressToDbModel.DifferencesNotesToDb = differencesNotesToDb;
 			using (var uow = dataContext.CreateUnitOfWork())
 			{
 				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
 				dataServiceResult = await testDataService.Update(addressToDbModel);
 			}
 		}
-
-		if (AddressToBeInputModel?.IsProcessed is null || AddressToBeInputModel?.IsProcessed is false)
+		// If address has not yet been processed
+		if (AddressToBeInputModel?.IsProcessed is null)
 		{
 			addressToDbModel.AccountId = AddressToBeInputModel?.AccountId;
 			addressToDbModel.IsProcessed = true;
-			addressToDbModel.IsVerified = null;
 			addressToDbModel.UserWhoProcessed = userState?.User.Identity?.Name;
-			addressToDbModel.PaymentAmount = AddressToBeInputModel?.PaymentAmount;						
+			addressToDbModel.PaymentAmount = AddressToBeInputModel?.PaymentAmount;
+			addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
 			addressToDbModel.PaymentDateAnnual = AddressToBeInputModel?.PaymentDateAnnual;
 			addressToDbModel.PaymentDateSemiAnnual1 = AddressToBeInputModel?.PaymentDateSemiAnnual1;
 			addressToDbModel.PaymentDateSemiAnnual2 = AddressToBeInputModel?.PaymentDateSemiAnnual2;
@@ -254,13 +255,8 @@ else
 			addressToDbModel.PaymentDateQuarterly3 = AddressToBeInputModel?.PaymentDateQuarterly3;
 			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel?.PaymentDateQuarterly4;
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel?.PaymentDateOther;
-			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;			
-
-			if (AddressToBeInputModel is not null)
-			{
-				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
-				addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
-			}
+			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;
+			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
 
 			using (var uow = dataContext.CreateUnitOfWork())
 			{

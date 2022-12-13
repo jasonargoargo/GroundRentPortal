@@ -24,5 +24,5 @@ select top (@UnverifiedAddressListAmount)
 [UserWhoVerified]
 	
 from dbo.[Test] 
-where [IsLegible] = 1 and [IsProcessed] = 1 and [IsVerified] is null
+where [IsProcessed] = 1
 end

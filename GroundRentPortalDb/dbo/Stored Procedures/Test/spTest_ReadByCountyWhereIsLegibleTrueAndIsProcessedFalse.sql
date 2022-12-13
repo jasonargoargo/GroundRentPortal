@@ -11,6 +11,7 @@ select top (@UnprocessedAddressListAmount)
 [IsVerified],
 [NotLegibleType],
 [NotVerifiedType],
+[DifferencesNotesToDb],
 [PaymentAmount],
 [PaymentFrequency],
 [PaymentDateAnnual],
@@ -25,5 +26,5 @@ select top (@UnprocessedAddressListAmount)
 [UserWhoVerified]
 	
 from dbo.[Test] 
-where [County] = @County and [IsLegible] = 1 and ([IsProcessed] = 0 or [IsProcessed] is null)
+where [County] = @County and [IsProcessed] is null
 end

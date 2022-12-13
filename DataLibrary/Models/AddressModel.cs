@@ -21,9 +21,10 @@ namespace DataLibrary.Models
         public enum InputType { PaymentAmount, PaymentDate, PaymentFrequency, IsLegible, NotLegibleType, Blank }
 		public InputType NotVerifiedType { get; set; } = new();
 		public InputType NotLegibleType { get; set; } = new();
+        [MaxLength(1024)] public string? DifferencesNotesToDb { get; set; }
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
         public enum PaymentFrequency { Annual, SemiAnnual, Quarterly, Other, Blank }
-        [Required] public PaymentFrequency GroundRentPaymentFrequency { get; set; }
+        [Required] public PaymentFrequency GroundRentPaymentFrequency { get; set; } = new();
         [DataType(DataType.DateTime)] public DateTime? PaymentDateAnnual { get; set; }
         [DataType(DataType.DateTime)] public DateTime? PaymentDateSemiAnnual1 { get; set; }
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateSemiAnnual2 { get; set; }
