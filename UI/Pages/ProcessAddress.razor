@@ -179,6 +179,7 @@ else
 			AddressModel addressToDbModel = new();
 			if (AddressToBeInputModel?.IsProcessed is true)
 			{
+				addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
 				addressToDbModel.IsVerified = true;
 				addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
 				addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
@@ -206,8 +207,9 @@ else
 			}
 			if (AddressToBeInputModel?.IsProcessed is false)
 			{
+				addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
 				addressToDbModel.IsProcessed = true;
-				addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
+				addressToDbModel.UserWhoProcessed = userState?.User.Identity?.Name;
 				addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
 				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
 				addressToDbModel.PaymentDateAnnual = AddressToBeInputModel.PaymentDateAnnual;

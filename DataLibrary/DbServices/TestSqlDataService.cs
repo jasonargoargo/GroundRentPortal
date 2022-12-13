@@ -19,14 +19,14 @@ public class TestSqlDataService : IGroundRentPortalDataService
         {
             var parms = new
             {
-                addressModel.AccountId,
+				addressModel.AccountId,
                 addressModel.IsProcessed,
                 addressModel.IsVerified,
                 addressModel.IsLegible,
                 addressModel.NotLegibleType,
                 addressModel.PaymentAmount,
-                addressModel.GroundRentPaymentFrequency,
-                addressModel.PaymentDateAnnual,
+				PaymentFrequency = addressModel.GroundRentPaymentFrequency,
+				addressModel.PaymentDateAnnual,
                 addressModel.PaymentDateSemiAnnual1,
                 addressModel.PaymentDateSemiAnnual2,
                 addressModel.PaymentDateQuarterly1,
