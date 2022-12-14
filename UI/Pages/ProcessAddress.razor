@@ -24,9 +24,11 @@
 				<CascadingValue Value="AddressToBeInputModel">
 					<PaymentAmountField />
 					<PaymentFrequencyField />
-					<DataLegibleRadio />
-				</CascadingValue>				
-				<FormSubmitButton />
+					<DataLegibleRadio />					
+				</CascadingValue>		
+				<CascadingValue Value="this">
+					<FormSubmitButton />
+				</CascadingValue>
 				@if (isValidationSuccessful)
 				{
 					snackbarNotification.Add("Submission successful!", Severity.Success);
@@ -37,7 +39,7 @@
 				</MudText>
 			</EditForm>
 		</div>
-	</div>	
+	</div>
 }
 else
 {
@@ -50,7 +52,7 @@ else
 	private AddressModel addressToDbModel = new();
 	private AddressModel originalProcessedAddress = new();
 	private ValidationMessageStore? validationMessageStore;
-	private bool isValidationSuccessful { get; set; }	
+	private bool isValidationSuccessful { get; set; }
 	private AuthenticationState? userState;
 	public AddressModel? AddressToBeInputModel { get; set; }
 	public AddressModel? OriginalAddressModel { get; set; }
@@ -62,7 +64,7 @@ else
 	private int UnverifiedAddressListAmount = default;
 	private bool addressesLoaded { get; set; } = false;
 	private bool addressSubmitted { get; set; } = false;
-	private bool isSubmitting { get; set; } = false;
+	public bool IsSubmitting { get; set; } = false;
 	private bool dataServiceResult { get; set; }
 
 	protected override async Task OnInitializedAsync()
@@ -140,15 +142,15 @@ else
 		}
 	}
 	private async Task HandleOnSubmit()
-	{	
-		if (isSubmitting)
-		{			
+	{
+		if (IsSubmitting)
+		{
 			return;
 		}
 		isValidationSuccessful = true;
-		isSubmitting = true;		
+		IsSubmitting = true;
 
-		isSubmitting = true;
+		IsSubmitting = true;
 		AddressModel addressToDbModel = new();
 		string differencesNotesToDb = "";
 		// If address has already been processed, it will now be verified
@@ -230,7 +232,10 @@ else
 			addressToDbModel.IsProcessed = true;
 			addressToDbModel.UserWhoProcessed = userState?.User.Identity?.Name;
 			addressToDbModel.PaymentAmount = AddressToBeInputModel?.PaymentAmount;
-			addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
+			if (AddressToBeInputModel?.GroundRentPaymentFrequency is not null)
+			{
+				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;	
+			}			
 			addressToDbModel.PaymentDateAnnual = AddressToBeInputModel?.PaymentDateAnnual;
 			addressToDbModel.PaymentDateSemiAnnual1 = AddressToBeInputModel?.PaymentDateSemiAnnual1;
 			addressToDbModel.PaymentDateSemiAnnual2 = AddressToBeInputModel?.PaymentDateSemiAnnual2;
@@ -240,7 +245,10 @@ else
 			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel?.PaymentDateQuarterly4;
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel?.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;
-			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+			if (AddressToBeInputModel is not null && addressToDbModel.IsLegible is false)
+			{
+				addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+			}
 
 			using (var uow = dataContext.CreateUnitOfWork())
 			{
@@ -249,7 +257,7 @@ else
 			}
 		}
 
-		isSubmitting = false;
+		IsSubmitting = false;
 		await InvokeAsync(StateHasChanged);
 		return;
 	}

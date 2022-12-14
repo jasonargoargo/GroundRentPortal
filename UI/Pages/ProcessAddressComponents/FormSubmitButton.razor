@@ -1,12 +1,18 @@
-﻿@namespace UI.Pages.ProcessAddressComponents
+﻿@using DataLibrary.Models
+@namespace UI.Pages.ProcessAddressComponents
 
 <div class="col gy-3">
-	<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn btn-primary mt-4"
-		ButtonType="ButtonType.Submit" Disabled="isSubmitting">
-		Submit
-	</MudButton>
+	@if (processAddress is not null)
+	{
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn btn-primary mt-2 mb-4" 
+			ButtonType="ButtonType.Submit"
+			Disabled="processAddress.IsSubmitting">
+			Submit
+		</MudButton>
+	}
 </div>
 
 @code {
-	private bool isSubmitting { get; set; } = false;
+	[CascadingParameter]
+	private ProcessAddress? processAddress { get; set; }
 }

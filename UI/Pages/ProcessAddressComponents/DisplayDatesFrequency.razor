@@ -5,7 +5,7 @@
 {
 	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Annual Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateAnnual" />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateAnnual" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Required />
 	</div>
 }
 
@@ -13,11 +13,11 @@
 {
 	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Semi-Annual 1 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual1" />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual1" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual1)" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Semi-Annual 2 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual2" />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual2" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual2)" Required />
 	</div>
 }
 
@@ -25,19 +25,19 @@
 {
 	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Quarterly 1 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly1" />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly1" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateQuarterly1)" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Quarterly 2 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly2" />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly2" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateQuarterly2)" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Quarterly 3 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly3" />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly3" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateQuarterly3)" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
 		<label>Quarterly 4 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly4" />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly4" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateQuarterly4)" Required />
 	</div>
 }
 
@@ -45,7 +45,7 @@
 {
 	<div class="col gy-3" style="max-width: 15em;">
 		<label>Other Date</label>
-		<MudInputString Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentDateOther" />
+		<MudInputString Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentDateOther" For="@(() => AddressToBeInputModel.PaymentDateOther)" Required />
 	</div>
 }
 
