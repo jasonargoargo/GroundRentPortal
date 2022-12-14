@@ -17,9 +17,8 @@ namespace DataLibrary.Models
         public bool? IsGroundRent { get; set; }
         public bool? IsProcessed { get; set; }
         public bool? IsVerified { get; set; }
-        public enum InputType { PaymentAmount, PaymentFrequency, PaymentDate, IsLegible, NotLegibleType, Blank }
-        [Required] public bool? IsLegible { get; set; }
-		public enum InputType { PaymentAmount, PaymentDate, PaymentFrequency, IsLegible, NotLegibleType, Blank }
+		[Required] public bool? IsLegible { get; set; }
+		public enum InputType { PaymentAmount, PaymentFrequency, PaymentDate, IsLegible, NotLegibleType, Blank }        
 		public InputType? NotVerifiedType { get; set; } = new();
 		public InputType? NotLegibleType { get; set; } = new();
         [MaxLength(1024)] public string? DifferencesNotesToDb { get; set; }
