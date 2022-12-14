@@ -24,9 +24,11 @@
 				<CascadingValue Value="AddressToBeInputModel">
 					<PaymentAmountField />
 					<PaymentFrequencyField />
-					<DataLegibleRadio />
+					<DataLegibleRadio />					
+				</CascadingValue>		
+				<CascadingValue Value="this">
+					<FormSubmitButton />
 				</CascadingValue>
-				<FormSubmitButton />
 				@if (isValidationSuccessful)
 				{
 					snackbarNotification.Add("Submission successful!", Severity.Success);
@@ -62,7 +64,7 @@ else
 	private int UnverifiedAddressListAmount = default;
 	private bool addressesLoaded { get; set; } = false;
 	private bool addressSubmitted { get; set; } = false;
-	private bool isSubmitting { get; set; } = false;
+	public bool IsSubmitting { get; set; } = false;
 	private bool dataServiceResult { get; set; }
 
 	protected override async Task OnInitializedAsync()
@@ -141,14 +143,14 @@ else
 	}
 	private async Task HandleOnSubmit()
 	{
-		if (isSubmitting)
+		if (IsSubmitting)
 		{
 			return;
 		}
 		isValidationSuccessful = true;
-		isSubmitting = true;
+		IsSubmitting = true;
 
-		isSubmitting = true;
+		IsSubmitting = true;
 		AddressModel addressToDbModel = new();
 		string differencesNotesToDb = "";
 		// If address has already been processed, it will now be verified
@@ -255,7 +257,7 @@ else
 			}
 		}
 
-		isSubmitting = false;
+		IsSubmitting = false;
 		await InvokeAsync(StateHasChanged);
 		return;
 	}
