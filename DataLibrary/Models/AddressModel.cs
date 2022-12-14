@@ -25,8 +25,8 @@ namespace DataLibrary.Models
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
         public enum PaymentFrequency { Annual, SemiAnnual, Quarterly, Other, Blank }
         [Required] public PaymentFrequency GroundRentPaymentFrequency { get; set; } = new();
-        [DataType(DataType.DateTime)] public DateTime? PaymentDateAnnual { get; set; }
-        [DataType(DataType.DateTime)] public DateTime? PaymentDateSemiAnnual1 { get; set; }
+		[DataType(DataType.DateTime)] public DateTime? PaymentDateAnnual { get; set; }
+		[DataType(DataType.DateTime)] public DateTime? PaymentDateSemiAnnual1 { get; set; }
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateSemiAnnual2 { get; set; }
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateQuarterly1 { get; set; }
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateQuarterly2 { get; set; }
