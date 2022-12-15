@@ -59,7 +59,6 @@ else
 	private List<AddressModel> UnprocessedAddressList = new();
 	private List<AddressModel> UnverifiedAddressList = new();
 	private List<AddressModel> AddressList = new();
-	public EventCallback AddressProcessed { get; set; }
 	private int UnprocessedAddressListAmount { get; set; } = 100;
 	private int UnverifiedAddressListAmount = default;
 	private bool addressesLoaded { get; set; } = false;
@@ -91,6 +90,7 @@ else
 		double percentage = UnprocessedAddressListAmount * 0.1;
 		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.AwayFromZero);
 	}
+
 	private async Task LoadAddressList()
 	{
 		addressesLoaded = false;
@@ -102,6 +102,7 @@ else
 		UnprocessedAddressList = new();
 		UnverifiedAddressList = new();
 	}
+
 	private async Task<List<AddressModel>> LoadUnprocessedAddresses()
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -111,6 +112,7 @@ else
 		}
 		return UnprocessedAddressList;
 	}
+
 	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
 	{
 		CalculateListAmounts();
@@ -121,6 +123,7 @@ else
 		}
 		return UnverifiedAddressList;
 	}
+
 	private async Task<AddressModel> LoadOriginalProcessedAddress(string accountId)
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -145,6 +148,55 @@ else
 			}
 		}
 	}
+
+	private void LogBackEndData()
+	{
+		if (AddressToBeInputModel?.IsProcessed is null)
+		{
+			logger.LogInformation("Form submit succesful! IsProcessed Status is NULL");
+		}
+		else
+		{
+			logger.LogInformation("Form submit succesful! IsProcessed Status has returned successfully");
+		}
+
+		if (AddressToBeInputModel?.IsLegible is true)
+		{
+			logger.LogInformation("IsLegible is true");
+		} else
+		{
+			logger.LogInformation("IsLegible is false");
+		}
+
+		if (AddressToBeInputModel?.NotLegibleType is not null)
+		{
+			logger.LogInformation($"NotLegibleType returned {AddressToBeInputModel?.NotLegibleType.Value}");
+		}
+
+		switch (AddressToBeInputModel?.GroundRentPaymentFrequency)
+		{
+			case AddressModel.PaymentFrequency.Annual:
+				logger.LogInformation($"Payment Date Annual submitted to Db as {AddressToBeInputModel?.PaymentDateAnnual}");
+				break;
+			case AddressModel.PaymentFrequency.SemiAnnual:
+				logger.LogInformation($"Payment Date Semi-Annual 1 submitted to Db as {AddressToBeInputModel?.PaymentDateSemiAnnual1}");
+				logger.LogInformation($"Payment Date Semi-Annual 2 submitted to Db as {AddressToBeInputModel?.PaymentDateSemiAnnual2}");
+				break;
+			case AddressModel.PaymentFrequency.Quarterly:
+				logger.LogInformation($"Payment Date Quarterly 1 submitted to Db as {AddressToBeInputModel?.PaymentDateQuarterly1}");
+				logger.LogInformation($"Payment Date Quarterly 2 submitted to Db as {AddressToBeInputModel?.PaymentDateQuarterly2}");
+				logger.LogInformation($"Payment Date Quarterly 3 submitted to Db as {AddressToBeInputModel?.PaymentDateQuarterly3}");
+				logger.LogInformation($"Payment Date Quarterly 4 submitted to Db as {AddressToBeInputModel?.PaymentDateQuarterly4}");
+				break;
+			case AddressModel.PaymentFrequency.Other:
+				logger.LogInformation($"Payment Frequency other submitted to Db as {AddressToBeInputModel?.PaymentDateOther}");
+				break;
+			case AddressModel.PaymentFrequency.Blank:
+				logger.LogInformation("Payment Frequency is blank");
+				break;
+		}		
+	}
+
 	private async Task HandleOnSubmit()
 	{
 		if (IsSubmitting)
@@ -153,10 +205,8 @@ else
 		}
 		isValidationSuccessful = true;
 		IsSubmitting = true;
-
-		IsSubmitting = true;
-		AddressModel addressToDbModel = new();
 		string differencesNotesToDb = "";
+
 		// If address has already been processed, it will now be verified
 		if (AddressToBeInputModel?.IsProcessed is true)
 		{
@@ -234,6 +284,7 @@ else
 				dataServiceResult = await testDataService.Update(addressToDbModel);
 			}
 		}
+
 		// If address has not yet been processed
 		if (AddressToBeInputModel?.IsProcessed is null)
 		{
@@ -267,6 +318,7 @@ else
 			}
 		}
 
+		LogBackEndData();
 		IsSubmitting = false;
 		await InvokeAsync(StateHasChanged);
 		return;
