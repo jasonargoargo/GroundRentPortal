@@ -19,8 +19,9 @@
 			<MudText Class="mt-2" Typo="Typo.h4">Process Address</MudText>
 			<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
 				<DataAnnotationsValidator />
-				<MudText Class="mt-2">@userState.User.Identity?.Name is currently processing @AddressToBeInputModel?.AccountId</MudText>
-				<MudText Color="Color.Primary">Addresses are loaded.</MudText>
+				<MudText Color="Color.Primary">Addresses successfully loaded.</MudText>
+				<MudText Class="mt-2">@userState.User.Identity?.Name is currently processing address id: @AddressToBeInputModel?.AccountId</MudText>
+				<MudText Class="mt-2">You have processed @counter addresses out of @AddressList.Count this session.</MudText>
 				<CascadingValue Value="AddressToBeInputModel">
 					<PaymentAmountField />
 					<PaymentFrequencyField />
@@ -59,12 +60,14 @@ else
 	private List<AddressModel> UnprocessedAddressList = new();
 	private List<AddressModel> UnverifiedAddressList = new();
 	private List<AddressModel> AddressList = new();
+	public EventCallback AddressProcessed { get; set; }
 	private int UnprocessedAddressListAmount { get; set; } = 100;
 	private int UnverifiedAddressListAmount = default;
 	private bool addressesLoaded { get; set; } = false;
 	private bool addressSubmitted { get; set; } = false;
 	public bool IsSubmitting { get; set; } = false;
 	private bool dataServiceResult { get; set; }
+	private int counter = 0;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -77,6 +80,9 @@ else
 				userState = await authenticationState;
 			}
 			await LoadAddressList();
+			AddressToBeInputModel = AddressList[0];
+			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[0].AccountId);
+			//await scraper.Scrape(AddressList[0]);
 			addressesLoaded = true;
 			await InvokeAsync(StateHasChanged);
 		}
@@ -85,68 +91,16 @@ else
 			logger.LogError($"Exception thrown during initilaztion {ex.Message}");
 		}
 	}
-	private void CalculateListAmounts()
-	{
-		double percentage = UnprocessedAddressListAmount * 0.1;
-		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.AwayFromZero);
-	}
 
-	private async Task LoadAddressList()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		addressesLoaded = false;
-		AddressList = new();
-		UnprocessedAddressList = await LoadUnprocessedAddresses();
-		UnverifiedAddressList = await LoadUnverifiedAddresses();
-		AddressList.AddRange(UnprocessedAddressList);
-		AddressList.AddRange(UnverifiedAddressList);
-		UnprocessedAddressList = new();
-		UnverifiedAddressList = new();
-	}
-
-	private async Task<List<AddressModel>> LoadUnprocessedAddresses()
-	{
-		using (var uow = dataContext.CreateUnitOfWork())
+		if (!firstRender)
 		{
-			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-			UnprocessedAddressList = await testDataService.ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse(UnprocessedAddressListAmount, "BaltimoreCity");
+			AddressToBeInputModel = AddressList[counter];
+			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[counter].AccountId);
+			await InvokeAsync(StateHasChanged);
 		}
-		return UnprocessedAddressList;
-	}
-
-	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
-	{
-		CalculateListAmounts();
-		using (var uow = dataContext.CreateUnitOfWork())
-		{
-			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-			UnverifiedAddressList = await testDataService.ReadByVerificationPercentageWhereIsLegibleTrueAndIsProcessedTrue(UnverifiedAddressListAmount);
-		}
-		return UnverifiedAddressList;
-	}
-
-	private async Task<AddressModel> LoadOriginalProcessedAddress(string accountId)
-	{
-		using (var uow = dataContext.CreateUnitOfWork())
-		{
-			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-			OriginalAddressModel = await testDataService.ReadByAccountId(accountId);
-		}
-		return OriginalAddressModel;
-	}
-	private void HandleInvalidSubmit() => isValidationSuccessful = false;
-
-	protected override async Task OnParametersSetAsync()
-	{
-		foreach (var address in AddressList)
-		{
-			if (address.AccountId is not null)
-			{
-				AddressToBeInputModel = address;
-				OriginalAddressModel = await LoadOriginalProcessedAddress(address.AccountId);
-				//await scraper.Scrape(AddressToBeInputModel);
-				await InvokeAsync(StateHasChanged);
-			}
-		}
+		await base.OnAfterRenderAsync(firstRender);
 	}
 
 	private void LogBackEndData()
@@ -197,16 +151,66 @@ else
 		}		
 	}
 
+	private void CalculateListAmounts()
+	{
+		double percentage = UnprocessedAddressListAmount * 0.1;
+		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.AwayFromZero);
+	}
+
+	private async Task LoadAddressList()
+	{
+		addressesLoaded = false;
+		AddressList = new();
+		UnprocessedAddressList = await LoadUnprocessedAddresses();
+		UnverifiedAddressList = await LoadUnverifiedAddresses();
+		AddressList.AddRange(UnprocessedAddressList);
+		AddressList.AddRange(UnverifiedAddressList);
+		UnprocessedAddressList = new();
+		UnverifiedAddressList = new();
+	}
+
+	private async Task<List<AddressModel>> LoadUnprocessedAddresses()
+	{
+		using (var uow = dataContext.CreateUnitOfWork())
+		{
+			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+			UnprocessedAddressList = await testDataService.ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse(UnprocessedAddressListAmount, "BaltimoreCity");
+		}
+		return UnprocessedAddressList;
+	}
+
+	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
+	{
+		CalculateListAmounts();
+		using (var uow = dataContext.CreateUnitOfWork())
+		{
+			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+			UnverifiedAddressList = await testDataService.ReadByVerificationPercentageWhereIsLegibleTrueAndIsProcessedTrue(UnverifiedAddressListAmount);
+		}
+		return UnverifiedAddressList;
+	}
+
+	private async Task<AddressModel> LoadOriginalProcessedAddress(string accountId)
+	{
+		using (var uow = dataContext.CreateUnitOfWork())
+		{
+			var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+			OriginalAddressModel = await testDataService.ReadByAccountId(accountId);
+		}
+		return OriginalAddressModel;
+	}
+	private void HandleInvalidSubmit() => isValidationSuccessful = false;
+
 	private async Task HandleOnSubmit()
 	{
 		if (IsSubmitting)
 		{
 			return;
 		}
+
 		isValidationSuccessful = true;
 		IsSubmitting = true;
 		string differencesNotesToDb = "";
-
 		// If address has already been processed, it will now be verified
 		if (AddressToBeInputModel?.IsProcessed is true)
 		{
@@ -283,8 +287,11 @@ else
 				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
 				dataServiceResult = await testDataService.Update(addressToDbModel);
 			}
+			if (dataServiceResult is true)
+			{
+				counter++;
+			}
 		}
-
 		// If address has not yet been processed
 		if (AddressToBeInputModel?.IsProcessed is null)
 		{
@@ -316,9 +323,14 @@ else
 				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
 				dataServiceResult = await testDataService.Update(addressToDbModel);
 			}
+			if (dataServiceResult is true)
+			{
+				counter++;
+			}
 		}
 
 		LogBackEndData();
+		isValidationSuccessful = false;
 		IsSubmitting = false;
 		await InvokeAsync(StateHasChanged);
 		return;
