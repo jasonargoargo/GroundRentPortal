@@ -4,40 +4,41 @@
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
 {
 	<div class="col gy-3" style="max-width: fit-content;">
-		<label>Annual Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateAnnual" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Required />
+		<MudText Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker Variant="Variant.Filled" Label="Annual Date" @bind-Date="AddressToBeInputModel.PaymentDateAnnual"
+				   For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Required />
 	</div>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
 {
 	<div class="col gy-3" style="max-width: fit-content;">
-		<label>Semi-Annual 1 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual1" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual1)" Required />
+		<MudText Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual1" Label="Semi-Annual 1 Date" Variant="Variant.Filled" For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual1)" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
-		<label>Semi-Annual 2 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual2" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual2)" Required />
+		<MudText Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual2" Label="Semi-Annual 2 Date" Variant="Variant.Filled" For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual2)" Required />
 	</div>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
 {
 	<div class="col gy-3" style="max-width: fit-content;">
-		<label>Quarterly 1 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly1" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateQuarterly1)" Required />
+		<MudText Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly1" Variant="Variant.Filled" Label="Quarterly 1 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly1)" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
-		<label>Quarterly 2 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly2" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateQuarterly2)" Required />
+		<MudText Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly2" Variant="Variant.Filled" Label="Quarterly 2 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly2)" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
-		<label>Quarterly 3 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly3" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateQuarterly3)" Required />
+		<MudText Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly3" Variant="Variant.Filled" Label="Quarterly 3 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly3)" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
-		<label>Quarterly 4 Date</label>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly4" PickerVariant="PickerVariant.Static" For="@(() => AddressToBeInputModel.PaymentDateQuarterly4)" Required />
+		<MudText Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly4" Variant="Variant.Filled" Label="Quarterly 4 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly4)" Required />
 	</div>
 }
 
