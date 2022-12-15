@@ -28,7 +28,7 @@
 					<DataLegibleRadio />
 				</CascadingValue>
 				<CascadingValue Value="this">
-					<FormSubmitButton />
+					<SubmitButton />
 				</CascadingValue>
 				@if (isValidationSuccessful)
 				{
@@ -79,6 +79,7 @@ else
 			{
 				userState = await authenticationState;
 			}
+
 			await LoadAddressList();
 			AddressToBeInputModel = AddressList[0];
 			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[0].AccountId);
@@ -312,6 +313,7 @@ else
 			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel?.PaymentDateQuarterly4;
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel?.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;
+
 			if (AddressToBeInputModel is not null && addressToDbModel.IsLegible is false)
 			{
 				addressToDbModel.NotLegibleType = null;
