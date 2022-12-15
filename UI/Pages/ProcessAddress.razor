@@ -93,16 +93,16 @@ else
 		}
 	}
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (!firstRender)
-		{
-			AddressToBeInputModel = AddressList[counter];
-			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[counter].AccountId);
-			await InvokeAsync(StateHasChanged);
-		}
-		await base.OnAfterRenderAsync(firstRender);
-	}
+	//protected override async Task OnAfterRenderAsync(bool firstRender)
+	//{
+	//	if (!firstRender)
+	//	{
+	//		AddressToBeInputModel = AddressList[counter];
+	//		OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[counter].AccountId);
+	//		await InvokeAsync(StateHasChanged);
+	//	}
+	//	await base.OnAfterRenderAsync(firstRender);
+	//}
 
 	private void LogBackEndData()
 	{
