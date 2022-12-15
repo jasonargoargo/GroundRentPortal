@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ExpressiveAnnotations.Attributes;
 
 namespace DataLibrary.Models
 {
@@ -25,12 +26,19 @@ namespace DataLibrary.Models
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
         public enum PaymentFrequency { Annual, SemiAnnual, Quarterly, Other, Blank }
         [Required] public PaymentFrequency GroundRentPaymentFrequency { get; set; } = new();
-		[DataType(DataType.DateTime)] public DateTime? PaymentDateAnnual { get; set; }
+		[RequiredIf("GroundRentPaymentFrequency == PaymentFrequency.Annual")]
+        [DataType(DataType.DateTime)] public DateTime? PaymentDateAnnual { get; set; }
+		[RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual")]
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateSemiAnnual1 { get; set; }
+		[RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual")]
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateSemiAnnual2 { get; set; }
+		[RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly")]
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateQuarterly1 { get; set; }
+		[RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly")]
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateQuarterly2 { get; set; }
+		[RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly")]
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateQuarterly3 { get; set; }
+		[RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly")]
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateQuarterly4 { get; set; }
 		[MaxLength(64)]public string? PaymentDateOther { get; set; }
         public string? UserWhoProcessed { get; set; }
