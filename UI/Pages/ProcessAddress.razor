@@ -131,15 +131,10 @@ else
 		return OriginalAddressModel;
 	}
 	private void HandleInvalidSubmit() => isValidationSuccessful = false;
-	protected override async Task OnParametersSetAsync()
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		foreach (var address in AddressList)
-		{
-			AddressToBeInputModel = address;
-			OriginalAddressModel = await LoadOriginalProcessedAddress(address.AccountId);
-			//await scraper.Scrape(AddressToBeInputModel);
-			await InvokeAsync(StateHasChanged);
-		}
+
+		await base.OnAfterRenderAsync(firstRender);
 	}
 	private async Task HandleOnSubmit()
 	{
