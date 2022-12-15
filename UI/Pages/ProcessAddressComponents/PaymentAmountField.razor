@@ -3,7 +3,7 @@
 @namespace UI.Pages.ProcessAddressComponents
 
 <div class="col gy-3">
-	<label>Payment Amount</label>
+	<MudText>Payment Amount</MudText>
 	@if (AddressToBeInputModel is not null)
 	{
 		<MudNumericField T="decimal?" Format="F2" Culture="CultureInfo.CurrentCulture" Label=@($"Currency Amount ${AddressToBeInputModel.PaymentAmount}")
