@@ -134,13 +134,13 @@ else
 	private void CalculateListAmounts()
 	{
 		double percentage = UnprocessedAddressListAmount * 0.1;
-		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.ToPositiveInfinity);
+		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.AwayFromZero);
 	}
 	private async Task LoadAddressList()
 	{
 		addressesLoaded = false;
 		AddressList = new();
-		//UnprocessedAddressList = await LoadUnprocessedAddresses();
+		UnprocessedAddressList = await LoadUnprocessedAddresses();
 		UnverifiedAddressList = await LoadUnverifiedAddresses();
 		AddressList.AddRange(UnprocessedAddressList);
 		AddressList.AddRange(UnverifiedAddressList);
