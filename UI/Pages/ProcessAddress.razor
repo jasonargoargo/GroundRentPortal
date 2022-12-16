@@ -126,6 +126,7 @@ else
 		{
 			AddressToBeInputModel = AddressList[counter];
 			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[counter].AccountId);
+			//await scraper.Scrape(AddressList[counter]);
 			await InvokeAsync(StateHasChanged);
 		}
 		await base.OnAfterRenderAsync(firstRender);
