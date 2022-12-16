@@ -16,7 +16,7 @@
     [IsLegible] BIT NULL,
     [NotLegibleType] NCHAR(32) NULL,
     [NotVerifiedType] NCHAR(32) NULL,
-    [DifferencesNotesToDb] NVARCHAR(1024) NULL,
+    [DataDifferencesJson] NVARCHAR(2048) NULL,
     [PaymentAmount] SMALLMONEY NULL,
     [PaymentFrequency] NCHAR(16) NULL,
     [PaymentDateAnnual] SMALLDATETIME NULL,

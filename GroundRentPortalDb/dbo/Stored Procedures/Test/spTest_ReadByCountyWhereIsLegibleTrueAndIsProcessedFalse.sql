@@ -11,7 +11,6 @@ select top (@UnprocessedAddressListAmount)
 [IsVerified],
 [NotLegibleType],
 [NotVerifiedType],
-[DifferencesNotesToDb],
 [PaymentAmount],
 [PaymentFrequency],
 [PaymentDateAnnual],

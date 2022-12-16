@@ -22,7 +22,7 @@ namespace DataLibrary.Models
 		public enum InputType { PaymentAmount, PaymentFrequency, PaymentDate, IsLegible, NotLegibleType, Blank }        
 		public InputType? NotVerifiedType { get; set; } = new();
 		public InputType? NotLegibleType { get; set; } = new();
-        [MaxLength(1024)] public string? DifferencesNotesToDb { get; set; }
+        [MaxLength(2048)] public string? DataDifferencesJson { get; set; }
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
         public enum PaymentFrequency { Annual, SemiAnnual, Quarterly, Other, Blank }
         [Required] public PaymentFrequency GroundRentPaymentFrequency { get; set; } = new();
