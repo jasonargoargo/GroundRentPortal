@@ -18,12 +18,13 @@
 {
 	<div class="row">
 		<div class="col gy-3">
-			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Filled"
+			<MudSelect Variant="Variant.Filled" ValueChanged="OnNotLegibleTypeChanged"
 				Label="What is illegible?" 
 				Style="max-width: fit-content;">
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentFrequency">Payment Frequency</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDate">Payment Date</MudSelectItem>
+				<MudSelectItem Value="@AddressModel.InputType.Blank"></MudSelectItem>
+				<MudSelectItem Value="@AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
+				<MudSelectItem Value="@AddressModel.InputType.PaymentFrequency">Payment Frequency</MudSelectItem>
+				<MudSelectItem Value="@AddressModel.InputType.PaymentDate">Payment Date</MudSelectItem>
 			</MudSelect>
 		</div>
 	</div>
@@ -32,4 +33,18 @@
 @code {
 	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
+	[Parameter]
+	public EventCallback<AddressModel.InputType> OnNotLegibleTypeChanged { get; set; }
+	protected override void OnInitialized()
+	{
+		if (AddressToBeInputModel is not null)
+		{
+			AddressToBeInputModel.NotLegibleType = AddressModel.InputType.Blank;
+		}
+		base.OnInitialized();
+	}
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		await base.OnAfterRenderAsync(firstRender);
+	}
 }

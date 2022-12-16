@@ -19,9 +19,9 @@ namespace DataLibrary.Models
         public bool? IsProcessed { get; set; }
         public bool? IsVerified { get; set; }
 		[Required] public bool? IsLegible { get; set; }
-		public enum InputType { PaymentAmount, PaymentFrequency, PaymentDate, IsLegible, NotLegibleType, Blank }        
-		public InputType? NotVerifiedType { get; set; } = new();
-		public InputType? NotLegibleType { get; set; } = new();
+		public enum InputType { Blank, PaymentAmount, PaymentFrequency, PaymentDate, IsLegible, NotLegibleType }        
+		public InputType? NotVerifiedType { get; set; }
+		public InputType? NotLegibleType { get; set; }
         [MaxLength(2048)] public string? DataDifferencesJson { get; set; }
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
         public enum PaymentFrequency { Blank, Annual, SemiAnnual, Quarterly, Other }

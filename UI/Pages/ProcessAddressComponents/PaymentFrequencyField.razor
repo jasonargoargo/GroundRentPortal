@@ -33,5 +33,60 @@
 			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
 		}
 		base.OnInitialized();
-	}	
+	}
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (!firstRender)
+		{
+			if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
+			{
+				AddressToBeInputModel.PaymentDateAnnual = null;
+				AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+				AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+				AddressToBeInputModel.PaymentDateQuarterly1 = null;
+				AddressToBeInputModel.PaymentDateQuarterly2 = null;
+				AddressToBeInputModel.PaymentDateQuarterly3 = null;
+				AddressToBeInputModel.PaymentDateQuarterly4 = null;
+				AddressToBeInputModel.PaymentDateOther = null;
+			}
+			else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
+			{
+				AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+				AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+				AddressToBeInputModel.PaymentDateQuarterly1 = null;
+				AddressToBeInputModel.PaymentDateQuarterly2 = null;
+				AddressToBeInputModel.PaymentDateQuarterly3 = null;
+				AddressToBeInputModel.PaymentDateQuarterly4 = null;
+				AddressToBeInputModel.PaymentDateOther = null;
+			}
+			else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
+			{
+				AddressToBeInputModel.PaymentDateAnnual = null;
+				AddressToBeInputModel.PaymentDateQuarterly1 = null;
+				AddressToBeInputModel.PaymentDateQuarterly2 = null;
+				AddressToBeInputModel.PaymentDateQuarterly3 = null;
+				AddressToBeInputModel.PaymentDateQuarterly4 = null;
+				AddressToBeInputModel.PaymentDateOther = null;
+			}
+			else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
+			{
+				AddressToBeInputModel.PaymentDateAnnual = null;
+				AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+				AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+				AddressToBeInputModel.PaymentDateOther = null;
+			}
+			else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
+			{
+				AddressToBeInputModel.PaymentDateAnnual = null;
+				AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+				AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+				AddressToBeInputModel.PaymentDateQuarterly1 = null;
+				AddressToBeInputModel.PaymentDateQuarterly2 = null;
+				AddressToBeInputModel.PaymentDateQuarterly3 = null;
+				AddressToBeInputModel.PaymentDateQuarterly4 = null;
+			}
+			await InvokeAsync(StateHasChanged);
+		}
+		await base.OnAfterRenderAsync(firstRender);
+	}
 }
