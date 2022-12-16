@@ -115,7 +115,6 @@ else
 		double percentage = UnprocessedAddressListAmount * 0.1;
 		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.AwayFromZero);
 	}
-
 	private async Task LoadAddressList()
 	{
 		addressesLoaded = false;
@@ -127,7 +126,6 @@ else
 		UnprocessedAddressList = new();
 		UnverifiedAddressList = new();
 	}
-
 	private async Task<List<AddressModel>> LoadUnprocessedAddresses()
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -137,7 +135,6 @@ else
 		}
 		return UnprocessedAddressList;
 	}
-
 	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
 	{
 		CalculateListAmounts();
@@ -148,7 +145,6 @@ else
 		}
 		return UnverifiedAddressList;
 	}
-
 	private async Task<AddressModel> LoadOriginalProcessedAddress(string accountId)
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -159,7 +155,6 @@ else
 		return OriginalAddressModel;
 	}
 	private void HandleInvalidSubmit() => isValidationSuccessful = false;
-
 	private void UpdatePaymentFrequency(AddressModel.PaymentFrequency paymentFrequency)
 	{
 		if(AddressToBeInputModel is not null)
@@ -204,7 +199,6 @@ else
 			AddressToBeInputModel.PaymentDateQuarterly4 = null;
 		}
 	}
-
 	private async Task HandleOnSubmit()
 	{
 		if (IsSubmitting)
