@@ -27,7 +27,7 @@
 					<MudText Class="mt-2">You have processed @counter addresses out of @AddressList.Count this session.</MudText>
 					<CascadingValue Value="AddressToBeInputModel">
 						<PaymentAmountField />
-						<PaymentFrequencyField />
+						<PaymentFrequencyField OnPaymentFrequencyChanged="UpdatePaymentFrequency" />
 						<DataLegibleRadio />
 					</CascadingValue>
 					<CascadingValue Value="this">
