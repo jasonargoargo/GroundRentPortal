@@ -15,7 +15,6 @@
     [IsVerified] BIT NULL,
     [IsLegible] BIT NULL,
     [NotLegibleType] NCHAR(32) NULL,
-    [NotVerifiedType] NCHAR(32) NULL,
     [DataDifferencesJson] NVARCHAR(2048) NULL,
     [PaymentAmount] SMALLMONEY NULL,
     [PaymentFrequency] NCHAR(16) NULL,
