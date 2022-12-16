@@ -24,7 +24,7 @@ namespace DataLibrary.Models
 		public InputType? NotLegibleType { get; set; } = new();
         [MaxLength(1024)] public string? DifferencesNotesToDb { get; set; }
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
-        public enum PaymentFrequency { Annual, SemiAnnual, Quarterly, Other, Blank }
+        public enum PaymentFrequency { Blank, Annual, SemiAnnual, Quarterly, Other }
         [Required] public PaymentFrequency GroundRentPaymentFrequency { get; set; } = new();
 		[RequiredIf("GroundRentPaymentFrequency == PaymentFrequency.Annual", ErrorMessage = "An annual date selection must be made")]
         [DataType(DataType.DateTime)] public DateTime? PaymentDateAnnual { get; set; }
