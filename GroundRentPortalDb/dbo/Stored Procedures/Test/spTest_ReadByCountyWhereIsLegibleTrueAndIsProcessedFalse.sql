@@ -24,5 +24,5 @@ select top (@UnprocessedAddressListAmount)
 [UserWhoVerified]
 	
 from dbo.[Test] 
-where [County] = @County and [IsProcessed] is null
+where [County] = @County and [IsProcessed] is null and ([IsLegible] = 1 or [IsLegible] is null)
 end
