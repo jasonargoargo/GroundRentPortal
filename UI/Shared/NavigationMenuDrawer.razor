@@ -1,6 +1,6 @@
 ﻿@namespace UI.Shared
 
-<MudDrawer Open="IsDrawerOpen">
+<MudDrawer Open="IsDrawerOpen" @ontouchend="() => IsDrawerOpen = !IsDrawerOpen">
 	<div class="navigation-container">
 		<LoginDisplay />
 		<MudText Class="ml-2" Typo="Typo.body2">Dark Mode:</MudText>
