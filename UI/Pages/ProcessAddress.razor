@@ -24,7 +24,7 @@
 				<MudText Class="mt-2">You have processed @counter addresses out of @AddressList.Count this session.</MudText>
 				<CascadingValue Value="AddressToBeInputModel">
 					<PaymentAmountField />
-					<PaymentFrequencyField />
+					<PaymentFrequencyField OnPaymentFrequencyChanged="UpdatePaymentFrequency" />
 					<DataLegibleRadio />
 				</CascadingValue>
 				<CascadingValue Value="this">
@@ -106,7 +106,7 @@ else
 
 	private void LogBackEndData()
 	{
-		if (AddressToBeInputModel?.IsProcessed is null)
+		if (addressToDbModel?.IsProcessed is null)
 		{
 			logger.LogInformation("Form submit succesful! IsProcessed Status is NULL");
 		}
@@ -115,17 +115,21 @@ else
 			logger.LogInformation("Form submit succesful! IsProcessed Status has returned successfully");
 		}
 
-		if (AddressToBeInputModel?.IsLegible is true)
+		if (addressToDbModel?.IsLegible is true)
 		{
 			logger.LogInformation("IsLegible is true");
-		} else
+		}
+		else
 		{
 			logger.LogInformation("IsLegible is false");
 		}
 
-		if (AddressToBeInputModel?.NotLegibleType is not null)
+		if (addressToDbModel?.NotLegibleType is not null)
 		{
-			logger.LogInformation($"NotLegibleType returned {AddressToBeInputModel?.NotLegibleType.Value}");
+			logger.LogInformation($"NotLegibleType returned {addressToDbModel?.NotLegibleType.Value}");
+		}else
+		{
+			logger.LogInformation($"NotLegibleType is NULL");
 		}
 
 		switch (AddressToBeInputModel?.GroundRentPaymentFrequency)
@@ -149,7 +153,7 @@ else
 			case AddressModel.PaymentFrequency.Blank:
 				logger.LogInformation("Payment Frequency is blank");
 				break;
-		}		
+		}
 	}
 
 	private void CalculateListAmounts()
@@ -201,6 +205,52 @@ else
 		return OriginalAddressModel;
 	}
 	private void HandleInvalidSubmit() => isValidationSuccessful = false;
+
+	private void UpdatePaymentFrequency(AddressModel.PaymentFrequency paymentFrequency)
+	{
+		if(AddressToBeInputModel is not null)
+		{
+			AddressToBeInputModel.GroundRentPaymentFrequency = paymentFrequency;
+		}		
+
+		if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
+		{
+			AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+			AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+			AddressToBeInputModel.PaymentDateQuarterly1 = null;
+			AddressToBeInputModel.PaymentDateQuarterly2 = null;
+			AddressToBeInputModel.PaymentDateQuarterly3 = null;
+			AddressToBeInputModel.PaymentDateQuarterly4 = null;
+			AddressToBeInputModel.PaymentDateOther = null;
+		}
+		else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
+		{
+			AddressToBeInputModel.PaymentDateAnnual = null;
+			AddressToBeInputModel.PaymentDateQuarterly1 = null;
+			AddressToBeInputModel.PaymentDateQuarterly2 = null;
+			AddressToBeInputModel.PaymentDateQuarterly3 = null;
+			AddressToBeInputModel.PaymentDateQuarterly4 = null;
+			AddressToBeInputModel.PaymentDateOther = null;
+		}
+		else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
+		{
+			AddressToBeInputModel.PaymentDateAnnual = null;
+			AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+			AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+			AddressToBeInputModel.PaymentDateOther = null;
+		}
+		else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
+		{
+			AddressToBeInputModel.PaymentDateAnnual = null;
+			AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+			AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+			AddressToBeInputModel.PaymentDateQuarterly1 = null;
+			AddressToBeInputModel.PaymentDateQuarterly2 = null;
+			AddressToBeInputModel.PaymentDateQuarterly3 = null;
+			AddressToBeInputModel.PaymentDateQuarterly4 = null;
+		}
+
+	}
 
 	private async Task HandleOnSubmit()
 	{
@@ -314,7 +364,7 @@ else
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel?.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;
 
-			if (AddressToBeInputModel is not null && addressToDbModel.IsLegible is false)
+			if (addressToDbModel is not null && addressToDbModel.IsLegible is false)
 			{
 				addressToDbModel.NotLegibleType = null;
 				addressToDbModel.NotVerifiedType = null;
@@ -322,8 +372,11 @@ else
 
 			using (var uow = dataContext.CreateUnitOfWork())
 			{
-				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-				dataServiceResult = await testDataService.Update(addressToDbModel);
+				if (addressToDbModel is not null)
+				{
+					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+					dataServiceResult = await testDataService.Update(addressToDbModel);
+				}
 			}
 			if (dataServiceResult is true)
 			{

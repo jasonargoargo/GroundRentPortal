@@ -5,7 +5,7 @@
 	<MudText>Payment Frequency</MudText>
 	@if (AddressToBeInputModel is not null)
 	{
-		<MudSelect Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.GroundRentPaymentFrequency"
+		<MudSelect Variant="Variant.Filled" ValueChanged="OnPaymentFrequencyChanged"
 			   Style="max-width: fit-content;" Required>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.Blank"></MudSelectItem>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.Annual">Annual</MudSelectItem>
@@ -23,6 +23,8 @@
 @code {
 	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
+	[Parameter]
+	public EventCallback<AddressModel.PaymentFrequency> OnPaymentFrequencyChanged { get; set; }
 
 	protected override void OnInitialized()
 	{
