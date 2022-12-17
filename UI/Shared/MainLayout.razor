@@ -5,14 +5,15 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>	
-	<MudAppBar>		
+<MudLayout>
+	<MudAppBar>
 		<MudIconButton Style="color: white;" Icon="@Icons.Filled.Menu" OnClick="() => _isNavigationMenuOpened = !_isNavigationMenuOpened" />
-		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>		
+		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>
 	</MudAppBar>
-	<NavigationMenuDrawer IsDrawerOpen="_isNavigationMenuOpened" OnIsDarkTheme="UpdateIsDarkTheme" 
-		OnMudThemeChanged="SwitchTheme" IsDarkThemeDisabled="isMidThemeSelected" IsMidThemeDisabled="_isDarkMode" />
-	<MudMainContent>		
+	<NavigationMenuDrawer IsDrawerOpen="_isNavigationMenuOpened" OnIsDarkTheme="UpdateIsDarkTheme"
+						  OnMudThemeChanged="SwitchTheme" IsDarkThemeDisabled="isMidThemeSelected"
+						  IsMidThemeDisabled="_isDarkMode" HasDetectedDarkTheme="_isDarkMode" />
+	<MudMainContent>
 		@Body
 	</MudMainContent>
 </MudLayout>
@@ -33,25 +34,23 @@
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender && _mudThemeProvider is not null)
-		{			
+		{
 			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
 			await InvokeAsync(StateHasChanged);
 		}
 	}
 
-	private void UpdateIsDarkTheme(bool value)
-	{
-		_isDarkMode = value;
-	}
+	private void UpdateIsDarkTheme(bool value) => _isDarkMode = value;
 
 	private void SwitchTheme(bool value)
 	{
 		isMidThemeSelected = value;
 
-		if(isMidThemeSelected)
+		if (isMidThemeSelected)
 		{
-			currentMudTheme = MidTheme;	
-		}else
+			currentMudTheme = MidTheme;
+		}
+		else
 		{
 			currentMudTheme = MainTheme;
 		}
@@ -60,14 +59,14 @@
 	MudTheme MainTheme = new MudTheme()
 		{
 			Palette = new Palette()
-			{				
+			{
 				Primary = "#be894a",
 				Secondary = "#4d4d4d",
 				AppbarBackground = "#be894a",
 			},
 			PaletteDark = new PaletteDark()
 			{
-				Primary = "#0099f5",				
+				Primary = "#0099f5",
 				PrimaryDarken = "#008cdf",
 				Secondary = "#000000",
 				TextPrimary = "#ffffff",

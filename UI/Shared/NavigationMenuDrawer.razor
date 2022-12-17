@@ -4,7 +4,7 @@
 	<div class="navigation-container">
 		<LoginDisplay />
 		<MudText Class="ml-2" Typo="Typo.body2">Dark Theme:</MudText>
-		<MudSwitch Class="ml-2" CheckedChanged="OnIsDarkTheme" Color="Color.Secondary" Disabled="IsDarkThemeDisabled" />
+		<MudSwitch Class="ml-2" Checked="HasDetectedDarkTheme" CheckedChanged="OnIsDarkTheme" Color="Color.Secondary" Disabled="IsDarkThemeDisabled" />
 		<MudText Class="ml-2" Typo="Typo.body2">Mid-Theme:</MudText>
 		<MudSwitch Class="ml-2" CheckedChanged="OnMudThemeChanged" Color="Color.Secondary" Disabled="IsMidThemeDisabled" />
 		<MudButton Class="ml-2" StartIcon="@Icons.Filled.Home" Color="Color.Primary" Href="/">Home</MudButton>
@@ -23,4 +23,6 @@
 	public bool IsDarkThemeDisabled { get; set; }
 	[Parameter]
 	public bool IsMidThemeDisabled { get; set; }
+	[Parameter]
+	public bool HasDetectedDarkTheme { get; set; }
 }
