@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @namespace UI.Shared
 <PageTitle>Ground Rent Portal</PageTitle>
-<MudThemeProvider @bind-IsDarkMode="_isDarkMode" Theme="MainTheme" />
+<MudThemeProvider @bind-IsDarkMode="_isDarkMode" Theme="currentMudTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -10,7 +10,7 @@
 		<MudIconButton Style="color: white;" Icon="@Icons.Filled.Menu" OnClick="() => _isNavigationMenuOpened = !_isNavigationMenuOpened" />
 		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>		
 	</MudAppBar>
-	<NavigationMenuDrawer IsDrawerOpen="_isNavigationMenuOpened" OnIsDarkTheme="UpdateIsDarkTheme" />
+	<NavigationMenuDrawer IsDrawerOpen="_isNavigationMenuOpened" OnIsDarkTheme="UpdateIsDarkTheme" OnMudThemeChanged="SwitchTheme" />
 	<MudMainContent>		
 		@Body
 	</MudMainContent>
@@ -20,11 +20,19 @@
 	private bool _isDarkMode;
 	private MudThemeProvider? _mudThemeProvider;
 	private bool _isNavigationMenuOpened { get; set; } = false;
+	private MudTheme? currentMudTheme { get; set; }
+	private bool isMidThemeSelected { get; set; }
+
+	protected override void OnInitialized()
+	{
+		currentMudTheme = MainTheme;
+		base.OnInitialized();
+	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender && _mudThemeProvider is not null)
-		{
+		{			
 			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
 			StateHasChanged();
 		}
@@ -33,6 +41,18 @@
 	private void UpdateIsDarkTheme(bool value)
 	{
 		_isDarkMode = value;
+	}
+
+	private void SwitchTheme(bool value)
+	{
+		isMidThemeSelected = value;
+		if(isMidThemeSelected)
+		{
+			currentMudTheme = MidTheme;	
+		}else
+		{
+			currentMudTheme = MainTheme;
+		}
 	}
 
 	MudTheme MainTheme = new MudTheme()
@@ -60,6 +80,17 @@
 			{
 				DrawerWidthLeft = "260px",
 				DrawerWidthRight = "300px"
+			}
+		};
+
+	MudTheme MidTheme = new()
+		{
+			Palette = new Palette()
+			{
+				Primary = "#be894a",
+				Secondary = "#4d4d4d",
+				AppbarBackground = "#be894a",
+				Background = "#f2f2f2"
 			}
 		};
 }
