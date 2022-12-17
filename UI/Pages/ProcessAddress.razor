@@ -140,7 +140,7 @@ else
 	{
 		addressesLoaded = false;
 		AddressList = new();
-		UnprocessedAddressList = await LoadUnprocessedAddresses();
+		//UnprocessedAddressList = await LoadUnprocessedAddresses();
 		UnverifiedAddressList = await LoadUnverifiedAddresses();
 		AddressList.AddRange(UnprocessedAddressList);
 		AddressList.AddRange(UnverifiedAddressList);
@@ -259,6 +259,14 @@ else
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
 			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+			if (AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
+			{
+				addressToDbModel.GroundRentPaymentFrequency = null;
+			}
+			if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.Blank)
+			{
+				addressToDbModel.NotLegibleType = null;
+			}
 
 			// If there are any differences between the processed and verified address
 			if (
@@ -275,6 +283,8 @@ else
 				(OriginalAddressModel?.NotLegibleType != addressToDbModel.NotLegibleType) ||
 				(OriginalAddressModel?.PaymentAmount != addressToDbModel.PaymentAmount))
 			{
+				// These two models will be used as serialize fodder for the AddressModel.DataDifferencesJson column
+				// since we want to capture these differences before they are nulled out
 				AddressDataDifferencesUserWhoProcessedModel addressDataDifferencesUserWhoProcessedModel = new()
 				{
 					User = addressToDbModel.UserWhoProcessed
@@ -318,9 +328,9 @@ else
 				
 				// Since there are differences that exist between UserWhoProcessed input and UserWhoVerified input, all input is nulled
 				addressToDbModel.IsVerified = false;
-				addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+				addressToDbModel.NotLegibleType = null;
 				addressToDbModel.PaymentAmount = null;
-				addressToDbModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
+				addressToDbModel.GroundRentPaymentFrequency = null;
 				addressToDbModel.PaymentDateAnnual = null;
 				addressToDbModel.PaymentDateSemiAnnual1 = null;
 				addressToDbModel.PaymentDateSemiAnnual2 = null;
@@ -341,7 +351,7 @@ else
 				{
 					addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
 					addressToDbModel.PaymentAmount = null;
-					addressToDbModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
+					addressToDbModel.GroundRentPaymentFrequency = null;
 					addressToDbModel.PaymentDateAnnual = null;
 					addressToDbModel.PaymentDateSemiAnnual1 = null;
 					addressToDbModel.PaymentDateSemiAnnual2 = null;
@@ -381,12 +391,19 @@ else
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel?.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;
 			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
-
+			if (AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
+			{
+				addressToDbModel.GroundRentPaymentFrequency = null;
+			}
+			if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.Blank)
+			{
+				addressToDbModel.NotLegibleType = null;
+			}
 			if (addressToDbModel.IsLegible is false)
 			{
-				addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+				addressToDbModel.NotLegibleType = null;
 				addressToDbModel.PaymentAmount = null;
-				addressToDbModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
+				addressToDbModel.GroundRentPaymentFrequency = null;
 				addressToDbModel.PaymentDateAnnual = null;
 				addressToDbModel.PaymentDateSemiAnnual1 = null;
 				addressToDbModel.PaymentDateSemiAnnual2 = null;
@@ -407,7 +424,6 @@ else
 				counter++;
 			}
 		}
-
 		IsSubmitting = false;
 		isValidationSuccessful = false;
 		await InvokeAsync(StateHasChanged);

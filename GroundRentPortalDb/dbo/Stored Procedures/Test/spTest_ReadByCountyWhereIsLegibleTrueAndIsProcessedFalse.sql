@@ -11,7 +11,7 @@ select top (@UnprocessedAddressListAmount)
 [IsVerified],
 [NotLegibleType],
 [PaymentAmount],
-[PaymentFrequency],
+[GroundRentPaymentFrequency],
 [PaymentDateAnnual],
 [PaymentDateSemiAnnual1],
 [PaymentDateSemiAnnual2],

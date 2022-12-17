@@ -10,7 +10,7 @@ select top (@UnverifiedAddressListAmount)
 [IsVerified],
 [NotLegibleType],
 [PaymentAmount],
-[PaymentFrequency],
+[GroundRentPaymentFrequency],
 [PaymentDateAnnual],
 [PaymentDateSemiAnnual1],
 [PaymentDateSemiAnnual2],

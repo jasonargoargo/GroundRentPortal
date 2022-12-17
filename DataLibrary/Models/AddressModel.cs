@@ -24,7 +24,7 @@ namespace DataLibrary.Models
         [MaxLength(2048)] public string? DataDifferencesJson { get; set; }
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
         public enum PaymentFrequency { Blank, Annual, SemiAnnual, Quarterly, Other }
-        [Required] public PaymentFrequency GroundRentPaymentFrequency { get; set; } = new();
+        [Required] public PaymentFrequency? GroundRentPaymentFrequency { get; set; }
 		[RequiredIf("GroundRentPaymentFrequency == PaymentFrequency.Annual", ErrorMessage = "An annual date selection must be made")]
         [DataType(DataType.DateTime)] public DateTime? PaymentDateAnnual { get; set; }
 		[RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual", ErrorMessage = "All Semi-Annual date selections must be made.")]

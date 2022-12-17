@@ -26,7 +26,7 @@ public class TestSqlDataService : IGroundRentPortalDataService
                 addressModel.NotLegibleType,
 				addressModel.DataDifferencesJson,
                 addressModel.PaymentAmount,
-				PaymentFrequency = addressModel.GroundRentPaymentFrequency,
+				addressModel.GroundRentPaymentFrequency,
 				addressModel.PaymentDateAnnual,
                 addressModel.PaymentDateSemiAnnual1,
                 addressModel.PaymentDateSemiAnnual2,
