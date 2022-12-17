@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @namespace UI.Shared
 <PageTitle>Ground Rent Portal</PageTitle>
-<MudThemeProvider @bind-IsDarkMode="_isDarkMode" Theme="currentMudTheme" />
+<MudThemeProvider @ref="_mudThemeProvider" @bind-IsDarkMode="_isDarkMode" Theme="currentMudTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -35,7 +35,7 @@
 		if (firstRender && _mudThemeProvider is not null)
 		{			
 			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
-			StateHasChanged();
+			await InvokeAsync(StateHasChanged);
 		}
 	}
 
