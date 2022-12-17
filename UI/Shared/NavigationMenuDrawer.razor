@@ -4,9 +4,14 @@
 	<div class="navigation-container">
 		<LoginDisplay />
 		<MudText Class="ml-2" Typo="Typo.body2">Dark Theme:</MudText>
-		<MudSwitch Class="ml-2" Checked="HasDetectedDarkTheme" CheckedChanged="OnIsDarkTheme" Color="Color.Secondary" Disabled="IsDarkThemeDisabled" />
+		<MudTooltip Text="Requires mid-theme to be disabled." ShowOnHover="IsDarkThemeDisabled" ShowOnFocus="false" Placement="Placement.End" >
+			<MudSwitch Class="ml-2" Checked="HasDetectedDarkTheme" CheckedChanged="OnIsDarkTheme"
+				Color="Color.Secondary" Disabled="IsDarkThemeDisabled" />
+		</MudTooltip>
 		<MudText Class="ml-2" Typo="Typo.body2">Mid-Theme:</MudText>
-		<MudSwitch Class="ml-2" CheckedChanged="OnMudThemeChanged" Color="Color.Secondary" Disabled="IsMidThemeDisabled" />
+		<MudTooltip ShowOnHover="IsMidThemeDisabled" ShowOnFocus="false" Placement="Placement.End" Text="Requires dark theme to be Disabled">
+			<MudSwitch Class="ml-2" CheckedChanged="OnMudThemeChanged" Color="Color.Secondary" Disabled="IsMidThemeDisabled" />
+		</MudTooltip>
 		<MudButton Class="ml-2" StartIcon="@Icons.Filled.Home" Color="Color.Primary" Href="/">Home</MudButton>
 		<MudButton Class="ml-2" StartIcon="@Icons.Filled.LocationOn" Color="Color.Primary" Href="processaddress">Process Address</MudButton>
 	</div>
