@@ -37,6 +37,7 @@
 		if (firstRender && _mudThemeProvider is not null)
 		{
 			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
+			await HandleDarkThemeCookie();
 			await HandleThemeCookies();
 			await InvokeAsync(StateHasChanged);
 		}
@@ -44,7 +45,7 @@
 
 	private async Task HandleThemeCookies()
 	{
-		var currentThemeCookie = await jsRuntime.InvokeAsync<string>("getTheme");
+		var currentThemeCookie = await jsRuntime.InvokeAsync<string>("getTheme");		
 
 		if (currentThemeCookie == string.Empty)
 		{
@@ -62,7 +63,30 @@
 		}
 	}
 
-	private void UpdateIsDarkTheme(bool value) => _isDarkMode = value;
+	private async Task HandleDarkThemeCookie()
+	{
+		var currentDarkThemeCookie = await jsRuntime.InvokeAsync<string>("getTheme");
+
+		if (currentDarkThemeCookie == string.Empty)
+		{
+			_isDarkMode = false;
+		}
+
+		if (currentDarkThemeCookie.Contains("isDarkMode=true"))
+		{
+			_isDarkMode = true;
+		}
+		if (currentDarkThemeCookie.Contains("isDarkMode=false"))
+		{
+			_isDarkMode = false;		
+		}
+	}
+
+	private void UpdateIsDarkTheme(bool value) 
+	{
+		jsRuntime.InvokeVoidAsync("setDarkModeCookie", value);
+		_isDarkMode = value;
+	}
 
 	private void SwitchTheme(bool value)
 	{
