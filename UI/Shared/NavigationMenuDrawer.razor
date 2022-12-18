@@ -12,7 +12,7 @@
 		<MudText Class="ml-2" Typo="Typo.body2">Mid-Theme:</MudText>
 		<MudTooltip ShowOnHover="IsMidThemeDisabled" Duration="750" ShowOnFocus="false" Placement="Placement.End"
 					Text="Requires Dark theme to be Disabled"Arrow="true">
-			<MudSwitch Class="ml-2" CheckedChanged="OnMudThemeChanged" Color="Color.Secondary" Disabled="IsMidThemeDisabled" />
+			<MudSwitch Class="ml-2" Checked="IsMidThemeActive" CheckedChanged="OnMudThemeChanged" Color="Color.Secondary" Disabled="IsMidThemeDisabled" />
 		</MudTooltip>
 		<MudButton Class="ml-2" StartIcon="@Icons.Filled.Home" Color="Color.Primary" Href="/">Home</MudButton>
 		<MudButton Class="ml-2" StartIcon="@Icons.Filled.LocationOn" Color="Color.Primary" Href="processaddress">Process Address</MudButton>
@@ -32,7 +32,9 @@
 	public bool IsMidThemeDisabled { get; set; }
 	[Parameter]
 	public bool HasDetectedDarkTheme { get; set; }
-	private string? currentThemeName { get; set; }
+	[Parameter]
+	public bool IsMidThemeActive { get; set; }
+	private string? currentThemeName { get; set; }	
 
 	protected override void OnParametersSet()
 	{		

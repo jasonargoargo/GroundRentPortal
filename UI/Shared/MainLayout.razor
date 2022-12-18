@@ -13,7 +13,7 @@
 	</MudAppBar>
 	<NavigationMenuDrawer IsDrawerOpen="_isNavigationMenuOpened" OnIsDarkTheme="UpdateIsDarkTheme"
 						  OnMudThemeChanged="SwitchTheme" IsDarkThemeDisabled="isMidThemeSelected"
-						  IsMidThemeDisabled="_isDarkMode" HasDetectedDarkTheme="_isDarkMode" />
+						  IsMidThemeDisabled="_isDarkMode" IsMidThemeActive="isMidThemeSelected" HasDetectedDarkTheme="_isDarkMode" />
 	<MudMainContent>
 		@Body
 	</MudMainContent>
@@ -57,7 +57,8 @@
 		}
 		if (currentThemeCookie.Contains("MidTheme") && !_isDarkMode)
 		{
-			currentMudTheme = MidTheme;
+			isMidThemeSelected = true;
+			currentMudTheme = MidTheme;			
 		}
 	}
 
