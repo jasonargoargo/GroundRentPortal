@@ -3,13 +3,15 @@
 <MudDrawer Open="IsDrawerOpen" @ontouchend="() => IsDrawerOpen = !IsDrawerOpen">
 	<div class="navigation-container">
 		<LoginDisplay />
-		<MudText Class="ml-2" Typo="Typo.body2">Dark Theme:</MudText>
-		<MudTooltip Text="Requires mid-theme to be disabled." ShowOnHover="IsDarkThemeDisabled" ShowOnFocus="false" Placement="Placement.End" >
+		<MudText Class="ml-2" Typo="Typo.body2">@currentThemeName Theme:</MudText>
+		<MudTooltip Text="Requires Mid Theme to be disabled." ShowOnHover="IsDarkThemeDisabled" ShowOnFocus="false"
+					Placement="Placement.End" Duration="750" Arrow="true">
 			<MudSwitch Class="ml-2" Checked="HasDetectedDarkTheme" CheckedChanged="OnIsDarkTheme"
 				Color="Color.Secondary" Disabled="IsDarkThemeDisabled" />
 		</MudTooltip>
 		<MudText Class="ml-2" Typo="Typo.body2">Mid-Theme:</MudText>
-		<MudTooltip ShowOnHover="IsMidThemeDisabled" ShowOnFocus="false" Placement="Placement.End" Text="Requires dark theme to be Disabled">
+		<MudTooltip ShowOnHover="IsMidThemeDisabled" Duration="750" ShowOnFocus="false" Placement="Placement.End"
+					Text="Requires Dark theme to be Disabled"Arrow="true">
 			<MudSwitch Class="ml-2" CheckedChanged="OnMudThemeChanged" Color="Color.Secondary" Disabled="IsMidThemeDisabled" />
 		</MudTooltip>
 		<MudButton Class="ml-2" StartIcon="@Icons.Filled.Home" Color="Color.Primary" Href="/">Home</MudButton>
@@ -30,4 +32,19 @@
 	public bool IsMidThemeDisabled { get; set; }
 	[Parameter]
 	public bool HasDetectedDarkTheme { get; set; }
+	private string? currentThemeName { get; set; }
+
+	protected override void OnParametersSet()
+	{		
+		if (!HasDetectedDarkTheme)
+		{
+			currentThemeName = "Light";
+		}
+		else
+		{
+			currentThemeName = "Dark";
+		}
+
+		base.OnParametersSet();
+	}
 }
