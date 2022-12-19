@@ -22,8 +22,9 @@
 }
 else
 {
-	<div class="container-spinner">
+	<div class="container-spinner d-flex flex-column align-items-center">
 		<MudProgressCircular Color="Color.Default" Indeterminate="true" />
+		<MudText Color="Color.Default" Typo="Typo.h6">Loading Theme, please wait...</MudText>
 	</div>
 }
 
@@ -49,6 +50,7 @@ else
 			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
 			await HandleDarkThemeCookie();
 			await HandleThemeCookies();
+			await Task.Delay(500);
 			_hasThemeCookiesLoaded = true;
 			await InvokeAsync(StateHasChanged);
 		}
