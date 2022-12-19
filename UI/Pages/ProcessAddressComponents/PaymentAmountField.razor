@@ -6,9 +6,9 @@
 	<MudText>Payment Amount</MudText>
 	@if (AddressToBeInputModel is not null)
 	{
-		<MudNumericField T="decimal?" Format="F2" Culture="CultureInfo.CurrentCulture" Label=@($"Currency Amount ${AddressToBeInputModel.PaymentAmount}")
+		<MudNumericField Format="N2" Culture="@_en" Label=@($"Currency Amount ${AddressToBeInputModel.PaymentAmount}")
 					 HelperText="Shift + Mouse wheel increment"
-					 Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentAmount"
+					 Variant="Variant.Outlined" @bind-Value="AddressToBeInputModel.PaymentAmount"
 					 For="@(() => AddressToBeInputModel.PaymentAmount)" Min="0" Step="(decimal?)0.1"
 					 Style="max-width: fit-content;" InvertMouseWheel="false" Required />
 	}
@@ -17,4 +17,5 @@
 @code {
 	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
+	public CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
 }

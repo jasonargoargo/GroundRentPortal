@@ -1,50 +1,61 @@
-﻿@using DataLibrary.DbAccess
+﻿@using System.Text.Json
+@using DataLibrary.DbAccess
 @using DataLibrary.DbServices
 @using DataLibrary.Models
-@using DataLibrary.Services;
+@*@using DataLibrary.Services;*@
 @using UI.Pages.ProcessAddressComponents
 @inject IDataContext dataContext
 @inject IGroundRentPortalDataServiceFactory testDataServiceFactory
-@inject Scraper scraper
+@*@inject Scraper scraper*@
 @inject ILogger<ProcessAddress> logger
 @inject ISnackbar snackbarNotification
 @attribute [Authorize]
 @page "/processaddress"
 @namespace UI.Pages
 
-@if (userState is not null && addressesLoaded)
+@if (userState is not null)
 {
 	<div class="container">
-		<div hidden="@addressSubmitted">
+		@if(addressesLoaded)
+		{
 			<MudText Class="mt-2" Typo="Typo.h4">Process Address</MudText>
-			<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
-				<DataAnnotationsValidator />
-				<MudText Color="Color.Primary">Addresses successfully loaded.</MudText>
-				<MudText Class="mt-2">@userState.User.Identity?.Name is currently processing address id: @AddressToBeInputModel?.AccountId</MudText>
-				<MudText Class="mt-2">You have processed @counter addresses out of @AddressList.Count this session.</MudText>
-				<CascadingValue Value="AddressToBeInputModel">
-					<PaymentAmountField />
-					<PaymentFrequencyField OnPaymentFrequencyChanged="UpdatePaymentFrequency" />
-					<DataLegibleRadio />
-				</CascadingValue>
-				<CascadingValue Value="this">
-					<SubmitButton />
-				</CascadingValue>
-				@if (isValidationSuccessful)
-				{
-					snackbarNotification.Add("Submission successful!", Severity.Success);
-					<MudText Color="Color.Success" Typo="Typo.caption">Form submission successful!</MudText>
-				}
-				<MudText Color="Color.Error" Typo="Typo.body2">
-					<ValidationSummary />
-				</MudText>
-			</EditForm>
-		</div>
+			<MudText Color="Color.Primary">Addresses successfully loaded</MudText>
+			@if (counter <= AddressList.Count - 1)
+			{
+				<div hidden="@addressSubmitted">
+					<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+						<DataAnnotationsValidator />
+						<MudText Class="mt-2">@userState.User.Identity?.Name is currently processing address id: @AddressToBeInputModel?.AccountId</MudText>
+						<MudText Class="mt-2">You have processed @counter addresses out of @AddressList.Count this session.</MudText>
+						<CascadingValue Value="AddressToBeInputModel">
+							<PaymentAmountField />
+							<PaymentFrequencyField OnPaymentFrequencyChanged="UpdatePaymentFrequency" />
+							<DataLegibleRadio />
+						</CascadingValue>
+						<CascadingValue Value="this">
+							<SubmitButton />
+						</CascadingValue>
+						@if (isValidationSuccessful)
+						{
+							snackbarNotification.Add("Submission successful!", Severity.Success);
+							<MudText Color="Color.Success" Typo="Typo.caption">Form submission successful!</MudText>
+						}
+						<MudText Color="Color.Error" Typo="Typo.body2">
+							<ValidationSummary />
+						</MudText>
+					</EditForm>
+				</div>
+			}
+			else
+			{
+				<MudText>Nice job. Session finished. Please refresh to start a new session.</MudText>
+			}
+		}
 	</div>
 }
 else
 {
-	<MudText Color="Color.Error">You are not authorized. Please log in or contact your manager.</MudText>
+	<MudText Color="Color.Error">You are not logged in. Please log in or contact your manager.</MudText>
 }
 
 @code {
@@ -81,87 +92,50 @@ else
 			}
 
 			await LoadAddressList();
-			AddressToBeInputModel = AddressList[0];
 			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[0].AccountId);
+			AddressToBeInputModel = AddressList[0];
+			// If address is processed, null values to prevent user from lazily keeping visible values
+			if (AddressToBeInputModel.IsProcessed is true) NullifyValues();
 			//await scraper.Scrape(AddressList[0]);
 			addressesLoaded = true;
 			await InvokeAsync(StateHasChanged);
 		}
 		catch (Exception ex)
 		{
-			logger.LogError($"Exception thrown during initilaztion {ex.Message}");
+			logger.LogError($"Exception thrown during initilazation {ex.Message}");
 		}
 	}
-
+	private void NullifyValues()
+	{
+		AddressToBeInputModel.PaymentAmount = null;
+		AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
+		AddressToBeInputModel.PaymentDateAnnual = null;
+		AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+		AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+		AddressToBeInputModel.PaymentDateQuarterly1 = null;
+		AddressToBeInputModel.PaymentDateQuarterly2 = null;
+		AddressToBeInputModel.PaymentDateQuarterly3 = null;
+		AddressToBeInputModel.PaymentDateQuarterly4 = null;
+		AddressToBeInputModel.PaymentDateOther = null;
+		AddressToBeInputModel.IsLegible = null;
+		AddressToBeInputModel.NotLegibleType = AddressModel.InputType.Blank;
+	}
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		if (!firstRender)
+		if (!firstRender && counter <= AddressList.Count - 1)
 		{
 			AddressToBeInputModel = AddressList[counter];
 			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[counter].AccountId);
+			//await scraper.Scrape(AddressList[counter]);
 			await InvokeAsync(StateHasChanged);
 		}
 		await base.OnAfterRenderAsync(firstRender);
 	}
-
-	private void LogBackEndData()
-	{
-		if (addressToDbModel?.IsProcessed is null)
-		{
-			logger.LogInformation("Form submit succesful! IsProcessed Status is NULL");
-		}
-		else
-		{
-			logger.LogInformation("Form submit succesful! IsProcessed Status has returned successfully");
-		}
-
-		if (addressToDbModel?.IsLegible is true)
-		{
-			logger.LogInformation("IsLegible is true");
-		}
-		else
-		{
-			logger.LogInformation("IsLegible is false");
-		}
-
-		if (addressToDbModel?.NotLegibleType is not null)
-		{
-			logger.LogInformation($"NotLegibleType returned {addressToDbModel?.NotLegibleType.Value}");
-		}else
-		{
-			logger.LogInformation($"NotLegibleType is NULL");
-		}
-
-		switch (AddressToBeInputModel?.GroundRentPaymentFrequency)
-		{
-			case AddressModel.PaymentFrequency.Annual:
-				logger.LogInformation($"Payment Date Annual submitted to Db as {AddressToBeInputModel?.PaymentDateAnnual}");
-				break;
-			case AddressModel.PaymentFrequency.SemiAnnual:
-				logger.LogInformation($"Payment Date Semi-Annual 1 submitted to Db as {AddressToBeInputModel?.PaymentDateSemiAnnual1}");
-				logger.LogInformation($"Payment Date Semi-Annual 2 submitted to Db as {AddressToBeInputModel?.PaymentDateSemiAnnual2}");
-				break;
-			case AddressModel.PaymentFrequency.Quarterly:
-				logger.LogInformation($"Payment Date Quarterly 1 submitted to Db as {AddressToBeInputModel?.PaymentDateQuarterly1}");
-				logger.LogInformation($"Payment Date Quarterly 2 submitted to Db as {AddressToBeInputModel?.PaymentDateQuarterly2}");
-				logger.LogInformation($"Payment Date Quarterly 3 submitted to Db as {AddressToBeInputModel?.PaymentDateQuarterly3}");
-				logger.LogInformation($"Payment Date Quarterly 4 submitted to Db as {AddressToBeInputModel?.PaymentDateQuarterly4}");
-				break;
-			case AddressModel.PaymentFrequency.Other:
-				logger.LogInformation($"Payment Frequency other submitted to Db as {AddressToBeInputModel?.PaymentDateOther}");
-				break;
-			case AddressModel.PaymentFrequency.Blank:
-				logger.LogInformation("Payment Frequency is blank");
-				break;
-		}
-	}
-
 	private void CalculateListAmounts()
 	{
 		double percentage = UnprocessedAddressListAmount * 0.1;
 		UnverifiedAddressListAmount = (int)Math.Round(percentage, MidpointRounding.AwayFromZero);
 	}
-
 	private async Task LoadAddressList()
 	{
 		addressesLoaded = false;
@@ -173,7 +147,6 @@ else
 		UnprocessedAddressList = new();
 		UnverifiedAddressList = new();
 	}
-
 	private async Task<List<AddressModel>> LoadUnprocessedAddresses()
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -183,7 +156,6 @@ else
 		}
 		return UnprocessedAddressList;
 	}
-
 	private async Task<List<AddressModel>> LoadUnverifiedAddresses()
 	{
 		CalculateListAmounts();
@@ -194,7 +166,6 @@ else
 		}
 		return UnverifiedAddressList;
 	}
-
 	private async Task<AddressModel> LoadOriginalProcessedAddress(string accountId)
 	{
 		using (var uow = dataContext.CreateUnitOfWork())
@@ -204,16 +175,25 @@ else
 		}
 		return OriginalAddressModel;
 	}
-	private void HandleInvalidSubmit() => isValidationSuccessful = false;
-
 	private void UpdatePaymentFrequency(AddressModel.PaymentFrequency paymentFrequency)
 	{
-		if(AddressToBeInputModel is not null)
+		if (AddressToBeInputModel is not null)
 		{
 			AddressToBeInputModel.GroundRentPaymentFrequency = paymentFrequency;
-		}		
+		}
 
-		if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
+		if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
+		{
+			AddressToBeInputModel.PaymentDateAnnual = null;
+			AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+			AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+			AddressToBeInputModel.PaymentDateQuarterly1 = null;
+			AddressToBeInputModel.PaymentDateQuarterly2 = null;
+			AddressToBeInputModel.PaymentDateQuarterly3 = null;
+			AddressToBeInputModel.PaymentDateQuarterly4 = null;
+			AddressToBeInputModel.PaymentDateOther = null;
+		}
+		else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
 		{
 			AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
 			AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
@@ -250,23 +230,21 @@ else
 			AddressToBeInputModel.PaymentDateQuarterly4 = null;
 		}
 	}
-
+	private void HandleInvalidSubmit() => isValidationSuccessful = false;
 	private async Task HandleOnSubmit()
 	{
 		if (IsSubmitting)
 		{
 			return;
 		}
-
 		isValidationSuccessful = true;
 		IsSubmitting = true;
-		string differencesNotesToDb = "";
+		AddressModel addressToDbModel = new();
 		// If address has already been processed, it will now be verified
 		if (AddressToBeInputModel?.IsProcessed is true)
 		{
 			addressToDbModel.AccountId = AddressToBeInputModel.AccountId;
 			addressToDbModel.IsProcessed = AddressToBeInputModel.IsProcessed;
-			addressToDbModel.IsVerified = true;
 			addressToDbModel.UserWhoProcessed = AddressToBeInputModel.UserWhoProcessed;
 			addressToDbModel.UserWhoVerified = userState?.User.Identity?.Name;
 			addressToDbModel.PaymentAmount = AddressToBeInputModel.PaymentAmount;
@@ -280,62 +258,115 @@ else
 			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel.PaymentDateQuarterly4;
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
-
-			if (AddressToBeInputModel is not null && addressToDbModel.IsLegible is false)
+			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+			if (AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
+			{
+				addressToDbModel.GroundRentPaymentFrequency = null;
+			}
+			if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.Blank)
 			{
 				addressToDbModel.NotLegibleType = null;
-				addressToDbModel.NotVerifiedType = null;
 			}
 
-			if (OriginalAddressModel?.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency)
+			// If there are any differences between the processed and verified address
+			if (
+				(OriginalAddressModel?.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency) || 
+				(OriginalAddressModel?.PaymentDateAnnual != addressToDbModel.PaymentDateAnnual) ||
+				(OriginalAddressModel?.PaymentDateSemiAnnual1 != addressToDbModel.PaymentDateSemiAnnual1) ||
+				(OriginalAddressModel?.PaymentDateSemiAnnual2 != addressToDbModel.PaymentDateSemiAnnual2) || 
+				(OriginalAddressModel?.PaymentDateQuarterly1 != addressToDbModel.PaymentDateQuarterly1) ||
+				(OriginalAddressModel?.PaymentDateQuarterly2 != addressToDbModel.PaymentDateQuarterly2) ||
+				(OriginalAddressModel?.PaymentDateQuarterly3 != addressToDbModel.PaymentDateQuarterly3) ||
+				(OriginalAddressModel?.PaymentDateQuarterly4 != addressToDbModel.PaymentDateQuarterly4) || 
+				(OriginalAddressModel?.PaymentDateOther != addressToDbModel.PaymentDateOther) || 
+				(OriginalAddressModel?.IsLegible != addressToDbModel.IsLegible) ||
+				(OriginalAddressModel?.NotLegibleType != addressToDbModel.NotLegibleType) ||
+				(OriginalAddressModel?.PaymentAmount != addressToDbModel.PaymentAmount))
 			{
-				addressToDbModel.IsVerified = false;
-				addressToDbModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
-			}
-			if (OriginalAddressModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
-			{
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Annual Date as {OriginalAddressModel.PaymentDateAnnual}. {addressToDbModel.UserWhoVerified} input Payment Frequency Annual Date as {addressToDbModel.PaymentDateAnnual}." + Environment.NewLine;
-			}
-			if (OriginalAddressModel?.PaymentDateSemiAnnual1 != addressToDbModel.PaymentDateSemiAnnual1)
-			{
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Semi-Annual1 Date as {OriginalAddressModel?.PaymentDateSemiAnnual1}. {addressToDbModel.UserWhoVerified} input Payment Frequency Semi-Annual1 Date as {addressToDbModel.PaymentDateSemiAnnual1}." + Environment.NewLine;
-			}
-			if (OriginalAddressModel?.PaymentDateSemiAnnual2 != addressToDbModel.PaymentDateSemiAnnual2)
-			{
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Semi-Annual2 Date as {OriginalAddressModel?.PaymentDateSemiAnnual2}. {addressToDbModel.UserWhoVerified} input Payment Frequency Semi-Annual2 Date as {addressToDbModel.PaymentDateSemiAnnual2}." + Environment.NewLine;
-			}
-			if (OriginalAddressModel?.PaymentDateQuarterly1 != addressToDbModel.PaymentDateQuarterly1)
-			{
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Quarterly1 Date as {OriginalAddressModel?.PaymentDateQuarterly1}. {addressToDbModel.UserWhoVerified} input Payment Frequency Quarterly1 Date as {addressToDbModel.PaymentDateQuarterly1}." + Environment.NewLine;
-			}
-			if (OriginalAddressModel?.PaymentDateQuarterly2 != addressToDbModel.PaymentDateQuarterly2)
-			{
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Quarterly2 Date as {OriginalAddressModel?.PaymentDateQuarterly2}. {addressToDbModel.UserWhoVerified} input Payment Frequency Quarterly2 Date as {addressToDbModel.PaymentDateQuarterly2}." + Environment.NewLine;
-			}
-			if (OriginalAddressModel?.PaymentDateQuarterly3 != addressToDbModel.PaymentDateQuarterly3)
-			{
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Quarterly3 Date as {OriginalAddressModel?.PaymentDateQuarterly3}. {addressToDbModel.UserWhoVerified} input Payment Frequency Quarterly3 Date as {addressToDbModel.PaymentDateQuarterly3}." + Environment.NewLine;
-			}
-			if (OriginalAddressModel?.PaymentDateQuarterly4 != addressToDbModel.PaymentDateQuarterly4)
-			{
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Frequency Quarterly4 Date as {OriginalAddressModel?.PaymentDateQuarterly4}. {addressToDbModel.UserWhoVerified} input Payment Frequency Quarterly4 Date as {addressToDbModel.PaymentDateQuarterly4}." + Environment.NewLine;
-			}
-			if (OriginalAddressModel?.IsLegible != addressToDbModel.IsLegible)
-			{
-				addressToDbModel.IsVerified = false;
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} selected IsLegible as {OriginalAddressModel?.IsLegible}. {addressToDbModel.UserWhoVerified} selected IsLegible as {addressToDbModel.IsLegible}." + Environment.NewLine;
-			}
-			if (OriginalAddressModel?.PaymentAmount != addressToDbModel.PaymentAmount)
-			{
-				addressToDbModel.IsVerified = false;
-				differencesNotesToDb += $"{addressToDbModel.UserWhoProcessed} input Payment Amount as {OriginalAddressModel?.PaymentAmount}. {addressToDbModel.UserWhoVerified} input Payment Amount as {addressToDbModel.PaymentAmount}." + Environment.NewLine;
-			}
+				// These two models will be used as serialize fodder for the AddressModel.DataDifferencesJson column
+				// since we want to capture these differences before they are nulled out
+				AddressDataDifferencesUserWhoProcessedModel addressDataDifferencesUserWhoProcessedModel = new()
+				{
+					User = addressToDbModel.UserWhoProcessed
+				};
+				AddressDataDifferencesUserWhoVerifiedModel addressDataDifferencesUserWhoVerifiedModel = new()
+				{
+					User = addressToDbModel.UserWhoVerified
+				};
+				addressDataDifferencesUserWhoProcessedModel.ProcessedGroundRentPaymentFrequency = OriginalAddressModel.GroundRentPaymentFrequency;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedGroundRentPaymentFrequency = addressToDbModel.GroundRentPaymentFrequency;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentDateAnnual = OriginalAddressModel.PaymentDateAnnual;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentDateAnnual = addressToDbModel.PaymentDateAnnual;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentDateSemiAnnual1 = OriginalAddressModel.PaymentDateSemiAnnual1;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentDateSemiAnnual1 = addressToDbModel.PaymentDateSemiAnnual1;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentDateSemiAnnual2 = OriginalAddressModel.PaymentDateSemiAnnual2;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentDateSemiAnnual2 = addressToDbModel.PaymentDateSemiAnnual2;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentDateQuarterly1 = OriginalAddressModel.PaymentDateQuarterly1;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentDateQuarterly1 = addressToDbModel.PaymentDateQuarterly1;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentDateQuarterly2 = OriginalAddressModel.PaymentDateQuarterly2;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentDateQuarterly2 = addressToDbModel.PaymentDateQuarterly2;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentDateQuarterly3 = OriginalAddressModel.PaymentDateQuarterly3;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentDateQuarterly3 = addressToDbModel.PaymentDateQuarterly3;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentDateQuarterly4 = OriginalAddressModel.PaymentDateQuarterly4;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentDateQuarterly4 = addressToDbModel.PaymentDateQuarterly4;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentDateOther = OriginalAddressModel.PaymentDateOther;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentDateOther = addressToDbModel.PaymentDateOther;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedPaymentAmount = OriginalAddressModel.PaymentAmount;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedPaymentAmount = addressToDbModel.PaymentAmount;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedIsLegible = OriginalAddressModel.IsLegible;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedIsLegible = addressToDbModel.IsLegible;
+				addressDataDifferencesUserWhoProcessedModel.ProcessedNotLegibleType = OriginalAddressModel.NotLegibleType;
+				addressDataDifferencesUserWhoVerifiedModel.VerifiedNotLegibleType = addressToDbModel.NotLegibleType;
 
-			addressToDbModel.DifferencesNotesToDb = differencesNotesToDb;
-			using (var uow = dataContext.CreateUnitOfWork())
+				AddressDataDifferencesUserModel addressDataDifferencesUserModel = new()
+				{
+					UserWhoProcessed = addressDataDifferencesUserWhoProcessedModel,
+					UserWhoVerified = addressDataDifferencesUserWhoVerifiedModel
+				};
+				// The differences are captured in a json body
+				addressToDbModel.DataDifferencesJson = JsonSerializer.Serialize<AddressDataDifferencesUserModel>(addressDataDifferencesUserModel);
+				
+				// Since there are differences that exist between UserWhoProcessed input and UserWhoVerified input, all input is nulled
+				addressToDbModel.IsVerified = false;
+				addressToDbModel.NotLegibleType = null;
+				addressToDbModel.PaymentAmount = null;
+				addressToDbModel.GroundRentPaymentFrequency = null;
+				addressToDbModel.PaymentDateAnnual = null;
+				addressToDbModel.PaymentDateSemiAnnual1 = null;
+				addressToDbModel.PaymentDateSemiAnnual2 = null;
+				addressToDbModel.PaymentDateQuarterly1 = null;
+				addressToDbModel.PaymentDateQuarterly2 = null;
+				addressToDbModel.PaymentDateQuarterly3 = null;
+				addressToDbModel.PaymentDateQuarterly4 = null;
+				addressToDbModel.PaymentDateOther = null;
+				using (var uow = dataContext.CreateUnitOfWork())
+				{
+					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+					dataServiceResult = await testDataService.Update(addressToDbModel);
+				}
+			}
+			else
 			{
-				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-				dataServiceResult = await testDataService.Update(addressToDbModel);
+				if (addressToDbModel?.IsLegible is false)
+				{
+					addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+					addressToDbModel.PaymentAmount = null;
+					addressToDbModel.GroundRentPaymentFrequency = null;
+					addressToDbModel.PaymentDateAnnual = null;
+					addressToDbModel.PaymentDateSemiAnnual1 = null;
+					addressToDbModel.PaymentDateSemiAnnual2 = null;
+					addressToDbModel.PaymentDateQuarterly1 = null;
+					addressToDbModel.PaymentDateQuarterly2 = null;
+					addressToDbModel.PaymentDateQuarterly3 = null;
+					addressToDbModel.PaymentDateQuarterly4 = null;
+					addressToDbModel.PaymentDateOther = null;
+				}
+				addressToDbModel.IsVerified = true;
+				using (var uow = dataContext.CreateUnitOfWork())
+				{
+					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+					dataServiceResult = await testDataService.Update(addressToDbModel);
+				}
 			}
 			if (dataServiceResult is true)
 			{
@@ -349,10 +380,7 @@ else
 			addressToDbModel.IsProcessed = true;
 			addressToDbModel.UserWhoProcessed = userState?.User.Identity?.Name;
 			addressToDbModel.PaymentAmount = AddressToBeInputModel?.PaymentAmount;
-			if (AddressToBeInputModel?.GroundRentPaymentFrequency is not null)
-			{
-				addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
-			}
+			addressToDbModel.GroundRentPaymentFrequency = AddressToBeInputModel.GroundRentPaymentFrequency;
 			addressToDbModel.PaymentDateAnnual = AddressToBeInputModel?.PaymentDateAnnual;
 			addressToDbModel.PaymentDateSemiAnnual1 = AddressToBeInputModel?.PaymentDateSemiAnnual1;
 			addressToDbModel.PaymentDateSemiAnnual2 = AddressToBeInputModel?.PaymentDateSemiAnnual2;
@@ -362,30 +390,42 @@ else
 			addressToDbModel.PaymentDateQuarterly4 = AddressToBeInputModel?.PaymentDateQuarterly4;
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel?.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;
-
-			if (addressToDbModel is not null && addressToDbModel.IsLegible is false)
+			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
+			if (AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
+			{
+				addressToDbModel.GroundRentPaymentFrequency = null;
+			}
+			if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.Blank)
 			{
 				addressToDbModel.NotLegibleType = null;
-				addressToDbModel.NotVerifiedType = null;
+			}
+			if (addressToDbModel.IsLegible is false)
+			{
+				addressToDbModel.NotLegibleType = null;
+				addressToDbModel.PaymentAmount = null;
+				addressToDbModel.GroundRentPaymentFrequency = null;
+				addressToDbModel.PaymentDateAnnual = null;
+				addressToDbModel.PaymentDateSemiAnnual1 = null;
+				addressToDbModel.PaymentDateSemiAnnual2 = null;
+				addressToDbModel.PaymentDateQuarterly1 = null;
+				addressToDbModel.PaymentDateQuarterly2 = null;
+				addressToDbModel.PaymentDateQuarterly3 = null;
+				addressToDbModel.PaymentDateQuarterly4 = null;
+				addressToDbModel.PaymentDateOther = null;
 			}
 
 			using (var uow = dataContext.CreateUnitOfWork())
 			{
-				if (addressToDbModel is not null)
-				{
-					var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
-					dataServiceResult = await testDataService.Update(addressToDbModel);
-				}
+				var testDataService = testDataServiceFactory.CreateAddressDataService(uow);
+				dataServiceResult = await testDataService.Update(addressToDbModel);
 			}
 			if (dataServiceResult is true)
 			{
 				counter++;
 			}
 		}
-
-		LogBackEndData();
-		isValidationSuccessful = false;
 		IsSubmitting = false;
+		isValidationSuccessful = false;
 		await InvokeAsync(StateHasChanged);
 		return;
 	}

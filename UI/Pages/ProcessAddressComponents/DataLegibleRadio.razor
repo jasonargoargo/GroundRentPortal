@@ -10,7 +10,7 @@
 				<MudRadio Option="(bool?)true" Color="Color.Primary">Yes</MudRadio>
 				<MudRadio Option="(bool?)false" Color="Color.Primary">No</MudRadio>
 			</MudRadioGroup>
-		}		
+		}
 	</div>
 </div>
 
@@ -19,11 +19,18 @@
 	<div class="row">
 		<div class="col gy-3">
 			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Filled"
-				Label="What is illegible?" 
-				Style="max-width: fit-content;">
+				   Label="What is illegible?"
+				   Style="max-width: fit-content;">
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.Blank"></MudSelectItem>
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentFrequency">Payment Frequency</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDate">Payment Date</MudSelectItem>
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateAnnual">PaymentDateAnnual</MudSelectItem>
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateSemiAnnual1">PaymentDateSemiAnnual1</MudSelectItem>
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateSemiAnnual2">PaymentDateSemiAnnual2</MudSelectItem>
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly1">PaymentDateQuarterly1</MudSelectItem>
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly2">PaymentDateQuarterly2</MudSelectItem>
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly3">PaymentDateQuarterly3</MudSelectItem>
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly4">PaymentDateQuarterly4</MudSelectItem>
+				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateOther">PaymentDateOther</MudSelectItem>
 			</MudSelect>
 		</div>
 	</div>
