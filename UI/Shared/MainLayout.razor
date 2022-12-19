@@ -5,19 +5,28 @@
 <MudThemeProvider @ref="_mudThemeProvider" @bind-IsDarkMode="_isDarkMode" Theme="currentMudTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
-
-<MudLayout>
-	<MudAppBar>
-		<MudIconButton Style="color: white;" Icon="@Icons.Filled.Menu" OnClick="() => _isNavigationMenuOpened = !_isNavigationMenuOpened" />
-		<MudText Typo="Typo.h5">Ground Rent Portal</MudText>
-	</MudAppBar>
-	<NavigationMenuDrawer IsDrawerOpen="_isNavigationMenuOpened" OnIsDarkTheme="UpdateIsDarkTheme"
+@if (_hasThemeCookiesLoaded)
+{
+	<MudLayout>
+		<MudAppBar>
+			<MudIconButton Style="color: white;" Icon="@Icons.Filled.Menu" OnClick="() => _isNavigationMenuOpened = !_isNavigationMenuOpened" />
+			<MudText Typo="Typo.h5">Ground Rent Portal</MudText>
+		</MudAppBar>
+		<NavigationMenuDrawer IsDrawerOpen="_isNavigationMenuOpened" OnIsDarkTheme="UpdateIsDarkTheme"
 						  OnMudThemeChanged="SwitchTheme" IsDarkThemeDisabled="isMidThemeSelected"
 						  IsMidThemeDisabled="_isDarkMode" IsMidThemeActive="isMidThemeSelected" HasDetectedDarkTheme="_isDarkMode" />
-	<MudMainContent>
-		@Body
-	</MudMainContent>
-</MudLayout>
+		<MudMainContent>
+			@Body
+		</MudMainContent>
+	</MudLayout>
+}
+else
+{
+	<div class="container-spinner">
+		<MudProgressCircular Color="Color.Default" Indeterminate="true" />
+	</div>
+}
+
 
 @code {
 	private bool _isDarkMode;
@@ -25,6 +34,7 @@
 	private bool _isNavigationMenuOpened { get; set; } = false;
 	private MudTheme? currentMudTheme { get; set; }
 	private bool isMidThemeSelected { get; set; }
+	private bool _hasThemeCookiesLoaded = default;
 
 	protected override void OnInitialized()
 	{
@@ -39,13 +49,14 @@
 			_isDarkMode = await _mudThemeProvider.GetSystemPreference();
 			await HandleDarkThemeCookie();
 			await HandleThemeCookies();
+			_hasThemeCookiesLoaded = true;
 			await InvokeAsync(StateHasChanged);
 		}
 	}
 
 	private async Task HandleThemeCookies()
 	{
-		var currentThemeCookie = await jsRuntime.InvokeAsync<string>("getTheme");		
+		var currentThemeCookie = await jsRuntime.InvokeAsync<string>("getTheme");
 
 		if (currentThemeCookie == string.Empty)
 		{
@@ -59,7 +70,7 @@
 		if (currentThemeCookie.Contains("MidTheme") && !_isDarkMode)
 		{
 			isMidThemeSelected = true;
-			currentMudTheme = MidTheme;			
+			currentMudTheme = MidTheme;
 		}
 	}
 
@@ -78,11 +89,11 @@
 		}
 		if (currentDarkThemeCookie.Contains("isDarkMode=false"))
 		{
-			_isDarkMode = false;		
+			_isDarkMode = false;
 		}
 	}
 
-	private void UpdateIsDarkTheme(bool value) 
+	private void UpdateIsDarkTheme(bool value)
 	{
 		jsRuntime.InvokeVoidAsync("setDarkModeCookie", value);
 		_isDarkMode = value;

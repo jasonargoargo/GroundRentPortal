@@ -75,3 +75,9 @@ a, .btn-link {
     background-color: #e0e0e04a;
     border-radius: 3px;
 }
+
+.container-spinner {
+    position: absolute;
+    left: 46%;
+    top: 40%;
+}
