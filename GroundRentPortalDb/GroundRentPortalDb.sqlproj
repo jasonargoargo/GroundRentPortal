@@ -75,11 +75,11 @@
     <Build Include="dbo\Stored Procedures\Test\spTest_ReadByAccountId.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GroundRentPortalDb.publish.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Build Include="dbo\Stored Procedures\Address\spAddress_ReadByCountyWhereIsLegibleTrueAndIsProcessedFalse.sql" />
     <Build Include="dbo\Stored Procedures\Address\spAddress_ReadByVerificationPercentageWhereIsLegibleTrueAndIsProcessedTrue.sql" />
     <Build Include="dbo\Stored Procedures\Address\spAddress_Update.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GroundRentPortalDb.publish.xml" />
   </ItemGroup>
 </Project>
