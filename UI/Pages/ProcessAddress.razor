@@ -140,7 +140,7 @@ else
 	{
 		addressesLoaded = false;
 		AddressList = new();
-		//UnprocessedAddressList = await LoadUnprocessedAddresses();
+		UnprocessedAddressList = await LoadUnprocessedAddresses();
 		UnverifiedAddressList = await LoadUnverifiedAddresses();
 		AddressList.AddRange(UnprocessedAddressList);
 		AddressList.AddRange(UnverifiedAddressList);
