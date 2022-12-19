@@ -2,11 +2,11 @@
 @using DataLibrary.DbAccess
 @using DataLibrary.DbServices
 @using DataLibrary.Models
-@using DataLibrary.Services;
+@*@using DataLibrary.Services;*@
 @using UI.Pages.ProcessAddressComponents
 @inject IDataContext dataContext
 @inject IGroundRentPortalDataServiceFactory testDataServiceFactory
-@inject Scraper scraper
+@*@inject Scraper scraper*@
 @inject ILogger<ProcessAddress> logger
 @inject ISnackbar snackbarNotification
 @attribute [Authorize]
@@ -96,7 +96,7 @@ else
 			AddressToBeInputModel = AddressList[0];
 			// If address is processed, null values to prevent user from lazily keeping visible values
 			if (AddressToBeInputModel.IsProcessed is true) NullifyValues();
-			await scraper.Scrape(AddressList[0]);
+			//await scraper.Scrape(AddressList[0]);
 			addressesLoaded = true;
 			await InvokeAsync(StateHasChanged);
 		}
@@ -126,7 +126,7 @@ else
 		{
 			AddressToBeInputModel = AddressList[counter];
 			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[counter].AccountId);
-			await scraper.Scrape(AddressList[counter]);
+			//await scraper.Scrape(AddressList[counter]);
 			await InvokeAsync(StateHasChanged);
 		}
 		await base.OnAfterRenderAsync(firstRender);
