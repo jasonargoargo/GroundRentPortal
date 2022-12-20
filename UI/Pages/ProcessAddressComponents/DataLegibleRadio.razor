@@ -17,9 +17,9 @@
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.IsLegible == false)
 {
 	<div class="row">
-		<div class="col gy-3">			
-			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Filled"
-				   Label="What is illegible?"
+		<div class="col gy-3">		
+			<MudText>What is illegible?</MudText>
+			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Outlined"
 				   Style="max-width: fit-content;">
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.Blank"></MudSelectItem>
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
