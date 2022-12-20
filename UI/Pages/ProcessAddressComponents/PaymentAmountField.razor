@@ -8,9 +8,9 @@
 	{
 		<MudNumericField Format="N2" Culture="@_en" Label=@($"Currency Amount ${AddressToBeInputModel.PaymentAmount}")
 					 HelperText="Shift + Mouse wheel increment"
-					 Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentAmount"
+					 Variant="Variant.Outlined" @bind-Value="AddressToBeInputModel.PaymentAmount"
 					 For="@(() => AddressToBeInputModel.PaymentAmount)" Min="0" Step="(decimal?)0.1"
-					 Style="max-width: fit-content;" InvertMouseWheel="false" Required />
+					 Style="max-width: fit-content;" Margin="Margin.Dense" InvertMouseWheel="false" Required />
 	}
 </div>
 

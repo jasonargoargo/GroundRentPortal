@@ -81,3 +81,12 @@ a, .btn-link {
     left: 39%;
     top: 40%;
 }
+
+
+.mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
+    background-color: transparent;
+}
+
+.mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol.mud-input-error {
+    background-color: var(--mud-palette-background);
+}

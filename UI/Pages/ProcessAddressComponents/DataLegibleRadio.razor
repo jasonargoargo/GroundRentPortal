@@ -17,7 +17,7 @@
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.IsLegible == false)
 {
 	<div class="row">
-		<div class="col gy-3">
+		<div class="col gy-3">			
 			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Filled"
 				   Label="What is illegible?"
 				   Style="max-width: fit-content;">

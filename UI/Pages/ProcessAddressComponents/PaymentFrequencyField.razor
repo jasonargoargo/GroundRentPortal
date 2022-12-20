@@ -5,7 +5,7 @@
 	<MudText>Payment Frequency</MudText>
 	@if (AddressToBeInputModel is not null)
 	{
-		<MudSelect Variant="Variant.Filled" ValueChanged="OnPaymentFrequencyChanged"
+		<MudSelect Label="Payment Frequency" Variant="Variant.Outlined" ValueChanged="OnPaymentFrequencyChanged"
 			   Style="max-width: fit-content;" Required>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.Blank"></MudSelectItem>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.Annual">Annual</MudSelectItem>

@@ -46,7 +46,9 @@
 {
 	<div class="col gy-3" style="max-width: 15em;">
 		<label>Other Date</label>
-		<MudInputString Variant="Variant.Filled" @bind-Value="AddressToBeInputModel.PaymentDateOther" For="@(() => AddressToBeInputModel.PaymentDateOther)" Required />
+		<MudTooltip Text="Please enter other date or item needed." Arrow="true" Placement="Placement.End">
+			<MudInputString Placeholder="1/4/2023" Variant="Variant.Outlined" @bind-Value="AddressToBeInputModel.PaymentDateOther" For="@(() => AddressToBeInputModel.PaymentDateOther)" Required />
+		</MudTooltip>
 	</div>
 }
 
