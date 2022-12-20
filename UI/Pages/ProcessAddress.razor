@@ -9,6 +9,7 @@
 @*@inject Scraper scraper*@
 @inject ILogger<ProcessAddress> logger
 @inject ISnackbar snackbarNotification
+@inject IJSRuntime jsRuntime
 @attribute [Authorize]
 @page "/processaddress"
 @namespace UI.Pages
@@ -95,6 +96,7 @@ else
 			if (AddressToBeInputModel.IsProcessed is true) NullifyValues();
 			//await scraper.Scrape(AddressList[0]);
 			addressesLoaded = true;
+			await jsRuntime.InvokeVoidAsync("searchAddress", AddressToBeInputModel);
 			await InvokeAsync(StateHasChanged);
 		}
 		catch (Exception ex)
@@ -235,7 +237,8 @@ else
 			return;
 		}
 		isValidationSuccessful = true;
-		IsSubmitting = true;
+		IsSubmitting = true;		
+
 		AddressModel addressToDbModel = new();
 		// If address has already been processed, it will now be verified
 		if (AddressToBeInputModel?.IsProcessed is true)
