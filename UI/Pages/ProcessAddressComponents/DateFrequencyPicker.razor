@@ -79,11 +79,10 @@
 		{
 			charactersLeft++;
 		}
-
-		if (charactersLeft > 0)
+		else if (charactersLeft <= maxCharacterLengthOther && args.Key != "Backspace")
 		{
 			charactersLeft--;
-		}
+		}			
 	}
 
 	private void CheckDisabledStatus()
