@@ -5,48 +5,87 @@
 {
 	<div class="col gy-3" style="max-width: fit-content;">
 		<MudText Typo="Typo.caption">Please select a date:</MudText>
-		<MudDatePicker Variant="Variant.Outlined" Label="Annual Date" @onfocusout="CheckDisabledStatus" @bind-Date="AddressToBeInputModel.PaymentDateAnnual"
-				   For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Disabled="isDisabled" Required />
+		<MudDatePicker Variant="Variant.Outlined" Label="Annual Date" @bind-Date="AddressToBeInputModel.PaymentDateAnnual"
+				   For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateAnnual" Required />
 	</div>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null 
-	&& AddressToBeInputModel.NotLegibleType == DataLibrary.Models.AddressModel.InputType.PaymentDateAnnual)
+	&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateAnnual)
 {
-	<MudText>Annual Date is disabled as it is not legible.</MudText>
+	<MudText Color="Color.Error">Annual Date is disabled as it is not legible.</MudText>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
 {
 	<div class="col gy-3" style="max-width: fit-content;">
 		<MudText Typo="Typo.caption">Please select a date:</MudText>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual1" Label="Semi-Annual 1 Date" Variant="Variant.Outlined" For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual1)" Required />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual1" Label="Semi-Annual 1 Date" Variant="Variant.Outlined"
+				   For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual1)" Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual1" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
 		<MudText Typo="Typo.caption">Please select a date:</MudText>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual2" Label="Semi-Annual 2 Date" Variant="Variant.Outlined" For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual2)" Required />
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual2" Label="Semi-Annual 2 Date" Variant="Variant.Outlined"
+				   For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual2)" Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual2" Required />
 	</div>
+}
+
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
+					&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual1)
+{
+	<MudText Color="Color.Error">Semi-Annual Date 1 is disabled as it is not legible.</MudText>
+}
+
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
+			&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual2)
+{
+	<MudText Color="Color.Error">Semi-Annual Date 2 is disabled as it is not legible.</MudText>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly)
 {
 	<div class="col gy-3" style="max-width: fit-content;">
-		<MudText Typo="Typo.caption">Please select a date:</MudText>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly1" Variant="Variant.Outlined" Label="Quarterly 1 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly1)" Required />
+		<MudText Color="Color.Error" Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly1" Variant="Variant.Outlined" Label="Quarterly 1 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly1)"
+				Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly1" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
-		<MudText Typo="Typo.caption">Please select a date:</MudText>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly2" Variant="Variant.Outlined" Label="Quarterly 2 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly2)" Required />
+		<MudText  Color="Color.Error" Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly2" Variant="Variant.Outlined" Label="Quarterly 2 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly2)" 
+			Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly2" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
-		<MudText Typo="Typo.caption">Please select a date:</MudText>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly3" Variant="Variant.Outlined" Label="Quarterly 3 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly3)" Required />
+		<MudText  Color="Color.Error" Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly3" Variant="Variant.Outlined" Label="Quarterly 3 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly3)"
+				   Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly3" Required />
 	</div>
 	<div class="col gy-3" style="max-width: fit-content;">
-		<MudText Typo="Typo.caption">Please select a date:</MudText>
-		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly4" Variant="Variant.Outlined" Label="Quarterly 4 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly4)" Required />
+		<MudText  Color="Color.Error" Typo="Typo.caption">Please select a date:</MudText>
+		<MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly4" Variant="Variant.Outlined" Label="Quarterly 4 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly4)" Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly4" Required />
 	</div>
 }
+
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
+					&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly1)
+{
+	<MudText Color="Color.Error">PaymentDateQuarterly1 is disabled as it is not legible.</MudText>
+}
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
+					&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly2)
+{
+	<MudText Color="Color.Error">PaymentDateQuarterly2 is disabled as it is not legible.</MudText>
+}
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
+					&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly3)
+{
+	<MudText Color="Color.Error">PaymentDateQuarterly3 is disabled as it is not legible.</MudText>
+}
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
+					&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly4)
+{
+	<MudText Color="Color.Error">PaymentDateQuarterly4 is disabled as it is not legible.</MudText>
+}
+
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
 {
@@ -54,10 +93,14 @@
 		<MudText>Other Date:</MudText>
 		<MudTooltip Text="Please enter other date or item needed." Arrow="true" Placement="Placement.End">
 			<MudInputString OnKeyDown="CalculateCharactersLeft" @bind-Value="AddressToBeInputModel.PaymentDateOther" Variant="Variant.Outlined"
-						For="@(() => AddressToBeInputModel.PaymentDateOther)" Placeholder="1/4/2023" MaxLength="maxCharacterLengthOther" Required />
+						For="@(() => AddressToBeInputModel.PaymentDateOther)" Placeholder="1/4/2023" MaxLength="maxCharacterLengthOther" Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateOther" Required />
 		</MudTooltip>
 		<MudText>Characters left: @charactersLeft</MudText>
 	</div>
+	@if(AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateOther)
+	{
+		<MudText Color="Color.Error">PaymentDateOther is disabled due to not legible value.</MudText>
+	}
 }
 
 @code {
@@ -83,18 +126,6 @@
 		{
 			charactersLeft--;
 		}			
-	}
-
-	private void CheckDisabledStatus()
-	{
-		if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null 
-			&& AddressToBeInputModel.NotLegibleType == DataLibrary.Models.AddressModel.InputType.PaymentDateAnnual)
-		{
-			isDisabled = true;
-		}else
-		{
-			isDisabled = false;
-		}
 	}
 
 }

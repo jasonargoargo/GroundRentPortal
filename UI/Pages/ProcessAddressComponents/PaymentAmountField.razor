@@ -11,8 +11,12 @@
                          HelperText="Shift + Mouse Wheel to Increment"
                          Variant="Variant.Outlined" Placeholder="$500.00" InputMode="InputMode.numeric" @bind-Value="AddressToBeInputModel.PaymentAmount"
                          For="@(() => AddressToBeInputModel.PaymentAmount)" Min="0" Step="(decimal?)0.1"
-                         Style="max-width: fit-content;" Margin="Margin.Dense" InvertMouseWheel="false" Required />
+                         Style="max-width: fit-content;" Margin="Margin.Dense" InvertMouseWheel="false" Disabled="AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentAmount" Required />
         </MudTooltip>
+        @if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentAmount)
+        {
+            <MudText Color="Color.Error">Payment Amount Field is Disabled due to Not Legible value.</MudText>
+        }
     }
 </div>
 
