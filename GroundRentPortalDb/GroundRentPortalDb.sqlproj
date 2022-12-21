@@ -79,7 +79,4 @@
     <Build Include="dbo\Stored Procedures\Address\spAddress_ReadByVerificationPercentageWhereIsLegibleTrueAndIsProcessedTrue.sql" />
     <Build Include="dbo\Stored Procedures\Address\spAddress_Update.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="GroundRentPortalDb.publish.xml" />
-  </ItemGroup>
 </Project>
