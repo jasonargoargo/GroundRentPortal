@@ -107,7 +107,7 @@ else
 	private void NullifyValues()
 	{
 		AddressToBeInputModel.PaymentAmount = null;
-		AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
+		AddressToBeInputModel.GroundRentPaymentFrequency = null;
 		AddressToBeInputModel.PaymentDateAnnual = null;
 		AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
 		AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
@@ -174,25 +174,14 @@ else
 		}
 		return OriginalAddressModel;
 	}
-	private void UpdatePaymentFrequency(AddressModel.PaymentFrequency paymentFrequency)
+	private void UpdatePaymentFrequency(AddressModel.PaymentFrequency? paymentFrequency)
 	{
 		if (AddressToBeInputModel is not null)
 		{
 			AddressToBeInputModel.GroundRentPaymentFrequency = paymentFrequency;
 		}
 
-		if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
-		{
-			AddressToBeInputModel.PaymentDateAnnual = null;
-			AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
-			AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
-			AddressToBeInputModel.PaymentDateQuarterly1 = null;
-			AddressToBeInputModel.PaymentDateQuarterly2 = null;
-			AddressToBeInputModel.PaymentDateQuarterly3 = null;
-			AddressToBeInputModel.PaymentDateQuarterly4 = null;
-			AddressToBeInputModel.PaymentDateOther = null;
-		}
-		else if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
+		if (AddressToBeInputModel?.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Annual)
 		{
 			AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
 			AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
@@ -259,10 +248,7 @@ else
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
 			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
-			if (AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
-			{
-				addressToDbModel.GroundRentPaymentFrequency = null;
-			}
+
 			if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.Blank)
 			{
 				addressToDbModel.NotLegibleType = null;
@@ -391,10 +377,7 @@ else
 			addressToDbModel.PaymentDateOther = AddressToBeInputModel?.PaymentDateOther;
 			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;
 			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
-			if (AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Blank)
-			{
-				addressToDbModel.GroundRentPaymentFrequency = null;
-			}
+
 			if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.Blank)
 			{
 				addressToDbModel.NotLegibleType = null;

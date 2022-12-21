@@ -5,12 +5,12 @@
 	<MudText>Payment Frequency</MudText>
 	@if (AddressToBeInputModel is not null)
 	{
-		<MudSelect Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.MonitorHeart" Variant="Variant.Outlined" ValueChanged="OnPaymentFrequencyChanged"
-			   Style="max-width: fit-content;" Dense="true" Required>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.Annual">Annual</MudSelectItem>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.SemiAnnual">Semi-Annual</MudSelectItem>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.Quarterly">Quarterly</MudSelectItem>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.Other">Other</MudSelectItem>
+		<MudSelect T="AddressModel.PaymentFrequency?" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.MonitorHeart" Variant="Variant.Outlined" ValueChanged="OnPaymentFrequencyChanged" Placeholder="Annual"
+			   Style="max-width: fit-content;" Dense="true" For="@(() => AddressToBeInputModel.GroundRentPaymentFrequency)" Required>
+			<MudSelectItem T="AddressModel.PaymentFrequency?" Value="@AddressModel.PaymentFrequency.Annual">Annual</MudSelectItem>
+			<MudSelectItem T="AddressModel.PaymentFrequency?" Value="@AddressModel.PaymentFrequency.SemiAnnual">Semi-Annual</MudSelectItem>
+			<MudSelectItem T="AddressModel.PaymentFrequency?" Value="@AddressModel.PaymentFrequency.Quarterly">Quarterly</MudSelectItem>
+			<MudSelectItem T="AddressModel.PaymentFrequency?" Value="@AddressModel.PaymentFrequency.Other">Other</MudSelectItem>
 		</MudSelect>
 	}
 </div>
@@ -23,7 +23,7 @@
 	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
 	[Parameter]
-	public EventCallback<AddressModel.PaymentFrequency> OnPaymentFrequencyChanged { get; set; }
+	public EventCallback<AddressModel.PaymentFrequency?> OnPaymentFrequencyChanged { get; set; }
 
 	protected override void OnInitialized()
 	{
