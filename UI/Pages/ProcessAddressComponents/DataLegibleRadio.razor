@@ -22,8 +22,7 @@
 		<div class="col gy-3">		
 			<MudText>What is illegible?</MudText>
 			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Outlined"
-				   Style="max-width: fit-content;">
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.Blank"></MudSelectItem>
+				   Style="max-width: fit-content;" For="@(() => AddressToBeInputModel.NotLegibleType)">
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateAnnual">PaymentDateAnnual</MudSelectItem>
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateSemiAnnual1">PaymentDateSemiAnnual1</MudSelectItem>
@@ -41,4 +40,15 @@
 @code {
 	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
+	
+	protected override void OnInitialized()
+	{
+		if(AddressToBeInputModel is not null)
+		{
+			AddressToBeInputModel.NotLegibleType = null;
+		}
+
+		base.OnInitialized();
+	}
+
 }

@@ -325,7 +325,7 @@ else
 				};
 				// The differences are captured in a json body
 				addressToDbModel.DataDifferencesJson = JsonSerializer.Serialize<AddressDataDifferencesUserModel>(addressDataDifferencesUserModel);
-				
+
 				// Since there are differences that exist between UserWhoProcessed input and UserWhoVerified input, all input is nulled
 				addressToDbModel.IsVerified = false;
 				addressToDbModel.NotLegibleType = null;

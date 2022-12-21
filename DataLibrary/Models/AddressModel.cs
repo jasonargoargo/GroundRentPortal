@@ -18,9 +18,10 @@ namespace DataLibrary.Models
         public bool? IsGroundRent { get; set; }
         public bool? IsProcessed { get; set; }
         public bool? IsVerified { get; set; }
-		[Required] public bool? IsLegible { get; set; }
+		[Required] public bool? IsLegible { get; set; }		
 		public enum InputType { Blank, PaymentAmount, PaymentDateAnnual, PaymentDateSemiAnnual1, PaymentDateSemiAnnual2, PaymentDateQuarterly1, PaymentDateQuarterly2, PaymentDateQuarterly3, PaymentDateQuarterly4, PaymentDateOther }
-		public InputType? NotLegibleType { get; set; }
+		[RequiredIf("IsLegible == false", ErrorMessage = "Input what is illegible!")]
+        public InputType? NotLegibleType { get; set; }
         [MaxLength(2048)] public string? DataDifferencesJson { get; set; }
         [Required] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
         public enum PaymentFrequency { Blank, Annual, SemiAnnual, Quarterly, Other }
