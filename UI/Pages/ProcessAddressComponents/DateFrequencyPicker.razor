@@ -5,9 +5,15 @@
 {
 	<div class="col gy-3" style="max-width: fit-content;">
 		<MudText Typo="Typo.caption">Please select a date:</MudText>
-		<MudDatePicker Variant="Variant.Outlined" Label="Annual Date" @bind-Date="AddressToBeInputModel.PaymentDateAnnual"
-				   For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Required />
+		<MudDatePicker Variant="Variant.Outlined" Label="Annual Date" @onfocusout="CheckDisabledStatus" @bind-Date="AddressToBeInputModel.PaymentDateAnnual"
+				   For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Disabled="isDisabled" Required />
 	</div>
+}
+
+@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null 
+	&& AddressToBeInputModel.NotLegibleType == DataLibrary.Models.AddressModel.InputType.PaymentDateAnnual)
+{
+	<MudText>Annual Date is disabled as it is not legible.</MudText>
 }
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.SemiAnnual)
@@ -59,7 +65,7 @@
 	public AddressModel? AddressToBeInputModel { get; set; }
 	private int maxCharacterLengthOther { get; set; }
 	private int charactersLeft { get; set; } = 64;
-
+	private bool isDisabled { get; set; }
 	private void CalculateCharactersLeft()
 	{
 		if (AddressToBeInputModel?.PaymentDateOther is not null)
@@ -67,4 +73,17 @@
 			charactersLeft = maxCharacterLengthOther - AddressToBeInputModel.PaymentDateOther.Length;
 		}
 	}
+
+	private void CheckDisabledStatus()
+	{
+		if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null 
+			&& AddressToBeInputModel.NotLegibleType == DataLibrary.Models.AddressModel.InputType.PaymentDateAnnual)
+		{
+			isDisabled = true;
+		}else
+		{
+			isDisabled = false;
+		}
+	}
+
 }
