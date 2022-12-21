@@ -6,8 +6,7 @@
 	@if (AddressToBeInputModel is not null)
 	{
 		<MudSelect Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.MonitorHeart" Variant="Variant.Outlined" ValueChanged="OnPaymentFrequencyChanged"
-			   Style="max-width: fit-content;" Required>
-			<MudSelectItem Value="@AddressModel.PaymentFrequency.Blank"></MudSelectItem>
+			   Style="max-width: fit-content;" Dense="true" Required>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.Annual">Annual</MudSelectItem>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.SemiAnnual">Semi-Annual</MudSelectItem>
 			<MudSelectItem Value="@AddressModel.PaymentFrequency.Quarterly">Quarterly</MudSelectItem>
@@ -30,7 +29,7 @@
 	{
 		if (AddressToBeInputModel is not null)
 		{
-			AddressToBeInputModel.GroundRentPaymentFrequency = AddressModel.PaymentFrequency.Blank;
+			AddressToBeInputModel.GroundRentPaymentFrequency = null;
 		}
 		base.OnInitialized();
 	}

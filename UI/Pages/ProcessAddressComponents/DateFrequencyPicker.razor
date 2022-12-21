@@ -51,9 +51,9 @@
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other)
 {
 	<div class="col gy-3" style="max-width: 15em;">
-		<MudText>Other Date</MudText>
+		<MudText>Other Date:</MudText>
 		<MudTooltip Text="Please enter other date or item needed." Arrow="true" Placement="Placement.End">
-			<MudInputString OnKeyPress="CalculateCharactersLeft" @bind-Value="AddressToBeInputModel.PaymentDateOther" Variant="Variant.Outlined"
+			<MudInputString OnKeyDown="CalculateCharactersLeft" @bind-Value="AddressToBeInputModel.PaymentDateOther" Variant="Variant.Outlined"
 						For="@(() => AddressToBeInputModel.PaymentDateOther)" Placeholder="1/4/2023" MaxLength="maxCharacterLengthOther" Required />
 		</MudTooltip>
 		<MudText>Characters left: @charactersLeft</MudText>
@@ -63,14 +63,26 @@
 @code {
 	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
-	private int maxCharacterLengthOther { get; set; }
-	private int charactersLeft { get; set; } = 64;
+	private int maxCharacterLengthOther { get; set; } = 64;
+	private int charactersLeft { get; set; }
 	private bool isDisabled { get; set; }
-	private void CalculateCharactersLeft()
+
+	protected override void OnInitialized()
 	{
-		if (AddressToBeInputModel?.PaymentDateOther is not null)
+		charactersLeft = maxCharacterLengthOther;
+		base.OnInitialized();
+	}
+
+	private void CalculateCharactersLeft(KeyboardEventArgs args)
+	{
+		if (args.Key == "Backspace" && charactersLeft < maxCharacterLengthOther)
 		{
-			charactersLeft = maxCharacterLengthOther - AddressToBeInputModel.PaymentDateOther.Length;
+			charactersLeft++;
+		}
+
+		if (charactersLeft > 0)
+		{
+			charactersLeft--;
 		}
 	}
 

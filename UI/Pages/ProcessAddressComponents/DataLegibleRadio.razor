@@ -21,8 +21,8 @@
 	<div class="row">
 		<div class="col gy-3">		
 			<MudText>What is illegible?</MudText>
-			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Outlined"
-				   Style="max-width: fit-content;" For="@(() => AddressToBeInputModel.NotLegibleType)">
+			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Outlined" Placeholder="Payment Amount"
+				   Style="max-width: fit-content;" Dense="true" For="@(() => AddressToBeInputModel.NotLegibleType)">
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateAnnual">PaymentDateAnnual</MudSelectItem>
 				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateSemiAnnual1">PaymentDateSemiAnnual1</MudSelectItem>
