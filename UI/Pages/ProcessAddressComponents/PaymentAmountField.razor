@@ -3,19 +3,21 @@
 @namespace UI.Pages.ProcessAddressComponents
 
 <div class="col gy-3">
-	<MudText>Payment Amount</MudText>
-	@if (AddressToBeInputModel is not null)
-	{
-		<MudNumericField Format="N2" Culture="@_en" Label=@($"Currency Amount ${AddressToBeInputModel.PaymentAmount}")
-					 HelperText="Shift + Mouse wheel increment"
-					 Variant="Variant.Outlined" InputMode="InputMode.numeric" @bind-Value="AddressToBeInputModel.PaymentAmount"
-					 For="@(() => AddressToBeInputModel.PaymentAmount)" Min="0" Step="(decimal?)0.1"
-					 Style="max-width: fit-content;" Margin="Margin.Dense" InvertMouseWheel="false" Required />
-	}
+    <MudText>Payment Amount</MudText>
+    @if (AddressToBeInputModel is not null)
+    {
+        <MudTooltip Text="Enter the payment amount listed" Placement="Placement.Right">
+            <MudNumericField Format="N2" Culture="@_en" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.AttachMoney"
+                         HelperText="Shift + Mouse Wheel to Increment"
+                         Variant="Variant.Outlined" InputMode="InputMode.numeric" @bind-Value="AddressToBeInputModel.PaymentAmount"
+                         For="@(() => AddressToBeInputModel.PaymentAmount)" Min="0" Step="(decimal?)0.1"
+                         Style="max-width: fit-content;" Margin="Margin.Dense" InvertMouseWheel="false" Required />
+        </MudTooltip>
+    }
 </div>
 
 @code {
-	[CascadingParameter]
-	public AddressModel? AddressToBeInputModel { get; set; }
-	public CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
+    [CascadingParameter]
+    public AddressModel? AddressToBeInputModel { get; set; }
+    public CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
 }
