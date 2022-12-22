@@ -115,7 +115,7 @@ else
 		AddressToBeInputModel.PaymentDateQuarterly4 = null;
 		AddressToBeInputModel.PaymentDateOther = null;
 		AddressToBeInputModel.IsLegible = null;
-		AddressToBeInputModel.NotLegibleType = AddressModel.InputType.Blank;
+		AddressToBeInputModel.NotLegibleType = null;
 	}
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -247,11 +247,6 @@ else
 			addressToDbModel.IsLegible = AddressToBeInputModel.IsLegible;
 			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
 
-			if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.Blank)
-			{
-				addressToDbModel.NotLegibleType = null;
-			}
-
 			// If there are any differences between the processed and verified address
 			if (
 				(OriginalAddressModel?.GroundRentPaymentFrequency != addressToDbModel.GroundRentPaymentFrequency) || 
@@ -312,7 +307,6 @@ else
 
 				// Since there are differences that exist between UserWhoProcessed input and UserWhoVerified input, all input is nulled
 				addressToDbModel.IsVerified = false;
-				addressToDbModel.NotLegibleType = null;
 				addressToDbModel.PaymentAmount = null;
 				addressToDbModel.GroundRentPaymentFrequency = null;
 				addressToDbModel.PaymentDateAnnual = null;
@@ -333,7 +327,6 @@ else
 			{
 				if (addressToDbModel?.IsLegible is false)
 				{
-					addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
 					addressToDbModel.PaymentAmount = null;
 					addressToDbModel.GroundRentPaymentFrequency = null;
 					addressToDbModel.PaymentDateAnnual = null;
@@ -376,13 +369,8 @@ else
 			addressToDbModel.IsLegible = AddressToBeInputModel?.IsLegible;
 			addressToDbModel.NotLegibleType = AddressToBeInputModel.NotLegibleType;
 
-			if (AddressToBeInputModel.NotLegibleType == AddressModel.InputType.Blank)
-			{
-				addressToDbModel.NotLegibleType = null;
-			}
 			if (addressToDbModel.IsLegible is false)
 			{
-				addressToDbModel.NotLegibleType = null;
 				addressToDbModel.PaymentAmount = null;
 				addressToDbModel.GroundRentPaymentFrequency = null;
 				addressToDbModel.PaymentDateAnnual = null;

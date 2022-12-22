@@ -19,7 +19,7 @@ namespace DataLibrary.Models
         public bool? IsProcessed { get; set; }
         public bool? IsVerified { get; set; }
 		[Required] public bool? IsLegible { get; set; }		
-		public enum InputType { Blank, PaymentAmount, PaymentDateAnnual, PaymentDateSemiAnnual1, PaymentDateSemiAnnual2, PaymentDateQuarterly1, PaymentDateQuarterly2, PaymentDateQuarterly3, PaymentDateQuarterly4, PaymentDateOther }
+		public enum InputType { PaymentAmount, PaymentDateAnnual, PaymentDateSemiAnnual1, PaymentDateSemiAnnual2, PaymentDateQuarterly1, PaymentDateQuarterly2, PaymentDateQuarterly3, PaymentDateQuarterly4, PaymentDateOther }
 		[RequiredIf("IsLegible == false", ErrorMessage = "Illegible field is required!")]
         public InputType? NotLegibleType { get; set; }
         [MaxLength(2048)] public string? DataDifferencesJson { get; set; }
