@@ -15,7 +15,8 @@
         </MudTooltip>
         @if (AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentAmount)
         {
-            <MudText Color="Color.Error">Payment Amount Field is Disabled due to Not Legible value.</MudText>
+            <br />
+            <MudText Color="Color.Default" Typo="Typo.caption">Payment Amount Field is 'Disabled' due to Not Legible value.</MudText>
         }
     }
 </div>
