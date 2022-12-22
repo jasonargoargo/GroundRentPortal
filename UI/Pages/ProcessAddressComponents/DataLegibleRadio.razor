@@ -2,53 +2,87 @@
 @namespace UI.Pages.ProcessAddressComponents
 
 <div class="row">
-	<div class="col gy-3">
-		<MudTooltip Text="Is the data presented readible?" Placement="Placement.Right">
-			<MudText>Is data legible?</MudText>
-			@if (AddressToBeInputModel is not null)
-			{
-				<MudRadioGroup T="bool?" @bind-SelectedOption="AddressToBeInputModel.IsLegible" For="@(() => AddressToBeInputModel.IsLegible)" Required>
-					<MudRadio Option="(bool?)true" Color="Color.Primary">Yes</MudRadio>
-					<MudRadio Option="(bool?)false" Color="Color.Primary">No</MudRadio>
-				</MudRadioGroup>
-			}
-		</MudTooltip>		
-	</div>
+    <div class="col gy-3">
+        <MudTooltip Text="Is the data presented readible?" Placement="Placement.Right">
+            <MudText>Is data legible?</MudText>
+            @if (AddressToBeInputModel is not null)
+            {
+                <MudRadioGroup T="bool?" @bind-SelectedOption="AddressToBeInputModel.IsLegible" For="@(() => AddressToBeInputModel.IsLegible)" Required>
+                    <MudRadio Option="(bool?)true" Color="Color.Primary">Yes</MudRadio>
+                    <MudRadio Option="(bool?)false" Color="Color.Primary">No</MudRadio>
+                </MudRadioGroup>
+            }
+        </MudTooltip>
+    </div>
 </div>
 
 @if (AddressToBeInputModel is not null && AddressToBeInputModel.IsLegible == false)
 {
-	<div class="row">
-		<div class="col gy-3">		
-			<MudText>What is illegible?</MudText>
-			<MudSelect T="AddressModel.InputType?" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Outlined" Placeholder="Payment Amount"
-				   Style="max-width: fit-content;" Dense="true" For="@(() => AddressToBeInputModel.NotLegibleType)">
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateAnnual">PaymentDateAnnual</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateSemiAnnual1">PaymentDateSemiAnnual1</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateSemiAnnual2">PaymentDateSemiAnnual2</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly1">PaymentDateQuarterly1</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly2">PaymentDateQuarterly2</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly3">PaymentDateQuarterly3</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly4">PaymentDateQuarterly4</MudSelectItem>
-				<MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateOther">PaymentDateOther</MudSelectItem>
-			</MudSelect>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col gy-3">
+            <MudText>What is illegible?</MudText>
+            <MudSelect T="AddressModel.InputType?" OnBlur="NullNotLegibleSelection" @bind-Value="AddressToBeInputModel.NotLegibleType" Variant="Variant.Outlined" Placeholder="Payment Amount"
+                   Style="max-width: fit-content;" Dense="true" For="@(() => AddressToBeInputModel.NotLegibleType)">
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentAmount">Payment Amount</MudSelectItem>
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateAnnual">PaymentDateAnnual</MudSelectItem>
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateSemiAnnual1">PaymentDateSemiAnnual1</MudSelectItem>
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateSemiAnnual2">PaymentDateSemiAnnual2</MudSelectItem>
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly1">PaymentDateQuarterly1</MudSelectItem>
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly2">PaymentDateQuarterly2</MudSelectItem>
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly3">PaymentDateQuarterly3</MudSelectItem>
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateQuarterly4">PaymentDateQuarterly4</MudSelectItem>
+                <MudSelectItem T="AddressModel.InputType?" Value="AddressModel.InputType.PaymentDateOther">PaymentDateOther</MudSelectItem>
+            </MudSelect>
+        </div>
+    </div>
 }
 
 @code {
-	[CascadingParameter]
-	public AddressModel? AddressToBeInputModel { get; set; }
-	
-	protected override void OnInitialized()
-	{
-		if(AddressToBeInputModel is not null)
-		{
-			AddressToBeInputModel.NotLegibleType = null;
-		}
+    [CascadingParameter]
+    public AddressModel? AddressToBeInputModel { get; set; }
 
-		base.OnInitialized();
-	}
+    protected override void OnInitialized()
+    {
+        if (AddressToBeInputModel is not null)
+        {
+            AddressToBeInputModel.NotLegibleType = null;
+        }
+
+        base.OnInitialized();
+    }
+
+    private void NullNotLegibleSelection()
+    {
+        switch (AddressToBeInputModel?.NotLegibleType)
+        {
+            case AddressModel.InputType.PaymentAmount:
+                AddressToBeInputModel.PaymentAmount = null;
+                break;
+            case AddressModel.InputType.PaymentDateAnnual:
+                AddressToBeInputModel.PaymentDateAnnual = null;
+                break;
+            case AddressModel.InputType.PaymentDateSemiAnnual1:
+                AddressToBeInputModel.PaymentDateSemiAnnual1 = null;
+                break;
+            case AddressModel.InputType.PaymentDateSemiAnnual2:
+                AddressToBeInputModel.PaymentDateSemiAnnual2 = null;
+                break;
+            case AddressModel.InputType.PaymentDateQuarterly1:
+                AddressToBeInputModel.PaymentDateQuarterly1 = null;
+                break;
+            case AddressModel.InputType.PaymentDateQuarterly2:
+                AddressToBeInputModel.PaymentDateQuarterly2 = null;
+                break;
+            case AddressModel.InputType.PaymentDateQuarterly3:
+                AddressToBeInputModel.PaymentDateQuarterly3 = null;
+                break;
+            case AddressModel.InputType.PaymentDateQuarterly4:
+                AddressToBeInputModel.PaymentDateQuarterly4 = null;
+                break;
+            case AddressModel.InputType.PaymentDateOther:
+                AddressToBeInputModel.PaymentDateOther = null;
+                break;
+        }
+    }
 
 }
