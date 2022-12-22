@@ -11,7 +11,6 @@ namespace DataLibrary.Services;
 public class Scraper
 {
 	// Docker-Selenium github resources found here: https://github.com/seleniumhq/docker-selenium
-	private List<AddressModel> AddressList { get; set; }
 	private readonly string BaseUrl = "https://sdat.dat.maryland.gov/RealProperty/Pages/default.aspx";
 	private IWebDriver RemoteWebDriver { get; set; }
 	private IWebElement FirefoxInput { get; set; }
