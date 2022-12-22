@@ -23,7 +23,9 @@ namespace DataLibrary.Models
 		[RequiredIf("IsLegible == false", ErrorMessage = "Illegible field is required!")]
         public InputType? NotLegibleType { get; set; }
         [MaxLength(2048)] public string? DataDifferencesJson { get; set; }
-        [RequiredIf("NotLegibleType != AddressModel.InputType.PaymentAmount", ErrorMessage = "Payment Amount field is required.")] [DataType(DataType.Currency)] public decimal? PaymentAmount { get; set; }
+        [RequiredIf("NotLegibleType != AddressModel.InputType.PaymentAmount", ErrorMessage = "Payment Amount field is required.")] 
+        [DataType(DataType.Currency)]
+        public decimal? PaymentAmount { get; set; }
         public enum PaymentFrequency { Annual, SemiAnnual, Quarterly, Other }
         [Required] public PaymentFrequency? GroundRentPaymentFrequency { get; set; }
 		[RequiredIf("GroundRentPaymentFrequency == PaymentFrequency.Annual && NotLegibleType != AddressModel.InputType.PaymentDateAnnual", ErrorMessage = "An annual date selection must be made")]
@@ -40,7 +42,7 @@ namespace DataLibrary.Models
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateQuarterly3 { get; set; }
 		[RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Quarterly && NotLegibleType != AddressModel.InputType.PaymentDateQuarterly4", ErrorMessage = "A Quarterly date selection must be made.")]
 		[DataType(DataType.DateTime)] public DateTime? PaymentDateQuarterly4 { get; set; }
-        [RequiredIf("NotLegibleType != AddressModel.InputType.PaymentDateOther", ErrorMessage = "Other input field is required!")]
+        [RequiredIf("GroundRentPaymentFrequency == AddressModel.PaymentFrequency.Other && NotLegibleType != AddressModel.InputType.PaymentDateOther", ErrorMessage = "Other input field is required!")]
         [MaxLength(64)]public string? PaymentDateOther { get; set; }
         public string? UserWhoProcessed { get; set; }
         public string? UserWhoVerified { get; set; }
