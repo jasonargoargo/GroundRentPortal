@@ -8,8 +8,8 @@
 		<MudDatePicker Variant="Variant.Outlined" Label="Annual Date" @bind-Date="AddressToBeInputModel.PaymentDateAnnual"
 				   For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateAnnual" Required />
 	</div>
-	@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
-			&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateAnnual)
+	@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null && AddressToBeInputModel.IsLegible is false
+			&& AddressToBeInputModel?.NotLegibleType == AddressModel.InputType.PaymentDateAnnual)
 	{
 		<MudText Color="Color.Error">Annual Date is disabled as it is not legible.</MudText>
 	}
@@ -28,7 +28,7 @@
 				   For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual2)" Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual2" Required />
 	</div>
 	@if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
-							&& AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual1)
+								&& AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual1)
 	{
 		<MudText Color="Color.Error">Semi-Annual Date 1 is disabled as it is not legible.</MudText>
 	}
@@ -97,7 +97,7 @@
 		</MudTooltip>
 		<MudText>Characters left: @charactersLeft</MudText>
 	</div>
-	@if(AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateOther)
+	@if (AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateOther)
 	{
 		<MudText Color="Color.Error">PaymentDateOther is disabled due to not legible value.</MudText>
 	}
