@@ -94,7 +94,6 @@
         <MudInputString OnKeyUp="CalculateCharactersLeft" @bind-Value="AddressToBeInputModel.PaymentDateOther" Variant="Variant.Outlined"
                     For="@(() => AddressToBeInputModel.PaymentDateOther)" Placeholder="mm/dd/yyyy separated by semicolon (no space)" MaxLength="maxCharacterLengthOther"
                     Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateOther" Required />
-        <MudText>Characters left: @charactersLeft</MudText>
     </div>
     @if (AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateOther)
     {
@@ -105,7 +104,8 @@
 @code {
     [CascadingParameter]
     public AddressModel? AddressToBeInputModel { get; set; }
-    private int maxCharacterLengthOther { get; set; } = 64;
+    // Max input character length for PaymentDateOther type
+    private int maxCharacterLengthOther { get; set; } = 64;    
     private int charactersLeft { get; set; }
 
     protected override void OnInitialized()

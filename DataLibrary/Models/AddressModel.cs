@@ -5,7 +5,13 @@ namespace DataLibrary.Models
 {
     public class AddressModel
     {
+        /// <summary>
+        /// The user AccountId that is active & making submissions
+        /// </summary>
         public string? AccountId { get; set; }
+        /// <summary>
+        /// The county location of property, explicity declared as BaltimoreCity
+        /// </summary>
         public string? County { get; set; }
         public string? AccountNumber { get; set; }
         public string? Ward { get; set; }
@@ -15,9 +21,15 @@ namespace DataLibrary.Models
         public string? LandUseCode { get; set; }
         public int? YearBuilt { get; set; }
         public bool? IsRedeemed { get; set; }
-        public bool? IsGroundRent { get; set; }
+        public bool? IsGroundRent { get; set; }        
         public bool? IsProcessed { get; set; }
+        /// <summary>
+        /// IsVerified if user is authenticated & authorized for submissions to Db back-end
+        /// </summary>
         public bool? IsVerified { get; set; }
+        /// <summary>
+        /// IsLegible used to verify if data being submitted is readble and sent to Db back-end processing
+        /// </summary>
 		[Required] public bool? IsLegible { get; set; }		
 		public enum InputType { PaymentAmount, PaymentDateAnnual, PaymentDateSemiAnnual1, PaymentDateSemiAnnual2, PaymentDateQuarterly1, PaymentDateQuarterly2, PaymentDateQuarterly3, PaymentDateQuarterly4, PaymentDateOther }
 		[RequiredIf("IsLegible == false", ErrorMessage = "Illegible field is required!")]

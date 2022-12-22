@@ -19,9 +19,10 @@
 	<DateFrequencyPicker />
 </CascadingValue>
 
-@code {
+@code {	
 	[CascadingParameter]
 	public AddressModel? AddressToBeInputModel { get; set; }
+	// EventCallback Parameter sent to parent ProcessAddress.Razor to process PaymentFrequencySelection
 	[Parameter]
 	public EventCallback<AddressModel.PaymentFrequency?> OnPaymentFrequencyChanged { get; set; }
 
