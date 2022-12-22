@@ -27,7 +27,7 @@ public class Scraper
 	{
 
 	}
-	public async Task SpinUp()
+	public async Task SpinUp() // This logic to go into constructor?
 	{
 		var gridNetwork = new TestcontainersNetworkBuilder()
 			.WithName("seleniumgridnetwork")
@@ -65,7 +65,7 @@ public class Scraper
 		RemoteWebDriver = new RemoteWebDriver(new Uri("http://localhost:4444/"), firefoxOptions);
 		RemoteWebDriver.Navigate().GoToUrl(BaseUrl);
 	}
-	public async Task Scrape(AddressModel address)
+	public async Task Scrape(AddressModel address) // The actual business logic
 	{
 		WebDriverWait webDriverWait = new(RemoteWebDriver, TimeSpan.FromSeconds(10));
 		// Business logic to direct user to specific page per address in the AddressList
