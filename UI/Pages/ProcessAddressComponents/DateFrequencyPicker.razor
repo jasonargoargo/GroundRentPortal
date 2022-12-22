@@ -91,7 +91,7 @@
 {
     <div class="col gy-3" style="max-width: 15em;">
         <MudText>Other Date:</MudText>
-        <MudInputString OnKeyDown="CalculateCharactersLeft" @bind-Value="AddressToBeInputModel.PaymentDateOther" Variant="Variant.Outlined"
+        <MudInputString OnBlur="UpdateCharactersLeftEmpty" OnKeyDown="CalculateCharactersLeft" @bind-Value="AddressToBeInputModel.PaymentDateOther" Variant="Variant.Outlined"
                     For="@(() => AddressToBeInputModel.PaymentDateOther)" Placeholder="1/4/2023" MaxLength="maxCharacterLengthOther"
                     Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateOther" Required />
         <MudText>Characters left: @charactersLeft</MudText>
@@ -116,13 +116,31 @@
 
     private void CalculateCharactersLeft(KeyboardEventArgs args)
     {
-        if (args.Key == "Backspace" && charactersLeft < maxCharacterLengthOther)
+        if (AddressToBeInputModel?.PaymentDateOther is not null)
         {
-            charactersLeft++;
-        }
-        else if (charactersLeft <= maxCharacterLengthOther && args.Key != "Backspace")
+            var previousCharacterCount = AddressToBeInputModel.PaymentDateOther.Length;
+
+            if (args.Key != "Backspace" && AddressToBeInputModel.PaymentDateOther.Length <= previousCharacterCount)
+            {
+                charactersLeft--;
+            }
+            else if (args.Key == "Backspace" && AddressToBeInputModel.PaymentDateOther.Length > 0)
+            {
+                charactersLeft++;
+            }
+
+            if (AddressToBeInputModel.PaymentDateOther.Length == 0)
+            {
+                charactersLeft = maxCharacterLengthOther;
+            }
+        }        
+    }
+
+    private void UpdateCharactersLeftEmpty()
+    {
+        if (AddressToBeInputModel?.PaymentDateOther is not null && AddressToBeInputModel.PaymentDateOther.Length == 0)
         {
-            charactersLeft--;
+            charactersLeft = maxCharacterLengthOther;
         }
     }
 
