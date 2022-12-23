@@ -7,7 +7,6 @@
 @inject IDataContext dataContext
 @inject IGroundRentPortalDataServiceFactory testDataServiceFactory
 @*@inject Scraper scraper*@
-@inject ILogger<ProcessAddress> logger
 @inject ISnackbar snackbarNotification
 @attribute [Authorize]
 @page "/processaddress"
@@ -25,7 +24,7 @@
 				<div hidden="@addressSubmitted">
 					<EditForm Model="AddressToBeInputModel" OnValidSubmit="HandleOnSubmit" OnInvalidSubmit="HandleInvalidSubmit">
 						<DataAnnotationsValidator />
-						<MudText Class="mt-2">@userState.User.Identity?.Name is currently processing address id: @AddressToBeInputModel?.AccountId</MudText>
+						<MudText Class="mt-2">@UserDisplayName is currently processing address id: @AddressToBeInputModel?.AccountId</MudText>
 						<MudText Class="mt-2">You have processed @counter addresses out of @AddressList.Count this session.</MudText>
 						<CascadingValue Value="AddressToBeInputModel">
 							<PaymentAmountField />
@@ -58,11 +57,13 @@ else
 @code {
 	[CascadingParameter]
 	private Task<AuthenticationState>? authenticationState { get; set; }
+	private AuthenticationState? userState;
+	private List<System.Security.Claims.Claim> ClaimsList = new();
 	private AddressModel addressToDbModel = new();
 	private AddressModel originalProcessedAddress = new();
 	private ValidationMessageStore? validationMessageStore;
 	private bool isValidationSuccessful { get; set; }
-	private AuthenticationState? userState;
+	private string? UserDisplayName;
 	public AddressModel? AddressToBeInputModel { get; set; }
 	public AddressModel? OriginalAddressModel { get; set; }
 	private List<AddressModel> UnprocessedAddressList = new();
@@ -86,6 +87,12 @@ else
 			if (authenticationState is not null)
 			{
 				userState = await authenticationState;
+				UserDisplayName = userState.User.Claims.FirstOrDefault(x => x.Type.Contains("name"))?.Value;
+				ClaimsList = userState.User.Claims.ToList();
+				foreach (var userClaim in ClaimsList)
+				{
+					ClaimsList.Append(userClaim).ToString();
+				}
 			}
 
 			await LoadAddressList();
@@ -99,7 +106,7 @@ else
 		}
 		catch (Exception ex)
 		{
-			logger.LogError($"Exception thrown during initilazation {ex.Message}");
+			Console.WriteLine(ex.Message);
 		}
 	}
 	private void NullifyValues()
