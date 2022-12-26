@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col gy-3">
         <MudTooltip Text="Is the data presented readible?" Placement="Placement.Right">
-            <MudText>Is data legible?</MudText>
+            <MudText Color="Color.Primary">Is data legible?</MudText>
             @if (AddressToBeInputModel is not null)
             {
                 <MudRadioGroup T="bool?" @bind-SelectedOption="AddressToBeInputModel.IsLegible" For="@(() => AddressToBeInputModel.IsLegible)" Required>

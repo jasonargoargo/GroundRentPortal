@@ -2,7 +2,7 @@
 @namespace UI.Pages.ProcessAddressComponents
 
 <div class="col gy-3">
-	<MudText>Payment Frequency</MudText>
+	<MudText Color="Color.Primary">Payment Frequency</MudText>
 	@if (AddressToBeInputModel is not null)
 	{
 		<MudSelect T="AddressModel.PaymentFrequency?" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.MonitorHeart" Variant="Variant.Outlined" ValueChanged="OnPaymentFrequencyChanged" Placeholder="Annual"

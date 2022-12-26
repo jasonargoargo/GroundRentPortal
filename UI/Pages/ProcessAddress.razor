@@ -17,7 +17,7 @@
 	<div class="container">
 		@if(addressesLoaded)
 		{
-			<MudText Class="mt-2" Typo="Typo.h4">Process Address</MudText>
+			@*<MudText Class="mt-2" Typo="Typo.h4">Process Address</MudText>*@
 			<MudText Color="Color.Primary">Addresses successfully loaded</MudText>
 			@if (counter <= AddressList.Count - 1)
 			{
@@ -88,17 +88,11 @@ else
 			{
 				userState = await authenticationState;
 				UserDisplayName = userState.User.Claims.FirstOrDefault(x => x.Type.Contains("name"))?.Value;
-				ClaimsList = userState.User.Claims.ToList();
-				foreach (var userClaim in ClaimsList)
-				{
-					ClaimsList.Append(userClaim).ToString();
-				}
 			}
 
 			await LoadAddressList();
 			OriginalAddressModel = await LoadOriginalProcessedAddress(AddressList[0].AccountId);
 			AddressToBeInputModel = AddressList[0];
-			// If address is processed, null values to prevent user from lazily keeping visible values
 			if (AddressToBeInputModel.IsProcessed is true) NullifyValues();
 			//await scraper.Scrape(AddressList[0]);
 			addressesLoaded = true;

@@ -5,7 +5,7 @@
 {
     <div class="col gy-3" style="max-width: fit-content;">
         <MudText Typo="Typo.caption">Please select a date:</MudText>
-        <MudDatePicker Variant="Variant.Outlined" Placeholder="*Annual Date" @bind-Date="AddressToBeInputModel.PaymentDateAnnual"
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" Variant="Variant.Outlined" Placeholder="*Annual Date" @bind-Date="AddressToBeInputModel.PaymentDateAnnual"
                    For="@(() => AddressToBeInputModel.PaymentDateAnnual)" Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateAnnual" Required />
     </div>
     @if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null && AddressToBeInputModel.IsLegible is false
@@ -19,13 +19,13 @@
 {
     <div class="col gy-3" style="max-width: fit-content;">
         <MudText Typo="Typo.caption">Please select a date:</MudText>
-        <MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual1" Placeholder="*Semi-Annual 1 Date" Variant="Variant.Outlined"
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual1" Placeholder="*Semi-Annual 1 Date" Variant="Variant.Outlined"
                    For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual1)" Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual1" Required />
     </div>
 
     <div class="col gy-3" style="max-width: fit-content;">
         <MudText Typo="Typo.caption">Please select a date:</MudText>
-        <MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual2" Placeholder="*Semi-Annual 2 Date" Variant="Variant.Outlined"
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Date="AddressToBeInputModel.PaymentDateSemiAnnual2" Placeholder="*Semi-Annual 2 Date" Variant="Variant.Outlined"
                    For="@(() => AddressToBeInputModel.PaymentDateSemiAnnual2)" Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateSemiAnnual2" Required />
     </div>
     @if (AddressToBeInputModel is not null && AddressToBeInputModel.NotLegibleType is not null
@@ -45,22 +45,22 @@
 {
     <div class="col gy-3" style="max-width: fit-content;">
         <MudText Color="Color.Default" Typo="Typo.caption">Please select a date:</MudText>
-        <MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly1" Variant="Variant.Outlined" Placeholder="*Quarterly 1 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly1)"
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Date="AddressToBeInputModel.PaymentDateQuarterly1" Variant="Variant.Outlined" Placeholder="*Quarterly 1 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly1)"
                    Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly1" Required />
     </div>
     <div class="col gy-3" style="max-width: fit-content;">
         <MudText Color="Color.Default" Typo="Typo.caption">Please select a date:</MudText>
-        <MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly2" Variant="Variant.Outlined" Placeholder="*Quarterly 2 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly2)"
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Date="AddressToBeInputModel.PaymentDateQuarterly2" Variant="Variant.Outlined" Placeholder="*Quarterly 2 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly2)"
                    Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly2" Required />
     </div>
     <div class="col gy-3" style="max-width: fit-content;">
         <MudText Color="Color.Default" Typo="Typo.caption">Please select a date:</MudText>
-        <MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly3" Variant="Variant.Outlined" Placeholder="*Quarterly 3 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly3)"
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Date="AddressToBeInputModel.PaymentDateQuarterly3" Variant="Variant.Outlined" Placeholder="*Quarterly 3 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly3)"
                    Disabled="AddressToBeInputModel.IsLegible is false &&  AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly3" Required />
     </div>
     <div class="col gy-3" style="max-width: fit-content;">
         <MudText Color="Color.Default" Typo="Typo.caption">Please select a date:</MudText>
-        <MudDatePicker @bind-Date="AddressToBeInputModel.PaymentDateQuarterly4" Variant="Variant.Outlined" Placeholder="*Quarterly 4 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly4)"
+        <MudDatePicker PickerVariant="PickerVariant.Dialog" @bind-Date="AddressToBeInputModel.PaymentDateQuarterly4" Variant="Variant.Outlined" Placeholder="*Quarterly 4 Date" For="@(() => AddressToBeInputModel.PaymentDateQuarterly4)"
                    Disabled="AddressToBeInputModel.IsLegible is false && AddressToBeInputModel.NotLegibleType == AddressModel.InputType.PaymentDateQuarterly4" Required />
     </div>
 

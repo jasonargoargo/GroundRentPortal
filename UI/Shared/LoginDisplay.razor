@@ -1,6 +1,6 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <MudText Class="ml-2" Typo="Typo.body1">Welcome, @context.User.Identity?.Name</MudText>
+        <MudText Class="ml-2" Typo="Typo.body1">Welcome, @context.User.Claims.FirstOrDefault(x => x.Type.Contains("name"))?.Value</MudText>
         <MudLink Underline="Underline.None" Class="ml-2 link-item" Href="MicrosoftIdentity/Account/SignOut">Log out</MudLink>
     </Authorized>
     <NotAuthorized>
